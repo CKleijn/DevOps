@@ -1,4 +1,4 @@
-namespace DomainServicesTests
+namespace DomainServices.Tests
 {
     public class DomainServicesTests
     {

@@ -5,12 +5,12 @@
 /.vs
 /Domain/obj
 /Domain/bin
-/DomainTests/obj
-/DomainTests/bin
+/Domain.Tests/obj
+/Domain.Tests/bin
 /DomainServices/obj
 /DomainServices/bin
-/DomainServicesTests/obj
-/DomainServicesTests/bin
+/DomainServices.Tests/obj
+/DomainServices.Tests/bin
 /Infrastructure/obj
 /Infrastructure/bin
 /Portal/obj
