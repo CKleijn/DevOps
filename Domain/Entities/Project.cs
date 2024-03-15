@@ -2,7 +2,7 @@
 
 namespace Domain.Entities;
 
-public class Project
+public class Project : IObservable<Project>
 {
     private Guid _id { get; init; }
     private Guid Id { get => _id; init => _id = value; }
@@ -11,8 +11,12 @@ public class Project
     public string Title { get => _title; set => _title = value; }
     
     private string _description { get; set; }
-    public string Description { get => _description; set => _description = value; }
-    
+    public string Description
+    {
+        get => _description;
+        set { _description = value; }
+    }
+
     private User _productOwner { get; init; }
     public User ProductOwner { get => _productOwner; init => _productOwner = value;}
     
@@ -25,6 +29,8 @@ public class Project
     private DateTime _createdAt { get; init; }
     public DateTime CreatedAt { get => _createdAt; init => _createdAt = value;}
     
+    private List<IObserver<Project>> Observers { get; set; }
+    
     //TODO: implement Backlog, Pipeline and VersionControl
 
     public Project(string title, string description, User productOwner, User createdBy)
@@ -35,9 +41,37 @@ public class Project
         ProductOwner = productOwner;
         CreatedBy = createdBy;
         CreatedAt = DateTime.Now;
+        Observers = new();
     }
 
-    //TODO: implement functions
+    public IDisposable Subscribe(IObserver<Project> observer)
+    {
+        if(!Observers.Contains(observer))
+        {
+            Observers.Add(observer);
+        }
+        
+        return new Unsubscriber(Observers, observer);
+    }
+    
+    //TODO: When will notify be executed?
+    public void Notify()
+    {
+        foreach (var observer in Observers)
+        {
+            observer.OnNext(this);
+        }
+    }
+    
+    public void RemoveObservers()
+    {
+        foreach (var observer in Observers)
+            if (Observers.Contains(observer))
+                observer.OnCompleted();
+        
+        Observers.Clear();
+    }
+    
     public override string ToString()
     {
         StringBuilder sb = new();
@@ -51,5 +85,25 @@ public class Project
         sb.AppendLine($"CreatedAt: {CreatedAt}");
 
         return sb.ToString();
+    }
+    
+    private class Unsubscriber : IDisposable
+    {
+        private List<IObserver<Project>>_observers;
+        private IObserver<Project> _observer;
+
+        public Unsubscriber(List<IObserver<Project>> observers, IObserver<Project> observer)
+        {
+            this._observers = observers;
+            this._observer = observer;
+        }
+
+        public void Dispose()
+        {
+            if (_observer != null && _observers.Contains(_observer))
+            {
+                _observers.Remove(_observer);
+            }
+        }
     }
 }

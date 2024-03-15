@@ -3,7 +3,7 @@ using Domain.Enums;
 
 namespace Domain.Entities;
 
-public class User
+public class User : IObserver<Project>
 {
     private Guid _id { get; init; }
     private Guid Id { get => _id; init => _id = value; }
@@ -25,6 +25,8 @@ public class User
     
     private DateTime _createdAt { get; init; }
     public DateTime CreatedAt { get => _createdAt; init => _createdAt = value;}
+    
+    private IDisposable _unsubscriber { get; set; }
 
     public User(string name, string email, string password, Role role)
     {
@@ -37,7 +39,34 @@ public class User
     }
     
     //TODO: implement functions (Update observers, etc)
+    
+    public void Subscribe(IObservable<Project> provider)
+    {
+        if (provider != null)
+            _unsubscriber = provider.Subscribe(this);
+    }
+    
+    public void OnCompleted()
+    {
+        Console.WriteLine("All data has been transmitted.");
+        Unsubscribe();
+    }
 
+    public void OnError(Exception error)
+    {
+        Console.WriteLine("An error has occurred transmitting the project: {0}", error.Message);
+    }
+
+    public void OnNext(Project value)
+    {
+        Console.WriteLine("New Project data: {0}", value);
+    }
+    
+    public void Unsubscribe()
+    {
+        _unsubscriber.Dispose();
+    }
+    
     public override string ToString()
     {
         StringBuilder sb = new();
