@@ -29,9 +29,8 @@ public abstract class Sprint
     private User _scrumMaster { get; set; }
     public User ScrumMaster { get => _scrumMaster; set => _scrumMaster = value; }
     
-    //TODO: alter type to "Developer"
-    private IList<User> _developers { get; init; }
-    public IList<User> Developers { get => _developers; init => _developers = value; }
+    private IList<Developer> _developers { get; init; }
+    public IList<Developer> Developers { get => _developers; init => _developers = value; }
     
     private User _createdBy { get; set; }
     public User CreatedBy { get => _createdBy; set => _createdBy = value; }
@@ -50,10 +49,7 @@ public abstract class Sprint
         _endDate = endDate;
         _createdBy = createdBy;
         _scrumMaster = scrumMaster;
-        
-        //TODO: alter type to "Developer"
-        _developers = new List<User>();
-        
+        _developers = new List<Developer>();
         _status = new InitialState();
         _reports = new List<Report>();
         _sprintBacklog = new SprintBacklog();
@@ -61,12 +57,12 @@ public abstract class Sprint
     }
     
     //TODO: add state functions
-    public void AddDeveloper(User developer)
+    public void AddDeveloper(Developer developer)
     {
         _developers.Add(developer);
     }
     
-    public void RemoveDeveloper(User developer)
+    public void RemoveDeveloper(Developer developer)
     {
         _developers.Remove(developer);
     }
