@@ -31,13 +31,13 @@ public class Report
     
     public Report(string title, Guid sprintId, string filePath, User creator, ReportExtension extension)
     {
-        Id = Guid.NewGuid();
-        Title = title;
-        SprintId = sprintId;
-        FilePath = filePath;
-        CreatedBy = creator;
-        Extension = extension;
-        CreatedAt = DateTime.Now;
+        _id = Guid.NewGuid();
+        _title = title;
+        _sprintId = sprintId;
+        _filePath = filePath;
+        _createdBy = creator;
+        _extension = extension;
+        _createdAt = DateTime.Now;
     }
     
     //TODO: implement functions (Update observers, etc)

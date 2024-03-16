@@ -27,12 +27,12 @@ public class Release
     
     public Release(Guid sprintId, Guid pipelineId, string tag, User creator)
     {
-        Id = Guid.NewGuid();
-        SprintId = sprintId;
-        PipelineId = pipelineId;
-        Tag = tag;
-        CreatedBy = creator;
-        CreatedAt = DateTime.Now;
+        _id = Guid.NewGuid();
+        _sprintId = sprintId;
+        _pipelineId = pipelineId;
+        _tag = tag;
+        _createdBy = creator;
+        _createdAt = DateTime.Now;
     }
     
     //TODO: implement further functions
