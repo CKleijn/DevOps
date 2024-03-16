@@ -1,6 +1,13 @@
-﻿namespace Domain.Interfaces.States;
+﻿using Domain.Entities;
+
+namespace Domain.Interfaces.States;
 
 public interface ISprintState
 {
-    //TODO: implement required methods
+    Sprint Context { get; init; }
+    void ExecuteSprint();
+    void FinishSprint();
+    void ReleaseSprint();
+    void ReviewSprint();
+    void CancelSprint();
 }

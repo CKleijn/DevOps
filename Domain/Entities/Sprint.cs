@@ -1,5 +1,5 @@
+using Domain.Interfaces.States;
 using Domain.States.Sprint;
-using DomainServices.Interfaces;
 
 namespace Domain.Entities;
 
