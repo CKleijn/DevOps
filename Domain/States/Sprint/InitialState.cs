@@ -1,4 +1,4 @@
-﻿using DomainServices.Interfaces;
+﻿using Domain.Interfaces.States;
 
 namespace DomainServices.States.Sprint;
 
