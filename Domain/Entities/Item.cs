@@ -13,8 +13,8 @@ namespace Domain.Entities
         private string _description { get; set; }
         public string Description { get => _description; set => _description = value; }
 
-        private User _developer { get; set; }
-        public User Developer { get => _developer; set => _developer = value; }
+        private Developer _developer { get; set; }
+        public Developer Developer { get => _developer; set => _developer = value; }
 
         private IList<Activity> _activities { get; init; }
         public IList<Activity> Activities { get => _activities; init => _activities = value; }
@@ -33,7 +33,7 @@ namespace Domain.Entities
         private DateTime _createdAt { get; init; }
         public DateTime CreatedAt { get => _createdAt; init => _createdAt = value; }
 
-        public Item(string title, string description, User developer, int storyPoints)
+        public Item(string title, string description, Developer developer, int storyPoints)
         {
             _id = Guid.NewGuid();
             _title = title;

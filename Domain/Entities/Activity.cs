@@ -13,8 +13,8 @@ namespace Domain.Entities
         private bool _isFinished { get; set; }
         public bool IsFinished { get => _isFinished; set => _isFinished = value; }
 
-        private User _developer { get; set; }
-        public User Developer { get => _developer; set => _developer = value; }
+        private Developer _developer { get; set; }
+        public Developer Developer { get => _developer; set => _developer = value; }
 
         private DateTime? _updatedAt { get; set; }
         public DateTime? UpdatedAt { get => _updatedAt; set => _updatedAt = value; }
@@ -22,7 +22,7 @@ namespace Domain.Entities
         private DateTime _createdAt { get; init; }
         public DateTime CreatedAt { get => _createdAt; init => _createdAt = value; }
 
-        public Activity(string title, User developer)
+        public Activity(string title, Developer developer)
         {
             _id = Guid.NewGuid();
             _title = title;
