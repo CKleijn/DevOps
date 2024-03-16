@@ -10,10 +10,4 @@
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Factories\" />
-    <Folder Include="States\BacklogItem\" />
-    <Folder Include="States\Pipeline\" />
-  </ItemGroup>
-
 </Project>
