@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using Domain.Interfaces.States;
+using Domain.States.Pipeline;
+using System.Text;
 
 namespace Domain.Entities
 {
@@ -10,7 +12,12 @@ namespace Domain.Entities
         private string _name { get; set; }
         public string Name { get => _name; set => _name = value; }
 
-        // TODO: Implement Status and Actions
+        // TODO: Implement Actions
+        private IPipelineState? _previousStatus { get; set; }
+        public IPipelineState? PreviousStatus { get => _previousStatus; set => _previousStatus = value; }
+
+        private IPipelineState _currentStatus { get; set; }
+        public IPipelineState CurrentStatus { get => _currentStatus; set => _currentStatus = value; }
 
         private User _creator { get; init; }
         public User Creator { get => _creator; init => _creator = value; }
@@ -25,6 +32,7 @@ namespace Domain.Entities
         {
             _id = Guid.NewGuid();
             _name = name;
+            _currentStatus = new InitialState(this);
             _creator = creator;
             _createdAt = DateTime.Now;
         }
@@ -71,6 +79,8 @@ namespace Domain.Entities
 
             sb.AppendLine($"Id: {_id}");
             sb.AppendLine($"Name: {_name}");
+            sb.AppendLine($"PreviousStatus: {_previousStatus?.GetType().Name}");
+            sb.AppendLine($"CurrentStatus: {_currentStatus.GetType().Name}");
             sb.AppendLine($"Creator: {_creator.ToString()}");
             sb.AppendLine($"UpdatedAt: {_updatedAt}");
             sb.AppendLine($"CreatedAt: {_createdAt}");
