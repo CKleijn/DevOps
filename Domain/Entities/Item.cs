@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using Domain.Interfaces.States;
+using Domain.States.BacklogItem;
+using System.Text;
 
 namespace Domain.Entities
 {
@@ -22,7 +24,11 @@ namespace Domain.Entities
         private IList<Activity> _activities { get; init; }
         public IList<Activity> Activities { get => _activities; init => _activities = value; }
 
-        // TODO: Implement Status 
+        private IBacklogItemState? _previousStatus { get; set; }
+        public IBacklogItemState? PreviousStatus { get => _previousStatus; set => _previousStatus = value; }
+
+        private IBacklogItemState _currentStatus { get; set; }
+        public IBacklogItemState CurrentStatus { get => _currentStatus; set => _currentStatus = value; }
 
         private IList<Thread> _threads { get; init; }
         public IList<Thread> Threads { get => _threads; init => _threads = value; }
@@ -44,6 +50,7 @@ namespace Domain.Entities
             _developer = developer;
             _creator = creator;
             _activities = new List<Activity>();
+            _currentStatus = new TodoState(this);
             _threads = new List<Thread>();
             _storyPoints = storyPoints;
             _createdAt = DateTime.Now;
@@ -60,6 +67,8 @@ namespace Domain.Entities
             sb.AppendLine($"Developer: {_developer.ToString()}");
             sb.AppendLine($"Creator: {_creator.ToString()}");
             sb.AppendLine($"Activities: {_activities.Count}");
+            sb.AppendLine($"PreviousStatus: {_previousStatus?.GetType().Name}");
+            sb.AppendLine($"CurrentStatus: {_currentStatus.GetType().Name}");
             sb.AppendLine($"Threads: {_threads.Count}");
             sb.AppendLine($"StoryPoints: {_storyPoints}");
             sb.AppendLine($"UpdatedAt: {_updatedAt}");

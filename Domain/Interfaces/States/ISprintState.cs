@@ -1,4 +1,4 @@
-﻿namespace DomainServices.Interfaces;
+﻿namespace Domain.Interfaces.States;
 
 public interface ISprintState
 {
