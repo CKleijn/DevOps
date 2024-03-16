@@ -30,13 +30,13 @@ public class Review
     
     public Review(string title, Guid sprintId, Guid pipelineId, string filePath, User creator)
     {
-        Id = Guid.NewGuid();
-        Title = title;
-        SprintId = sprintId;
-        PipelineId = pipelineId;
-        FilePath = filePath;
-        CreatedBy = creator;
-        CreatedAt = DateTime.Now;
+        _id = Guid.NewGuid();
+        _title = title;
+        _sprintId = sprintId;
+        _pipelineId = pipelineId;
+        _filePath = filePath;
+        _createdBy = creator;
+        _createdAt = DateTime.Now;
     }
     
     //TODO: implement further functions
