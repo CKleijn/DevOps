@@ -42,12 +42,12 @@ public class User
     {
         StringBuilder sb = new();
         
-        sb.AppendLine($"Id: {Id}");
-        sb.AppendLine($"Name: {Name}");
-        sb.AppendLine($"Email: {Email}");
-        sb.AppendLine($"Role: {Role}");
-        sb.AppendLine($"UpdatedAt: {UpdatedAt}");
-        sb.AppendLine($"CreatedAt: {CreatedAt}");
+        sb.AppendLine($"Id: {_id}");
+        sb.AppendLine($"Name: {_name}");
+        sb.AppendLine($"Email: {_email}");
+        sb.AppendLine($"Role: {_role}");
+        sb.AppendLine($"UpdatedAt: {_updatedAt}");
+        sb.AppendLine($"CreatedAt: {_createdAt}");
         
         return sb.ToString();
     }

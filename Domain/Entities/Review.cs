@@ -45,14 +45,14 @@ public class Review
     {
         StringBuilder sb = new();
         
-        sb.AppendLine($"Id: {Id}");
-        sb.AppendLine($"Title: {Title}");
-        sb.AppendLine($"SprintId: {SprintId}");
-        sb.AppendLine($"PipelineId: {PipelineId}");
-        sb.AppendLine($"FilePath: {FilePath}");
-        sb.AppendLine($"Creator: {CreatedBy}");
-        sb.AppendLine($"UpdatedAt: {UpdatedAt}");
-        sb.AppendLine($"CreatedAt: {CreatedAt}");
+        sb.AppendLine($"Id: {_id}");
+        sb.AppendLine($"Title: {_title}");
+        sb.AppendLine($"SprintId: {_sprintId}");
+        sb.AppendLine($"PipelineId: {_pipelineId}");
+        sb.AppendLine($"FilePath: {_filePath}");
+        sb.AppendLine($"Creator: {_createdBy.ToString()}");
+        sb.AppendLine($"UpdatedAt: {_updatedAt}");
+        sb.AppendLine($"CreatedAt: {_createdAt}");
         
         return sb.ToString();
     }

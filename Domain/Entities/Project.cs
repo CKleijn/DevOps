@@ -15,6 +15,9 @@ public class Project
     
     private User _productOwner { get; init; }
     public User ProductOwner { get => _productOwner; init => _productOwner = value;}
+
+    private ProjectBacklog _backlog { get; init; }
+    public ProjectBacklog Backlog { get => _backlog; init => _backlog = value; }
     
     private User _createdBy { get; init; }
     public User CreatedBy { get => _createdBy; init => _createdBy = value;}
@@ -25,7 +28,7 @@ public class Project
     private DateTime _createdAt { get; init; }
     public DateTime CreatedAt { get => _createdAt; init => _createdAt = value;}
     
-    //TODO: implement Backlog, Pipeline and VersionControl
+    //TODO: implement Pipeline and VersionControl
 
     public Project(string title, string description, User productOwner, User createdBy)
     {
@@ -33,6 +36,7 @@ public class Project
         Title = title;
         Description = description;
         ProductOwner = productOwner;
+        Backlog = new ProjectBacklog();
         CreatedBy = createdBy;
         CreatedAt = DateTime.Now;
     }
@@ -42,13 +46,14 @@ public class Project
     {
         StringBuilder sb = new();
         
-        sb.AppendLine($"Id: {Id}");
-        sb.AppendLine($"Title: {Title}");
-        sb.AppendLine($"Description: {Description}");
-        sb.AppendLine($"ProductOwner: {ProductOwner}");
-        sb.AppendLine($"CreatedBy: {CreatedBy}");
-        sb.AppendLine($"UpdatedAt: {UpdatedAt}");
-        sb.AppendLine($"CreatedAt: {CreatedAt}");
+        sb.AppendLine($"Id: {_id}");
+        sb.AppendLine($"Title: {_title}");
+        sb.AppendLine($"Description: {_description}");
+        sb.AppendLine($"ProductOwner: {_productOwner.ToString()}");
+        sb.AppendLine($"Backlog: {_backlog.ToString()}");
+        sb.AppendLine($"CreatedBy: {_createdBy.ToString()}");
+        sb.AppendLine($"UpdatedAt: {_updatedAt}");
+        sb.AppendLine($"CreatedAt: {_createdAt}");
 
         return sb.ToString();
     }

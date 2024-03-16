@@ -17,11 +17,11 @@ public class Notification
     private bool _status { get; set; }
     public bool Status { get => _status; set => _status = value; }
     
-    private List<User> _targetUsers { get; set; }
-    public List<User> TargetUsers { get => _targetUsers; set => _targetUsers = value; }
+    private IList<User> _targetUsers { get; set; }
+    public IList<User> TargetUsers { get => _targetUsers; set => _targetUsers = value; }
     
-    private List<NotificationProvider> _destinationTypes { get; set; }
-    public List<NotificationProvider> DestinationTypes { get => _destinationTypes; set => _destinationTypes = value; }
+    private IList<NotificationProvider> _destinationTypes { get; set; }
+    public IList<NotificationProvider> DestinationTypes { get => _destinationTypes; set => _destinationTypes = value; }
     
     private DateTime? _updatedAt { get; set; }
     public DateTime? UpdatedAt { get => _updatedAt; set => _updatedAt = value; }
@@ -29,7 +29,7 @@ public class Notification
     private DateTime _createdAt { get; init; }
     public DateTime CreatedAt { get => _createdAt; init => _createdAt = value;}
     
-    public Notification(string title, string body, bool status, List<User> targetUsers, List<NotificationProvider> destinationTypes)
+    public Notification(string title, string body, bool status, IList<User> targetUsers, IList<NotificationProvider> destinationTypes)
     {
         Id = Guid.NewGuid();
         Title = title;
@@ -46,12 +46,12 @@ public class Notification
     {
         StringBuilder sb = new();
         
-        sb.AppendLine($"Id: {Id}");
-        sb.AppendLine($"Title: {Title}");
-        sb.AppendLine($"Body: {Body}");
-        sb.AppendLine($"Status: {Status}");
-        sb.AppendLine($"UpdatedAt: {UpdatedAt}");
-        sb.AppendLine($"CreatedAt: {CreatedAt}");
+        sb.AppendLine($"Id: {_id}");
+        sb.AppendLine($"Title: {_title}");
+        sb.AppendLine($"Body: {_body}");
+        sb.AppendLine($"Status: {_status}");
+        sb.AppendLine($"UpdatedAt: {_updatedAt}");
+        sb.AppendLine($"CreatedAt: {_createdAt}");
         
         return sb.ToString();
     }

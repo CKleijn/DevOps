@@ -41,13 +41,13 @@ public class Release
     {
         StringBuilder sb = new();
         
-        sb.AppendLine($"Id: {Id}");
-        sb.AppendLine($"SprintId: {SprintId}");
-        sb.AppendLine($"PipelineId: {PipelineId}");
-        sb.AppendLine($"Tag: {Tag}");
-        sb.AppendLine($"Creator: {CreatedBy}");
-        sb.AppendLine($"UpdatedAt: {UpdatedAt}");
-        sb.AppendLine($"CreatedAt: {CreatedAt}");
+        sb.AppendLine($"Id: {_id}");
+        sb.AppendLine($"SprintId: {_sprintId}");
+        sb.AppendLine($"PipelineId: {_pipelineId}");
+        sb.AppendLine($"Tag: {_tag}");
+        sb.AppendLine($"Creator: {_createdBy.ToString()}");
+        sb.AppendLine($"UpdatedAt: {_updatedAt}");
+        sb.AppendLine($"CreatedAt: {_createdAt}");
 
         return sb.ToString();
     }
