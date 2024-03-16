@@ -1,5 +1,4 @@
 using Domain.Entities;
-using Domain.States.Sprint;
 using DomainServices.Factories;
 using DomainServices.Interfaces;
 using Infrastructure.Libraries.VersionControls;
