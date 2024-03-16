@@ -20,7 +20,7 @@ namespace Domain.Entities
         {
             _id = Guid.NewGuid();
             _items = new List<Item>();
-            _createdAt = DateTime.UtcNow;
+            _createdAt = DateTime.Now;
         }
 
         //TODO: implement functions
