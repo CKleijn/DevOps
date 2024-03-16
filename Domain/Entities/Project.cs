@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Domain.Interfaces.Strategies;
+using System.Text;
 
 namespace Domain.Entities;
 
@@ -18,7 +19,10 @@ public class Project
 
     private ProjectBacklog _backlog { get; init; }
     public ProjectBacklog Backlog { get => _backlog; init => _backlog = value; }
-    
+
+    private IVersionControlStrategy _versionControl { get; set; }
+    public IVersionControlStrategy VersionControl { get => _versionControl; set => _versionControl = value; }
+
     private User _createdBy { get; init; }
     public User CreatedBy { get => _createdBy; init => _createdBy = value;}
     
@@ -28,17 +32,18 @@ public class Project
     private DateTime _createdAt { get; init; }
     public DateTime CreatedAt { get => _createdAt; init => _createdAt = value;}
     
-    //TODO: implement Pipeline and VersionControl
+    //TODO: implement Pipeline
 
-    public Project(string title, string description, ProductOwner productOwner, User createdBy)
+    public Project(string title, string description, ProductOwner productOwner, IVersionControlStrategy versionControl, User createdBy)
     {
-        Id = Guid.NewGuid();
-        Title = title;
-        Description = description;
-        ProductOwner = productOwner;
-        Backlog = new ProjectBacklog();
-        CreatedBy = createdBy;
-        CreatedAt = DateTime.Now;
+        _id = Guid.NewGuid();
+        _title = title;
+        _description = description;
+        _productOwner = productOwner;
+        _backlog = new ProjectBacklog();
+        _versionControl = versionControl;
+        _createdBy = createdBy;
+        _createdAt = DateTime.Now;
     }
 
     //TODO: implement functions
@@ -51,6 +56,7 @@ public class Project
         sb.AppendLine($"Description: {_description}");
         sb.AppendLine($"ProductOwner: {_productOwner.ToString()}");
         sb.AppendLine($"Backlog: {_backlog.ToString()}");
+        sb.AppendLine($"VersionControl: {_versionControl.GetType().Name}");
         sb.AppendLine($"CreatedBy: {_createdBy.ToString()}");
         sb.AppendLine($"UpdatedAt: {_updatedAt}");
         sb.AppendLine($"CreatedAt: {_createdAt}");
