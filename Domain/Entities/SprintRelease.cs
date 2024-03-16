@@ -1,4 +1,6 @@
-﻿namespace Domain.Entities;
+﻿using System.Text;
+
+namespace Domain.Entities;
 
 public class SprintRelease : Sprint
 {
@@ -10,11 +12,12 @@ public class SprintRelease : Sprint
     public SprintRelease(string title, DateTime startDate, DateTime endDate, User createdBy, User scrumMaster) : base(title, startDate, endDate, createdBy, scrumMaster)
     {
         _releases = new List<Release>();   
+        Console.WriteLine("Sprint with release type initialized.");
     }
     
     public override void Execute()
     {
-        throw new NotImplementedException();
+        Console.WriteLine($"Execute Sprint ({Title}) with release type");
     }
 
     
@@ -30,6 +33,16 @@ public class SprintRelease : Sprint
     
     public override string ToString()
     {
-        throw new NotImplementedException();
+        StringBuilder sb = new();
+        
+        sb.AppendLine($"Sprint Release: {Title}");
+        sb.AppendLine($"Start Date: {StartDate}");
+        sb.AppendLine($"End Date: {EndDate}");
+        sb.AppendLine($"Created By: {CreatedBy}");
+        sb.AppendLine($"Scrum Master: {ScrumMaster}");
+        sb.AppendLine($"Status: {Status.GetType()}");
+        sb.AppendLine($"Releases: {Releases.Count}");
+        
+        return sb.ToString();
     }
 }
