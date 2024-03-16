@@ -1,20 +1,28 @@
-﻿namespace Domain.Entities;
+﻿using System.Text;
+
+namespace Domain.Entities;
 
 public class SprintReview : Sprint
 {
     private IList<Review> _reviews { get; init; }
     public IList<Review> Reviews { get => _reviews; init => _reviews = value; }
     
-    //TODO: implement functions
-
     public SprintReview(string title, DateTime startDate, DateTime endDate, User createdBy, User scrumMaster) : base(title, startDate, endDate, createdBy, scrumMaster)
     {
         _reviews = new List<Review>();
+        Console.WriteLine("Sprint with review type initialized.");
     }
 
     public override void Execute()
     {
-        throw new NotImplementedException();
+        if (Reviews.Count > 0)
+        {
+            Console.WriteLine($"Execute Sprint ({Title}) with review type");
+        }
+        else
+        {
+            Console.WriteLine("Review can't be executed without any reviews. Provide at least one review.");
+        }
     }
     
     public void AddReview(Review review)
@@ -29,6 +37,16 @@ public class SprintReview : Sprint
 
     public override string ToString()
     {
-        throw new NotImplementedException();
+        StringBuilder sb = new();
+        
+        sb.AppendLine($"Sprint Review: {Title}");
+        sb.AppendLine($"Start Date: {StartDate}");
+        sb.AppendLine($"End Date: {EndDate}");
+        sb.AppendLine($"Created By: {CreatedBy}");
+        sb.AppendLine($"Scrum Master: {ScrumMaster}");
+        sb.AppendLine($"Status: {Status.GetType()}");
+        sb.AppendLine($"Reviews: {Reviews.Count}");
+        
+        return sb.ToString();
     }
 }

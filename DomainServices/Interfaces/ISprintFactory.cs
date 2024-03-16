@@ -2,7 +2,7 @@
 
 namespace DomainServices.Interfaces;
 
-public interface ISprintFactory
+public interface ISprintFactory<T> where T : Sprint
 {
-    public Sprint CreateSprint(string title, DateTime startDate, DateTime endDate, User createdBy, User scrumMaster);
+    public T CreateSprint(string title, DateTime startDate, DateTime endDate, User createdBy, User scrumMaster);
 }
