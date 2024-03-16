@@ -6,7 +6,7 @@ namespace Domain.Entities;
 public class User
 {
     private Guid _id { get; init; }
-    private Guid Id { get => _id; init => _id = value; }
+    public Guid Id { get => _id; init => _id = value; }
     
     private string _name { get; set; }
     public string Name { get => _name; set => _name = value; }

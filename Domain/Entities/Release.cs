@@ -5,13 +5,13 @@ namespace Domain.Entities;
 public class Release
 {
     private Guid _id { get; init; }
-    private Guid Id { get => _id; init => _id = value; }
+    public Guid Id { get => _id; init => _id = value; }
     
     private Guid _sprintId { get; init; }
-    private Guid SprintId { get => _sprintId; init => _sprintId = value; }
+    public Guid SprintId { get => _sprintId; init => _sprintId = value; }
     
     private Guid _pipelineId { get; init; }
-    private Guid PinelineId { get => _pipelineId; init => _pipelineId = value; }
+    public Guid PipelineId { get => _pipelineId; init => _pipelineId = value; }
     
     private string _tag { get; set; }
     public string Tag { get => _tag; set => _tag = value; }
@@ -29,7 +29,7 @@ public class Release
     {
         Id = Guid.NewGuid();
         SprintId = sprintId;
-        PinelineId = pipelineId;
+        PipelineId = pipelineId;
         Tag = tag;
         CreatedBy = creator;
         CreatedAt = DateTime.Now;
@@ -43,7 +43,7 @@ public class Release
         
         sb.AppendLine($"Id: {Id}");
         sb.AppendLine($"SprintId: {SprintId}");
-        sb.AppendLine($"PipelineId: {PinelineId}");
+        sb.AppendLine($"PipelineId: {PipelineId}");
         sb.AppendLine($"Tag: {Tag}");
         sb.AppendLine($"Creator: {CreatedBy}");
         sb.AppendLine($"UpdatedAt: {UpdatedAt}");

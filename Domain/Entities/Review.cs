@@ -5,13 +5,13 @@ namespace Domain.Entities;
 public class Review
 {
     private Guid _id { get; init; }
-    private Guid Id { get => _id; init => _id = value; }
+    public Guid Id { get => _id; init => _id = value; }
     
     private Guid _sprintId { get; init; }
-    private Guid SprintId { get => _sprintId; init => _sprintId = value; }
+    public Guid SprintId { get => _sprintId; init => _sprintId = value; }
     
     private Guid _pipelineId { get; init; }
-    private Guid PinelineId { get => _pipelineId; init => _pipelineId = value; }
+    public Guid PipelineId { get => _pipelineId; init => _pipelineId = value; }
     
     private string _title { get; set; }
     public string Title { get => _title; set => _title = value; }
@@ -33,7 +33,7 @@ public class Review
         Id = Guid.NewGuid();
         Title = title;
         SprintId = sprintId;
-        PinelineId = pipelineId;
+        PipelineId = pipelineId;
         FilePath = filePath;
         CreatedBy = creator;
         CreatedAt = DateTime.Now;
@@ -48,7 +48,7 @@ public class Review
         sb.AppendLine($"Id: {Id}");
         sb.AppendLine($"Title: {Title}");
         sb.AppendLine($"SprintId: {SprintId}");
-        sb.AppendLine($"PipelineId: {PinelineId}");
+        sb.AppendLine($"PipelineId: {PipelineId}");
         sb.AppendLine($"FilePath: {FilePath}");
         sb.AppendLine($"Creator: {CreatedBy}");
         sb.AppendLine($"UpdatedAt: {UpdatedAt}");

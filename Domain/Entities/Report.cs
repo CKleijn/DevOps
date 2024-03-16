@@ -6,10 +6,10 @@ namespace Domain.Entities;
 public class Report
 {
     private Guid _id { get; init; }
-    private Guid Id { get => _id; init => _id = value; }
+    public Guid Id { get => _id; init => _id = value; }
     
     private Guid _sprintId { get; init; }
-    private Guid SprintId { get => _sprintId; init => _sprintId = value; }
+    public Guid SprintId { get => _sprintId; init => _sprintId = value; }
     
     private string _title { get; set; }
     public string Title { get => _title; set => _title = value; }

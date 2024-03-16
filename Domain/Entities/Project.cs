@@ -5,7 +5,7 @@ namespace Domain.Entities;
 public class Project
 {
     private Guid _id { get; init; }
-    private Guid Id { get => _id; init => _id = value; }
+    public Guid Id { get => _id; init => _id = value; }
     
     private string _title { get; set; }
     public string Title { get => _title; set => _title = value; }
