@@ -1,9 +1,8 @@
 ﻿using System.Text;
-using Domain.Enums;
 
 namespace Domain.Entities;
 
-public class User
+public abstract class User
 {
     private Guid _id { get; init; }
     public Guid Id { get => _id; init => _id = value; }
@@ -17,22 +16,18 @@ public class User
     private string _password { get; set; }
     public string Password { get => _password; set => _password = value; }
     
-    private Role _role { get; set; }
-    public Role Role { get => _role; set => _role = value; }
-
     private DateTime? _updatedAt { get; set; }
     public DateTime? UpdatedAt { get => _updatedAt; set => _updatedAt = value; }
     
     private DateTime _createdAt { get; init; }
     public DateTime CreatedAt { get => _createdAt; init => _createdAt = value;}
 
-    public User(string name, string email, string password, Role role)
+    public User(string name, string email, string password)
     {
         Id = Guid.NewGuid();
         Name = name;
         Email = email;
         Password = password;
-        Role = role;
         CreatedAt = DateTime.Now;
     }
     
@@ -45,7 +40,6 @@ public class User
         sb.AppendLine($"Id: {_id}");
         sb.AppendLine($"Name: {_name}");
         sb.AppendLine($"Email: {_email}");
-        sb.AppendLine($"Role: {_role}");
         sb.AppendLine($"UpdatedAt: {_updatedAt}");
         sb.AppendLine($"CreatedAt: {_createdAt}");
         
