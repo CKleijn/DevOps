@@ -16,8 +16,8 @@ public class Release
     private string _tag { get; set; }
     public string Tag { get => _tag; set => _tag = value; }
     
-    private User _createdBy { get; set; }
-    public User CreatedBy { get => _createdBy; set => _createdBy = value; }
+    private User _createdBy { get; init; }
+    public User CreatedBy { get => _createdBy; init => _createdBy = value; }
 
     private DateTime? _updatedAt { get; set; }
     public DateTime? UpdatedAt { get => _updatedAt; set => _updatedAt = value; }

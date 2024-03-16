@@ -20,8 +20,8 @@ public class Report
     private ReportExtension _extension { get; set; }
     public ReportExtension Extension { get => _extension; set => _extension = value; }
     
-    private User _createdBy { get; set; }
-    public User CreatedBy { get => _createdBy; set => _createdBy = value; }
+    private User _createdBy { get; init; }
+    public User CreatedBy { get => _createdBy; init => _createdBy = value; }
 
     private DateTime? _updatedAt { get; set; }
     public DateTime? UpdatedAt { get => _updatedAt; set => _updatedAt = value; }
