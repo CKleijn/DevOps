@@ -25,8 +25,6 @@ namespace Domain.Entities
             _id = Guid.NewGuid();
             _name = name;
             _currentStatus = new InitialState(this);
-
-            Logger.DisplayCreatedAlert(nameof(Pipeline), _name);
         }
 
         public void ExecutePipeline()
