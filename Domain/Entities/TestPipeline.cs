@@ -12,8 +12,6 @@ namespace Domain.Entities
         protected override void Test()
         {
             // TODO: Forloop each test action
-            
-            Logger.DisplayCustomAlert(nameof(TestPipeline), nameof(Test), $"Testing... {Name}");
         }
     }
 }

@@ -15,12 +15,6 @@ public abstract class User
     
     private string _password { get; set; }
     public string Password { get => _password; set => _password = value; }
-    
-    private DateTime? _updatedAt { get; set; }
-    public DateTime? UpdatedAt { get => _updatedAt; set => _updatedAt = value; }
-    
-    private DateTime _createdAt { get; init; }
-    public DateTime CreatedAt { get => _createdAt; init => _createdAt = value;}
 
     public User(string name, string email, string password)
     {
@@ -28,7 +22,6 @@ public abstract class User
         Name = name;
         Email = email;
         Password = password;
-        CreatedAt = DateTime.Now;
     }
     
     //TODO: implement functions (Update observers, etc)
@@ -40,8 +33,6 @@ public abstract class User
         sb.AppendLine($"Id: {_id}");
         sb.AppendLine($"Name: {_name}");
         sb.AppendLine($"Email: {_email}");
-        sb.AppendLine($"UpdatedAt: {_updatedAt}");
-        sb.AppendLine($"CreatedAt: {_createdAt}");
         
         return sb.ToString();
     }
