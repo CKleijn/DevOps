@@ -19,7 +19,20 @@ namespace Domain.Entities
             Logger.DisplayCreatedAlert(nameof(Backlog), $"Backlog: {_id}");
         }
 
-        //TODO: implement functions
+        public void AddItemToBacklog(Item item)
+        {
+            _items.Add(item);
+
+            Logger.DisplayUpdatedAlert(nameof(Backlog), $"Added item: {item.Title}");
+        }
+
+        public void RemoveItemFromBacklog(Item item)
+        {
+            _items.Remove(item);
+
+            Logger.DisplayUpdatedAlert(nameof(Backlog), $"Removed item: {item.Title}");
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new();

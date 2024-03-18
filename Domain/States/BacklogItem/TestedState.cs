@@ -34,11 +34,19 @@ namespace Domain.States.BacklogItem
 
         public void FinalizeBacklogItem()
         {
+            if (_context.Activities.Count != 0 && _context.Activities.Any(activity => !activity.IsFinished))
+            {
+                Logger.DisplayCustomAlert(nameof(TestedState), nameof(FinalizeBacklogItem), "The backlog item can't be set to done when all activities aren't finished");
+                return;
+            }
+
             _context.PreviousStatus = this;
             _context.CurrentStatus = new DoneState(_context);
 
             Logger.DisplayCustomAlert(nameof(TestedState), nameof(FinalizeBacklogItem), "Backlog item status changed to done");
         }
+
+        public void ReceiveFeedback() => throw new NotImplementedException();
 
         public void CloseBacklogItem() => throw new NotImplementedException();
     }

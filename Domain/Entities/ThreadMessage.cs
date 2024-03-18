@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Domain.Helpers;
+using Domain.States.BacklogItem;
 
 namespace Domain.Entities
 {
@@ -13,8 +14,11 @@ namespace Domain.Entities
         { 
             get => _title; 
             set {
-                _title = value;
-                Logger.DisplayUpdatedAlert(nameof(Title), _title);
+                if (ValidateUpdate())
+                {
+                    _title = value;
+                    Logger.DisplayUpdatedAlert(nameof(Title), _title);
+                }
             } 
         }
 
@@ -24,35 +28,36 @@ namespace Domain.Entities
             get => _body;
             set
             {
-                _body = value;
-                Logger.DisplayUpdatedAlert(nameof(Body), _body);
+                if (ValidateUpdate())
+                {
+                    _body = value;
+                    Logger.DisplayUpdatedAlert(nameof(Body), _body);
+                }
             }
         }
 
-        private IList<ThreadMessage> _threadMessages { get; init; }
-        public IList<ThreadMessage> ThreadMessages { get => _threadMessages; init => _threadMessages = value; }
+        private Thread _thread { get; init; }
+        public Thread Thread { get => _thread; init => _thread = value; }
 
-        public ThreadMessage(string title, string body)
+        public ThreadMessage(string title, string body, Thread thread)
         {
             _id = Guid.NewGuid();
             _title = title;
             _body = body;
-            _threadMessages = new List<ThreadMessage>();
+            _thread = thread;
             
             Logger.DisplayCreatedAlert(nameof(ThreadMessage), _title);
         }
-        
-        public void AddThreadMessage(ThreadMessage threadMessage)
+
+        public bool ValidateUpdate()
         {
-            _threadMessages.Add(threadMessage);
-            
-            Logger.DisplayUpdatedAlert(nameof(ThreadMessages), $"Added: {threadMessage}");
-        }
-    
-        public void RemoveThreadMessage(ThreadMessage threadMessage)
-        {
-            _threadMessages.Remove(threadMessage);
-            Logger.DisplayUpdatedAlert(nameof(ThreadMessages), $"Removed: {threadMessage}");
+            if (_thread.Item.CurrentStatus.GetType() == typeof(ClosedState))
+            {
+                Logger.DisplayCustomAlert(nameof(ThreadMessage), nameof(ValidateUpdate), "Can't update message when thread is closed.");
+                return false;
+            }
+
+            return true;
         }
 
         public override string ToString()
@@ -62,7 +67,6 @@ namespace Domain.Entities
             sb.AppendLine($"Id: {_id}");
             sb.AppendLine($"Title: {_title}");
             sb.AppendLine($"Body: {_body}");
-            sb.AppendLine($"ThreadMessages: {_threadMessages.Count}");
 
             return sb.ToString();
         }

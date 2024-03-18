@@ -1,4 +1,5 @@
-﻿using Domain.Interfaces.Strategies;
+﻿using Domain.Helpers;
+using Domain.Interfaces.Strategies;
 
 namespace Infrastructure.Libraries.VersionControls
 {
@@ -6,31 +7,31 @@ namespace Infrastructure.Libraries.VersionControls
     {
         public GitLab()
         {
-            Console.WriteLine("GitLab integrated!");
+            Logger.DisplayCustomAlert(nameof(GitLab), null, "GitLab integrated!");
         }
 
         public void CloneRepo(string url)
         {
-            Console.WriteLine($"Clone GitLab repo from {url}...");
-            Console.WriteLine("Succesfully cloned GitLab repo!");
+            Logger.DisplayCustomAlert(nameof(GitLab), nameof(CloneRepo), $"Clone GitLab repo from {url}...");
+            Logger.DisplayCustomAlert(nameof(GitLab), nameof(CloneRepo), "Succesfully cloned GitLab repo!");
         }
 
         public void CommitChanges(string message)
         {
-            Console.WriteLine($"Commit ({message}) to GitLab repo...");
-            Console.WriteLine("Succesfully committed to GitLab repo!");
+            Logger.DisplayCustomAlert(nameof(GitLab), nameof(CommitChanges), $"Commit ({message}) to GitLab repo...");
+            Logger.DisplayCustomAlert(nameof(GitLab), nameof(CommitChanges), "Succesfully committed to GitLab repo!");
         }
 
         public void PullChanges()
         {
-            Console.WriteLine("Pull changes from GitLab repo...");
-            Console.WriteLine("Succesfully pulled changes from GitLab repo!");
+            Logger.DisplayCustomAlert(nameof(GitLab), nameof(PullChanges), "Pull changes from GitLab repo...");
+            Logger.DisplayCustomAlert(nameof(GitLab), nameof(PullChanges), "Succesfully pulled changes from GitLab repo!");
         }
 
         public void PushChanges()
         {
-            Console.WriteLine("Push changes to GitLab repo...");
-            Console.WriteLine("Succesfully pushed changed to GitLab repo!");
+            Logger.DisplayCustomAlert(nameof(GitLab), nameof(PushChanges), "Push changes to GitLab repo...");
+            Logger.DisplayCustomAlert(nameof(GitLab), nameof(PushChanges), "Succesfully pushed changed to GitLab repo!");
         }
     }
 }

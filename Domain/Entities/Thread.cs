@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Domain.Helpers;
+using Domain.States.BacklogItem;
 
 namespace Domain.Entities
 {
@@ -15,8 +16,11 @@ namespace Domain.Entities
             get => _subject;
             set
             {
-                _subject = value;
-                Logger.DisplayUpdatedAlert(nameof(Subject), _subject);
+                if (ValidateUpdate())
+                {
+                    _subject = value;
+                    Logger.DisplayUpdatedAlert(nameof(Subject), _subject);
+                }
             }
         }
 
@@ -27,34 +31,68 @@ namespace Domain.Entities
             get => _description; 
             set
             {
-                _description = value;
-                Logger.DisplayUpdatedAlert(nameof(Description), _description);
+                if (ValidateUpdate())
+                {
+                    _description = value;
+                    Logger.DisplayUpdatedAlert(nameof(Description), _description);
+                }
             }
         }
+
+        private Item _item { get; init; }
+        public Item Item { get => _item; init => _item = value; }
 
         private IList<ThreadMessage> _threadMessages { get; init; }
         public IList<ThreadMessage> ThreadMessages { get => _threadMessages; init => _threadMessages = value; }
 
-        public Thread(string title, string body)
+        public Thread(string title, string body, Item item)
         {
             _id = Guid.NewGuid();
             _subject = title;
             _description = body;
+            _item = item;
+            _threadMessages = new List<ThreadMessage>();
             
             Logger.DisplayCreatedAlert(nameof(Thread), _subject);
         }
         
         public void AddThreadMessage(ThreadMessage threadMessage)
         {
-            _threadMessages.Add(threadMessage);
-            
-            Logger.DisplayUpdatedAlert(nameof(ThreadMessages), $"Added: {threadMessage}");
+            if (_item.CurrentStatus.GetType() == typeof(ClosedState))
+            {
+                _threadMessages.Add(threadMessage);
+
+                Logger.DisplayUpdatedAlert(nameof(ThreadMessages), $"Added: {threadMessage}");
+            } 
+            else
+            {
+                Logger.DisplayCustomAlert(nameof(Thread), nameof(AddThreadMessage), "Can't add thread message when item status is closed.");
+            }
         }
     
         public void RemoveThreadMessage(ThreadMessage threadMessage)
         {
-            _threadMessages.Remove(threadMessage);
-            Logger.DisplayUpdatedAlert(nameof(ThreadMessages), $"Removed: {threadMessage}");
+            if (_item.CurrentStatus.GetType() == typeof(ClosedState))
+            {
+                _threadMessages.Remove(threadMessage);
+
+                Logger.DisplayUpdatedAlert(nameof(ThreadMessages), $"Removed: {threadMessage}");
+            }
+            else
+            {
+                Logger.DisplayCustomAlert(nameof(Thread), nameof(AddThreadMessage), "Can't remove thread message when item status is closed.");
+            }
+        }
+
+        public bool ValidateUpdate()
+        {
+            if (_item.CurrentStatus.GetType() == typeof(ClosedState))
+            {
+                Logger.DisplayCustomAlert(nameof(Thread), nameof(ValidateUpdate), "Can't update thread when item status is closed.");
+                return false;
+            }
+
+            return true;
         }
 
         public override string ToString()
@@ -64,6 +102,7 @@ namespace Domain.Entities
             sb.AppendLine($"Id: {_id}");
             sb.AppendLine($"Subject: {_subject}");
             sb.AppendLine($"Description: {_description}");
+            sb.AppendLine($"Item: {_item.ToString()}");
             sb.AppendLine($"ThreadMessages: {_threadMessages.Count}");
 
             return sb.ToString();

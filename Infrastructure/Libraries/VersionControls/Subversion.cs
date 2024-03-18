@@ -1,34 +1,36 @@
-﻿namespace Infrastructure.Libraries.VersionControls
+﻿using Domain.Helpers;
+
+namespace Infrastructure.Libraries.VersionControls
 {
     public class Subversion
     {
         public Subversion()
         {
-            Console.WriteLine("Subversion integrated!");
+            Logger.DisplayCustomAlert(nameof(Subversion), null, "Subversion integrated!");
         }
 
         public void CloneRepo(string url)
         {
-            Console.WriteLine($"Clone Subversion repo from {url}...");
-            Console.WriteLine("Succesfully cloned Subversion repo!");
+            Logger.DisplayCustomAlert(nameof(Subversion), nameof(CloneRepo), $"Clone Subversion repo from {url}...");
+            Logger.DisplayCustomAlert(nameof(Subversion), nameof(CloneRepo), "Succesfully cloned Subversion repo!");
         }
 
         public void CommitChanges(string message)
         {
-            Console.WriteLine($"Commit ({message}) to Subversion repo...");
-            Console.WriteLine("Succesfully committed to Subversion repo!");
+            Logger.DisplayCustomAlert(nameof(Subversion), nameof(CommitChanges), $"Commit ({message}) to Subversion repo...");
+            Logger.DisplayCustomAlert(nameof(Subversion), nameof(CommitChanges), "Succesfully committed to Subversion repo!");
         }
 
         public void PullChanges()
         {
-            Console.WriteLine("Pull changes from Subversion repo...");
-            Console.WriteLine("Succesfully pulled changes from Subversion repo!");
+            Logger.DisplayCustomAlert(nameof(Subversion), nameof(PullChanges), "Pull changes from Subversion repo...");
+            Logger.DisplayCustomAlert(nameof(Subversion), nameof(PullChanges), "Succesfully pulled changes from Subversion repo!");
         }
 
         public void PushChanges()
         {
-            Console.WriteLine("Push changes to Subversion repo...");
-            Console.WriteLine("Succesfully pushed changed to Subversion repo!");
+            Logger.DisplayCustomAlert(nameof(Subversion), nameof(PushChanges), "Push changes to Subversion repo...");
+            Logger.DisplayCustomAlert(nameof(Subversion), nameof(PushChanges), "Succesfully pushed changed to Subversion repo!");
         }
     }
 }

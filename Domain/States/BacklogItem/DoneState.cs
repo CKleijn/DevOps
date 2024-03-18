@@ -28,6 +28,14 @@ namespace Domain.States.BacklogItem
 
         public void FinalizeBacklogItem() => throw new NotImplementedException();
 
+        public void ReceiveFeedback()
+        {
+            _context.PreviousStatus = this;
+            _context.CurrentStatus = new TodoState(_context);
+
+            Logger.DisplayCustomAlert(nameof(DoneState), nameof(ReceiveFeedback), "Backlog item status changed to todo");
+        }
+
         public void CloseBacklogItem()
         {
             _context.PreviousStatus = this;

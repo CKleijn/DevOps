@@ -73,16 +73,15 @@ namespace Domain.Entities
             Logger.DisplayCreatedAlert(nameof(Activity), _title);
         }
 
-        //TODO: implement functions
         public bool ValidateUpdate()
         {
-            if (_item.CurrentStatus.GetType() != typeof(DoneState) || _item.CurrentStatus.GetType() != typeof(ClosedState))
+            if (_item.CurrentStatus.GetType() == typeof(DoneState) || _item.CurrentStatus.GetType() == typeof(ClosedState))
             {
-                return true;
+                Logger.DisplayCustomAlert(nameof(Activity), nameof(ValidateUpdate), "Can't update activity when item status is done or closed.");
+                return false;
             }
 
-            Logger.DisplayCustomAlert(nameof(Activity), nameof(ValidateUpdate), "Can't update activity when item status is done or closed.");
-            return false;
+            return true;
         }
 
         public override string ToString()
@@ -92,6 +91,7 @@ namespace Domain.Entities
             sb.AppendLine($"Id: {_id}");
             sb.AppendLine($"Title: {_title}");
             sb.AppendLine($"IsFinished: {_isFinished}");
+            sb.AppendLine($"Item: {_item.ToString()}");
             sb.AppendLine($"Developer: {_developer?.ToString()}");
 
             return sb.ToString();

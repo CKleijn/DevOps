@@ -1,4 +1,5 @@
-﻿using Domain.Interfaces.Strategies;
+﻿using Domain.Helpers;
+using Domain.Interfaces.Strategies;
 
 namespace Infrastructure.Libraries.VersionControls
 {
@@ -6,31 +7,31 @@ namespace Infrastructure.Libraries.VersionControls
     {
         public GitHub()
         {
-            Console.WriteLine("GitHub integrated!");
+            Logger.DisplayCustomAlert(nameof(GitHub), null, "GitHub integrated!");
         }
 
         public void CloneRepo(string url)
         {
-            Console.WriteLine($"Clone GitHub repo from {url}...");
-            Console.WriteLine("Succesfully cloned GitHub repo!");
+            Logger.DisplayCustomAlert(nameof(GitHub), nameof(CloneRepo), $"Clone GitHub repo from {url}...");
+            Logger.DisplayCustomAlert(nameof(GitHub), nameof(CloneRepo), "Succesfully cloned GitHub repo!");
         }
 
         public void CommitChanges(string message)
         {
-            Console.WriteLine($"Commit ({message}) to GitHub repo...");
-            Console.WriteLine("Succesfully committed to GitHub repo!");
+            Logger.DisplayCustomAlert(nameof(GitHub), nameof(CommitChanges), $"Commit ({message}) to GitHub repo...");
+            Logger.DisplayCustomAlert(nameof(GitHub), nameof(CommitChanges), "Succesfully committed to GitHub repo!");
         }
 
         public void PullChanges()
         {
-            Console.WriteLine("Pull changes from GitHub repo...");
-            Console.WriteLine("Succesfully pulled changes from GitHub repo!");
+            Logger.DisplayCustomAlert(nameof(GitHub), nameof(PullChanges), "Pull changes from GitHub repo...");
+            Logger.DisplayCustomAlert(nameof(GitHub), nameof(PullChanges), "Succesfully pulled changes from GitHub repo!");
         }
 
         public void PushChanges()
         {
-            Console.WriteLine("Push changes to GitHub repo...");
-            Console.WriteLine("Succesfully pushed changed to GitHub repo!");
+            Logger.DisplayCustomAlert(nameof(GitHub), nameof(PushChanges), "Push changes to GitHub repo...");
+            Logger.DisplayCustomAlert(nameof(GitHub), nameof(PushChanges), "Succesfully pushed changed to GitHub repo!");
         }
     }
 }

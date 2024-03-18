@@ -1,6 +1,7 @@
 ﻿using Domain.Helpers;
 using Domain.Interfaces.States;
 using Domain.States.BacklogItem;
+using System.Diagnostics;
 using System.Text;
 
 namespace Domain.Entities
@@ -48,7 +49,54 @@ namespace Domain.Entities
             Logger.DisplayCreatedAlert(nameof(Item), _title);
         }
 
-        //TODO: implement functions
+        public void AddThreadToItem(Thread thread)
+        {
+            if (_currentStatus.GetType() != typeof(DoneState) || _currentStatus.GetType() != typeof(ClosedState))
+            {
+                _threads.Add(thread);
+            }
+
+            Logger.DisplayUpdatedAlert(nameof(Item), $"Added: {thread.Subject}");
+        }
+
+        public void RemoveThreadToItem(Thread thread)
+        {
+            if (_currentStatus.GetType() != typeof(DoneState) || _currentStatus.GetType() != typeof(ClosedState))
+            {
+                _threads.Remove(thread);
+            }
+
+            Logger.DisplayUpdatedAlert(nameof(Item), $"Removed: {thread.Subject}");
+        }
+
+        public void AddActivityToItem(Activity activity) 
+        {
+            _activities.Add(activity);
+
+            Logger.DisplayUpdatedAlert(nameof(Item), $"Added: {activity.Title}");
+        }
+
+        public void RemovedActivityToItem(Activity activity)
+        {
+            _activities.Remove(activity);
+
+            Logger.DisplayUpdatedAlert(nameof(Item), $"Removed: {activity.Title}");
+        }
+
+        public void CloseItem()
+        {
+            if (_currentStatus.GetType() == typeof(DoneState))
+            {
+                return;
+            }
+
+            _currentStatus.CloseBacklogItem();
+
+            // Send notification to product owner
+
+            Logger.DisplayCustomAlert(nameof(Item), nameof(CloseItem), $"Closed: {_title}");
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new();

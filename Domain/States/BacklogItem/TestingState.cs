@@ -44,6 +44,8 @@ namespace Domain.States.BacklogItem
 
         public void FinalizeBacklogItem() => throw new NotImplementedException();
 
+        public void ReceiveFeedback() => throw new NotImplementedException();
+
         public void CloseBacklogItem() => throw new NotImplementedException();
     }
 }
