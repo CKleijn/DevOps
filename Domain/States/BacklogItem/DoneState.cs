@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Helpers;
 using Domain.Interfaces.States;
 
 namespace Domain.States.BacklogItem
@@ -32,7 +33,7 @@ namespace Domain.States.BacklogItem
             _context.PreviousStatus = this;
             _context.CurrentStatus = new ClosedState(_context);
 
-            Console.WriteLine("Backlog item status changed to closed");
+            Logger.DisplayCustomAlert(nameof(DoneState), nameof(CloseBacklogItem), "Backlog item status changed to closed");
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Domain.Interfaces.States;
+﻿using Domain.Helpers;
+using Domain.Interfaces.States;
 
 namespace Domain.States.Pipeline
 {
@@ -19,7 +20,7 @@ namespace Domain.States.Pipeline
             _context.PreviousStatus = this;
             _context.CurrentStatus = new CancelledState(_context);
 
-            Console.WriteLine("Pipeline status changed to cancelled");
+            Logger.DisplayCustomAlert(nameof(ExecutingState), nameof(CancelPipeline), "Pipeline status changed to cancelled");
         }
 
         public void FailPipeline()
@@ -27,7 +28,7 @@ namespace Domain.States.Pipeline
             _context.PreviousStatus = this;
             _context.CurrentStatus = new FailedState(_context);
 
-            Console.WriteLine("Pipeline status changed to failed");
+            Logger.DisplayCustomAlert(nameof(ExecutingState), nameof(FailPipeline), "Pipeline status changed to failed");
         }
 
         public void FinalizePipeline()
@@ -35,7 +36,7 @@ namespace Domain.States.Pipeline
             _context.PreviousStatus = this;
             _context.CurrentStatus = new FinishedState(_context);
 
-            Console.WriteLine("Pipeline status changed to finished");
+            Logger.DisplayCustomAlert(nameof(ExecutingState), nameof(FinalizePipeline), "Pipeline status changed to finished");
         }
     }
 }

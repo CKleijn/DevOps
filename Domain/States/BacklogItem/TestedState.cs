@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Helpers;
 using Domain.Interfaces.States;
 
 namespace Domain.States.BacklogItem
@@ -28,7 +29,7 @@ namespace Domain.States.BacklogItem
             _context.PreviousStatus = this;
             _context.CurrentStatus = new ReadyForTestingState(_context);
 
-            Console.WriteLine("Backlog item status changed to ready for testing");
+            Logger.DisplayCustomAlert(nameof(TestedState), nameof(DenyTestedBacklogItem), "Backlog item status changed to ready for testing");
         }
 
         public void FinalizeBacklogItem()
@@ -36,7 +37,7 @@ namespace Domain.States.BacklogItem
             _context.PreviousStatus = this;
             _context.CurrentStatus = new DoneState(_context);
 
-            Console.WriteLine("Backlog item status changed to done");
+            Logger.DisplayCustomAlert(nameof(TestedState), nameof(FinalizeBacklogItem), "Backlog item status changed to done");
         }
 
         public void CloseBacklogItem() => throw new NotImplementedException();

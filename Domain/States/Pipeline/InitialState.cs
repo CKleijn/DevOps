@@ -1,4 +1,5 @@
-﻿using Domain.Interfaces.States;
+﻿using Domain.Helpers;
+using Domain.Interfaces.States;
 
 namespace Domain.States.Pipeline
 {
@@ -17,7 +18,7 @@ namespace Domain.States.Pipeline
             _context.PreviousStatus = this;
             _context.CurrentStatus = new ExecutingState(_context);
 
-            Console.WriteLine("Pipeline status changed to executing");
+            Logger.DisplayCustomAlert(nameof(InitialState), nameof(ExecutePipeline), "Pipeline status changed to executing");
         }
 
         public void CancelPipeline() => throw new NotImplementedException();

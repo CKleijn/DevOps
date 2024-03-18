@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Helpers;
 using Domain.Interfaces.States;
 
 namespace Domain.States.BacklogItem
@@ -17,14 +18,14 @@ namespace Domain.States.BacklogItem
         {
             if (_context.PreviousStatus?.Context.Developer.Id != _context.Developer.Id)
             {
-                Console.WriteLine("The backlog item needs to be fixed by the same developer!");
+                Logger.DisplayCustomAlert(nameof(TodoState), nameof(DevelopBacklogItem), "The backlog item needs to be fixed by the same developer!");
                 return;
             }
 
             _context.PreviousStatus = this;
             _context.CurrentStatus = new DoingState(_context);
 
-            Console.WriteLine("Backlog item status changed to doing");
+            Logger.DisplayCustomAlert(nameof(TodoState), nameof(DevelopBacklogItem), "Backlog item status changed to doing");
         }
 
         public void FinalizeDevelopmentBacklogItem() => throw new NotImplementedException();

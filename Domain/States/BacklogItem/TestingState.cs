@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Helpers;
 using Domain.Interfaces.States;
 
 namespace Domain.States.BacklogItem
@@ -26,7 +27,7 @@ namespace Domain.States.BacklogItem
             _context.PreviousStatus = this;
             _context.CurrentStatus = new TodoState(_context);
 
-            Console.WriteLine("Backlog item status changed to todo");
+            Logger.DisplayCustomAlert(nameof(TestingState), nameof(DenyDevelopedBacklogItem), "Backlog item status changed to todo");
         }
 
         public void FinalizeTestingBacklogItem()
@@ -36,7 +37,7 @@ namespace Domain.States.BacklogItem
             _context.PreviousStatus = this;
             _context.CurrentStatus = new TestedState(_context);
 
-            Console.WriteLine("Backlog item status changed to tested");
+            Logger.DisplayCustomAlert(nameof(TestingState), nameof(FinalizeTestingBacklogItem), "Backlog item status changed to tested");
         }
 
         public void DenyTestedBacklogItem() => throw new NotImplementedException();

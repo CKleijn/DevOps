@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Helpers;
 using Domain.Interfaces.States;
 
 namespace Domain.States.BacklogItem
@@ -22,7 +23,7 @@ namespace Domain.States.BacklogItem
             _context.PreviousStatus = this;
             _context.CurrentStatus = new TestingState(_context);
 
-            Console.WriteLine("Backlog item status changed to testing");
+            Logger.DisplayCustomAlert(nameof(ReadyForTestingState), nameof(TestingBacklogItem), "Backlog item status changed to testing");
         }
 
         public void DenyDevelopedBacklogItem() => throw new NotImplementedException();
