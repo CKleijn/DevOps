@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Domain.Helpers;
+using System.Text;
 
 namespace Domain.Entities
 {
@@ -10,17 +11,12 @@ namespace Domain.Entities
         private IList<Item> _items { get; init; }
         public IList<Item> Items { get => _items; init => _items = value; }
 
-        private DateTime? _updatedAt { get; set; }
-        public DateTime? UpdatedAt { get => _updatedAt; set => _updatedAt = value; }
-
-        private DateTime _createdAt { get; init; }
-        public DateTime CreatedAt { get => _createdAt; init => _createdAt = value; }
-
         public Backlog()
         {
             _id = Guid.NewGuid();
             _items = new List<Item>();
-            _createdAt = DateTime.Now;
+
+            Logger.DisplayCreatedAlert(nameof(Backlog), $"Backlog: {_id}");
         }
 
         //TODO: implement functions
@@ -30,8 +26,6 @@ namespace Domain.Entities
 
             sb.AppendLine($"Id: {_id}");
             sb.AppendLine($"Items: {_items.Count}");
-            sb.AppendLine($"UpdatedAt: {_updatedAt}");
-            sb.AppendLine($"CreatedAt: {_createdAt}");
 
             return sb.ToString();
         }

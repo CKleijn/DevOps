@@ -1,4 +1,5 @@
-﻿using Domain.Interfaces.States;
+﻿using Domain.Helpers;
+using Domain.Interfaces.States;
 using Domain.States.Pipeline;
 using System.Text;
 
@@ -19,22 +20,13 @@ namespace Domain.Entities
         private IPipelineState _currentStatus { get; set; }
         public IPipelineState CurrentStatus { get => _currentStatus; set => _currentStatus = value; }
 
-        private User _creator { get; init; }
-        public User Creator { get => _creator; init => _creator = value; }
-
-        private DateTime? _updatedAt { get; set; }
-        public DateTime? UpdatedAt { get => _updatedAt; set => _updatedAt = value; }
-
-        private DateTime _createdAt { get; init; }
-        public DateTime CreatedAt { get => _createdAt; init => _createdAt = value; }
-
-        public Pipeline(string name, User creator)
+        public Pipeline(string name)
         {
             _id = Guid.NewGuid();
             _name = name;
             _currentStatus = new InitialState(this);
-            _creator = creator;
-            _createdAt = DateTime.Now;
+
+            Logger.DisplayCreatedAlert(nameof(Pipeline), _name);
         }
 
         public void ExecutePipeline()
@@ -48,8 +40,8 @@ namespace Domain.Entities
 
         private void Start()
         {
-            Console.WriteLine("Start pipeline...");
-            Console.WriteLine("Pipeline started!");
+            Logger.DisplayCustomAlert(nameof(Pipeline), nameof(Start), $"Start pipeline {_name} ...");
+            Logger.DisplayCustomAlert(nameof(Pipeline), nameof(Start), $"Pipeline {_name} started!");
         }
 
         private void Build()
@@ -69,8 +61,8 @@ namespace Domain.Entities
 
         private void Finish()
         {
-            Console.WriteLine("Finish pipeline...");
-            Console.WriteLine("Pipeline finished!");
+            Logger.DisplayCustomAlert(nameof(Pipeline), nameof(Finish), $"Finish pipeline {_name} ...");
+            Logger.DisplayCustomAlert(nameof(Pipeline), nameof(Finish), $"Pipeline {_name} finished!");
         }
 
         public override string ToString()
@@ -81,9 +73,6 @@ namespace Domain.Entities
             sb.AppendLine($"Name: {_name}");
             sb.AppendLine($"PreviousStatus: {_previousStatus?.GetType().Name}");
             sb.AppendLine($"CurrentStatus: {_currentStatus.GetType().Name}");
-            sb.AppendLine($"Creator: {_creator.ToString()}");
-            sb.AppendLine($"UpdatedAt: {_updatedAt}");
-            sb.AppendLine($"CreatedAt: {_createdAt}");
 
             return sb.ToString();
         }

@@ -1,7 +1,12 @@
-﻿namespace Domain.Entities
+﻿using Domain.Helpers;
+
+namespace Domain.Entities
 {
     public class Developer : User
     {
-        public Developer(string name, string email, string password) : base(name, email, password) { }
+        public Developer(string name, string email, string password) : base(name, email, password) 
+        {
+            Logger.DisplayCreatedAlert(nameof(Developer), name);
+        }
     }
 }

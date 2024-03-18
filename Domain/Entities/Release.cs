@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Domain.Helpers;
+using System.Text;
 
 namespace Domain.Entities;
 
@@ -16,23 +17,14 @@ public class Release
     private string _tag { get; set; }
     public string Tag { get => _tag; set => _tag = value; }
     
-    private User _createdBy { get; init; }
-    public User CreatedBy { get => _createdBy; init => _createdBy = value; }
-
-    private DateTime? _updatedAt { get; set; }
-    public DateTime? UpdatedAt { get => _updatedAt; set => _updatedAt = value; }
-    
-    private DateTime _createdAt { get; init; }
-    public DateTime CreatedAt { get => _createdAt; init => _createdAt = value;}
-    
-    public Release(Guid sprintId, Guid pipelineId, string tag, User creator)
+    public Release(Guid sprintId, Guid pipelineId, string tag)
     {
         _id = Guid.NewGuid();
         _sprintId = sprintId;
         _pipelineId = pipelineId;
         _tag = tag;
-        _createdBy = creator;
-        _createdAt = DateTime.Now;
+
+        Logger.DisplayCreatedAlert(nameof(Release), $"Sprint: {_id}");
     }
     
     //TODO: implement further functions
@@ -45,9 +37,6 @@ public class Release
         sb.AppendLine($"SprintId: {_sprintId}");
         sb.AppendLine($"PipelineId: {_pipelineId}");
         sb.AppendLine($"Tag: {_tag}");
-        sb.AppendLine($"Creator: {_createdBy.ToString()}");
-        sb.AppendLine($"UpdatedAt: {_updatedAt}");
-        sb.AppendLine($"CreatedAt: {_createdAt}");
 
         return sb.ToString();
     }

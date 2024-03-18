@@ -17,7 +17,7 @@ namespace Domain.Entities
                 if (ValidateUpdate())
                 {
                     _title = value;
-                    Logger.ShowUpdatedAlert(nameof(Title), _title);
+                    Logger.DisplayUpdatedAlert(nameof(Title), _title);
                 }
             } 
         }
@@ -30,7 +30,7 @@ namespace Domain.Entities
                 if (ValidateUpdate())
                 {
                     _isFinished = value;
-                    Logger.ShowUpdatedAlert(nameof(IsFinished), _title);
+                    Logger.DisplayUpdatedAlert(nameof(IsFinished), _title);
                 }
             } 
         }
@@ -47,7 +47,7 @@ namespace Domain.Entities
                 if (ValidateUpdate())
                 {
                     _developer = value;
-                    Logger.ShowUpdatedAlert(nameof(Developer), _title);
+                    Logger.DisplayUpdatedAlert(nameof(Developer), _title);
                 }
             } 
         }
@@ -60,7 +60,7 @@ namespace Domain.Entities
             _item = item;
             _developer = developer;
 
-            Logger.ShowCreatedAlert(nameof(Activity), _title);
+            Logger.DisplayCreatedAlert(nameof(Activity), _title);
         }
 
         public Activity(string title, Item item)
@@ -70,7 +70,7 @@ namespace Domain.Entities
             _isFinished = false;
             _item = item;
 
-            Logger.ShowCreatedAlert(nameof(Activity), _title);
+            Logger.DisplayCreatedAlert(nameof(Activity), _title);
         }
 
         //TODO: implement functions
@@ -81,7 +81,7 @@ namespace Domain.Entities
                 return true;
             }
 
-            Console.WriteLine("Can't update activity when item status is done or closed.");
+            Logger.DisplayCustomAlert(nameof(Activity), nameof(ValidateUpdate), "Can't update activity when item status is done or closed.");
             return false;
         }
 

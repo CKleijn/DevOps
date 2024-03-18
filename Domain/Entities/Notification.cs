@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Domain.Enums;
+using Domain.Helpers;
 
 namespace Domain.Entities;
 
@@ -23,12 +24,6 @@ public class Notification
     private List<NotificationProvider> _destinationTypes { get; set; }
     public List<NotificationProvider> DestinationTypes { get => _destinationTypes; set => _destinationTypes = value; }
     
-    private DateTime? _updatedAt { get; set; }
-    public DateTime? UpdatedAt { get => _updatedAt; set => _updatedAt = value; }
-    
-    private DateTime _createdAt { get; init; }
-    public DateTime CreatedAt { get => _createdAt; init => _createdAt = value;}
-    
     public Notification(string title, string body, bool status)
     {
         _id = Guid.NewGuid();
@@ -37,17 +32,22 @@ public class Notification
         _status = status;
         _targetUsers = new List<User>();
         _destinationTypes = new List<NotificationProvider>();
-        _createdAt = DateTime.Now;
+
+        Logger.DisplayCreatedAlert(nameof(Notification), _title);
     }
     
     public void AddTargetUser(User user)
     {
         _targetUsers.Add(user);
+
+        Logger.DisplayUpdatedAlert(nameof(Notification), $"Added: {user}");
     }
     
     public void AddDestinationType(NotificationProvider destinationType)
     {
         _destinationTypes.Add(destinationType);
+
+        Logger.DisplayUpdatedAlert(nameof(Notification), $"Added: {destinationType}");
     }
     
     //TODO: implement further functions
@@ -60,8 +60,6 @@ public class Notification
         sb.AppendLine($"Title: {_title}");
         sb.AppendLine($"Body: {_body}");
         sb.AppendLine($"Status: {_status}");
-        sb.AppendLine($"UpdatedAt: {_updatedAt}");
-        sb.AppendLine($"CreatedAt: {_createdAt}");
         
         return sb.ToString();
     }
