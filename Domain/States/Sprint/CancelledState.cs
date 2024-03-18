@@ -12,28 +12,13 @@ public class CancelledState : ISprintState
         _context = context;
     }
     
-    public void ExecuteSprint()
-    {
-        throw new NotImplementedException();
-    }
+    public void ExecuteSprint() => throw new NotImplementedException();
 
-    public void FinishSprint()
-    {
-        throw new NotImplementedException();
-    }
+    public void FinishSprint() => throw new NotImplementedException(); //TODO: can finish sprint be reactivated?
 
-    public void ReleaseSprint()
-    {
-        throw new NotImplementedException();
-    }
+    public void ReleaseSprint() => throw new NotImplementedException();
 
-    public void ReviewSprint()
-    {
-        throw new NotImplementedException();
-    }
+    public void ReviewSprint() => throw new NotImplementedException();
 
-    public void CancelSprint()
-    {
-        throw new NotImplementedException();
-    }
+    public void CancelSprint() => throw new NotImplementedException();
 }

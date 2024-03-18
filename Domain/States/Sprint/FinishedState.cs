@@ -1,4 +1,6 @@
-﻿using Domain.Interfaces.States;
+﻿using Domain.Entities;
+using Domain.Helpers;
+using Domain.Interfaces.States;
 
 namespace Domain.States.Sprint;
 
@@ -12,28 +14,44 @@ public class FinishedState : ISprintState
         _context = context;
     }
 
-    public void ExecuteSprint()
-    {
-        throw new NotImplementedException();
-    }
+    public void ExecuteSprint() => throw new NotImplementedException();
 
-    public void FinishSprint()
-    {
-        throw new NotImplementedException();
-    }
+    public void FinishSprint() => throw new NotImplementedException();
 
-    public void ReleaseSprint()
+    public void ReleaseSprint() 
     {
-        throw new NotImplementedException();
+        if (_context is not SprintRelease)
+        {
+            return;
+        }
+        
+        //TODO: add conditionals, are "results" good enough?
+        //if not CancelSprint()
+        
+        _context.CurrentStatus = new ReviewState(_context);
+        
+        Logger.DisplayCustomAlert(nameof(FinishedState), nameof(ReleaseSprint), "Sprint status changed to releasing");
     }
 
     public void ReviewSprint()
     {
-        throw new NotImplementedException();
+        if (_context is not SprintReview)
+        {
+            return;
+        }
+        
+        //TODO: add conditionals, are "results" good enough?
+        //if not CancelSprint()
+        
+        _context.CurrentStatus = new ReviewState(_context);
+        
+        Logger.DisplayCustomAlert(nameof(FinishedState), nameof(ReviewSprint), "Sprint status changed to reviewing");
     }
 
     public void CancelSprint()
     {
-        throw new NotImplementedException();
+        _context.CurrentStatus = new CancelledState(_context);
+        
+        Logger.DisplayCustomAlert(nameof(FinishedState), nameof(CancelSprint), "Sprint status changed to cancelling");
     }
 }

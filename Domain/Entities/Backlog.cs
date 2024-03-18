@@ -19,7 +19,7 @@ namespace Domain.Entities
             Logger.DisplayCreatedAlert(nameof(Backlog), $"Backlog: {_id}");
         }
 
-        public void AddItemToBacklog(Item item)
+        public virtual void AddItemToBacklog(Item item)
         {
             _items.Add(item);
 

@@ -29,13 +29,13 @@ public class SprintReview : Sprint
     public void AddReview(Review review)
     {
         _reviews.Add(review);
-        Logger.DisplayUpdatedAlert(nameof(Reviews), $"Added: {review}");
+        Logger.DisplayUpdatedAlert(nameof(Reviews), $"Added review with an id of: {review}");
     }
     
     public void RemoveReview(Review review)
     {
         _reviews.Remove(review);
-        Logger.DisplayUpdatedAlert(nameof(Reviews), $"Removed: {review}");
+        Logger.DisplayUpdatedAlert(nameof(Reviews), $"Removed review with an id of: {review}");
     }
 
     public override string ToString()

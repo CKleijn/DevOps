@@ -62,7 +62,7 @@ namespace Domain.Entities
             {
                 _threadMessages.Add(threadMessage);
 
-                Logger.DisplayUpdatedAlert(nameof(ThreadMessages), $"Added: {threadMessage}");
+                Logger.DisplayUpdatedAlert(nameof(ThreadMessages), $"Added: {threadMessage.Title}");
             } 
             else
             {
@@ -76,7 +76,7 @@ namespace Domain.Entities
             {
                 _threadMessages.Remove(threadMessage);
 
-                Logger.DisplayUpdatedAlert(nameof(ThreadMessages), $"Removed: {threadMessage}");
+                Logger.DisplayUpdatedAlert(nameof(ThreadMessages), $"Removed: {threadMessage.Title}");
             }
             else
             {

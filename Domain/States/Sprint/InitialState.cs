@@ -1,4 +1,5 @@
-﻿using Domain.Interfaces.States;
+﻿using Domain.Helpers;
+using Domain.Interfaces.States;
 
 namespace Domain.States.Sprint;
 
@@ -11,29 +12,19 @@ public class InitialState : ISprintState
     {
         _context = context;
     }
-    
+
     public void ExecuteSprint()
     {
-        throw new NotImplementedException();
+        _context.CurrentStatus = new ExecutedState(_context);
+        
+        Logger.DisplayCustomAlert(nameof(InitialState), nameof(ExecuteSprint), "Sprint status changed to executing");
     }
 
-    public void FinishSprint()
-    {
-        throw new NotImplementedException();
-    }
+    public void FinishSprint() => throw new NotImplementedException();
 
-    public void ReleaseSprint()
-    {
-        throw new NotImplementedException();
-    }
+    public void ReleaseSprint() => throw new NotImplementedException();
 
-    public void ReviewSprint()
-    {
-        throw new NotImplementedException();
-    }
+    public void ReviewSprint() => throw new NotImplementedException();
 
-    public void CancelSprint()
-    {
-        throw new NotImplementedException();
-    }
+    public void CancelSprint() => throw new NotImplementedException();
 }

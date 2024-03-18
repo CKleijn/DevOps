@@ -113,7 +113,7 @@ public abstract class Sprint
         _developers = new List<Developer>();
         _currentStatus = new InitialState(this);
         _reports = new List<Report>();
-        _sprintBacklog = new SprintBacklog();
+        _sprintBacklog = new SprintBacklog(this);
     }
     
     //TODO: add state functions
@@ -124,7 +124,7 @@ public abstract class Sprint
         
         _developers.Add(developer);
         
-        Logger.DisplayUpdatedAlert(nameof(Developers), $"Added: {developer}");
+        Logger.DisplayUpdatedAlert(nameof(Developers), $"Added: {developer.Name}");
     }
     
     public void RemoveDeveloper(Developer developer)
@@ -134,7 +134,7 @@ public abstract class Sprint
         
         _developers.Remove(developer);
         
-        Logger.DisplayUpdatedAlert(nameof(Developers), $"Removed: {developer}");
+        Logger.DisplayUpdatedAlert(nameof(Developers), $"Removed: {developer.Name}");
     }
     
     public void AddReport(Report report)
@@ -144,7 +144,7 @@ public abstract class Sprint
         
         _reports.Add(report);
         
-        Logger.DisplayUpdatedAlert(nameof(Reports), $"Added: {report}");
+        Logger.DisplayUpdatedAlert(nameof(Reports), $"Added: {report.Title}");
     }
     
     public void RemoveReport(Report report)
@@ -154,8 +154,18 @@ public abstract class Sprint
         
         _reports.Remove(report);
         
-        Logger.DisplayUpdatedAlert(nameof(Reports), $"Removed: {report}");
+        Logger.DisplayUpdatedAlert(nameof(Reports), $"Removed: {report.Title}");
     }
+    
+    //** Start State functions **//
+
+    public void ExecuteSprint() => _currentStatus.ExecuteSprint();
+    public void FinishSprint() => _currentStatus.FinishSprint();
+    public void ReleaseSprint() => _currentStatus.ReleaseSprint();
+    public void ReviewSprint() => _currentStatus.ReviewSprint();
+    public void CancelSprint() => _currentStatus.ReviewSprint();
+    
+    //** End State functions **//
     
     private bool ValidateChange()
     {

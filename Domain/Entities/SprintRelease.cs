@@ -25,13 +25,13 @@ public class SprintRelease : Sprint
     public void AddRelease(Release release)
     {
         _releases.Add(release);
-        Logger.DisplayUpdatedAlert(nameof(Releases), $"Added: {release}");
+        Logger.DisplayUpdatedAlert(nameof(Releases), $"Added release with an id of: {release.Id}");
     }
     
     public void RemoveRelease(Release release)
     {
         _releases.Remove(release);
-        Logger.DisplayUpdatedAlert(nameof(Releases), $"Removed: {release}");
+        Logger.DisplayUpdatedAlert(nameof(Releases), $"Removed release with an id of: {release.Id}");
     }
     
     public override string ToString()
