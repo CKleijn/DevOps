@@ -9,15 +9,15 @@ var app = builder.Build();
 
 app.MapGet("/", () =>
 {
-    var productOwner = new ProductOwner("John Doe", "johndoe@gmail.com", "Password");
-    var project = new Project("Project1", "Description1", productOwner, new GitHub(), productOwner);
-    project.VersionControl.CloneRepo("https://github.com/CKleijn/SOFA3-DevOps.git");
+    //var productOwner = new ProductOwner("John Doe", "johndoe@gmail.com", "Password");
+    //var project = new Project("Project1", "Description1", productOwner, new GitHub(), productOwner);
+    //project.VersionControl.CloneRepo("https://github.com/CKleijn/SOFA3-DevOps.git");
 
-    var developer = new Developer("Kevin", "kevin@test.com", "Password");
+    //var developer = new Developer("Kevin", "kevin@test.com", "Password");
 
-    var activity = new Activity("Activity 1", new Item("Test", "Test", developer, developer, 5), developer);
+    //var activity = new Activity("Activity 1", new Item("Test", "Test", developer, developer, 5), developer);
 
-    return activity.ToString();
+    //return activity.ToString();
     
     //Factory test
     //var developer = new Developer("Kevin", "kevin@test.com", "Password");

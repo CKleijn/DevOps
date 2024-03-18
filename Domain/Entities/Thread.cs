@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Domain.Helpers;
 
 namespace Domain.Entities
 {
@@ -8,30 +9,52 @@ namespace Domain.Entities
         public Guid Id { get => _id; init => _id = value; }
 
         private string _subject { get; set; }
-        public string Subject { get => _subject; set => _subject = value; }
+
+        public string Subject
+        {
+            get => _subject;
+            set
+            {
+                _subject = value;
+                Logger.DisplayUpdatedAlert(nameof(Subject), _subject);
+            }
+        }
 
         private string _description { get; set; }
-        public string Description { get => _description; set => _description = value; }
 
-        private User _creator { get; init; }
-        public User Creator { get => _creator; init => _creator = value; }
+        public string Description
+        {
+            get => _description; 
+            set
+            {
+                _description = value;
+                Logger.DisplayUpdatedAlert(nameof(Description), _description);
+            }
+        }
 
         private IList<ThreadMessage> _threadMessages { get; init; }
         public IList<ThreadMessage> ThreadMessages { get => _threadMessages; init => _threadMessages = value; }
 
-        private DateTime? _updatedAt { get; set; }
-        public DateTime? UpdatedAt { get => _updatedAt; set => _updatedAt = value; }
-
-        private DateTime _createdAt { get; init; }
-        public DateTime CreatedAt { get => _createdAt; init => _createdAt = value; }
-
-        public Thread(string title, string body, User creator)
+        public Thread(string title, string body)
         {
             _id = Guid.NewGuid();
             _subject = title;
             _description = body;
-            _creator = creator;
-            _createdAt = DateTime.Now;
+            
+            Logger.DisplayCreatedAlert(nameof(Thread), _subject);
+        }
+        
+        public void AddThreadMessage(ThreadMessage threadMessage)
+        {
+            _threadMessages.Add(threadMessage);
+            
+            Logger.DisplayUpdatedAlert(nameof(ThreadMessages), $"Added: {threadMessage}");
+        }
+    
+        public void RemoveThreadMessage(ThreadMessage threadMessage)
+        {
+            _threadMessages.Remove(threadMessage);
+            Logger.DisplayUpdatedAlert(nameof(ThreadMessages), $"Removed: {threadMessage}");
         }
 
         public override string ToString()
@@ -41,10 +64,7 @@ namespace Domain.Entities
             sb.AppendLine($"Id: {_id}");
             sb.AppendLine($"Subject: {_subject}");
             sb.AppendLine($"Description: {_description}");
-            sb.AppendLine($"Creator: {_creator.ToString()}");
             sb.AppendLine($"ThreadMessages: {_threadMessages.Count}");
-            sb.AppendLine($"UpdatedAt: {_updatedAt}");
-            sb.AppendLine($"CreatedAt: {_createdAt}");
 
             return sb.ToString();
         }

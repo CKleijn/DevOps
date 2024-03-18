@@ -1,3 +1,4 @@
+using Domain.Helpers;
 using Domain.Interfaces.States;
 using Domain.States.Sprint;
 
@@ -17,6 +18,7 @@ public abstract class Sprint
             if (ValidateChange())
             {
                 _title = value;
+                Logger.DisplayUpdatedAlert(nameof(Title), _title);
             }
         }
     }
@@ -30,6 +32,7 @@ public abstract class Sprint
             if (ValidateChange())
             {
                 _startDate = value;
+                Logger.DisplayUpdatedAlert(nameof(StartDate), _startDate.ToString());
             }
         }
     }
@@ -43,6 +46,7 @@ public abstract class Sprint
             if (ValidateChange())
             {
                 _endDate = value;
+                Logger.DisplayUpdatedAlert(nameof(EndDate), _endDate.ToString());
             }
         }
     }
@@ -50,16 +54,31 @@ public abstract class Sprint
     private SprintBacklog _sprintBacklog { get; init; }
     public SprintBacklog SprintBacklog { get => _sprintBacklog; init => _sprintBacklog = value; }
     
-    private ISprintState _status { get; set; }
-
-    public ISprintState Status
+    private ISprintState? _previousStatus { get; set; }
+    public ISprintState? PreviousStatus
     {
-        get => _status;
+        get => _previousStatus;
         set
         {
             if (ValidateChange())
             {
-                _status = value;
+                _previousStatus = value;
+                Logger.DisplayUpdatedAlert(nameof(PreviousStatus), _previousStatus!.GetType().ToString());
+            }
+        }
+    }
+    
+    private ISprintState _currentStatus { get; set; }
+    public ISprintState CurrentStatus
+    {
+        get => _currentStatus;
+        set
+        {
+            if (ValidateChange())
+            {
+                _previousStatus = _currentStatus;
+                _currentStatus = value;
+                Logger.DisplayUpdatedAlert(nameof(CurrentStatus), _currentStatus.GetType().ToString());
             }
         }
     }
@@ -75,7 +94,8 @@ public abstract class Sprint
         {
             if (ValidateChange())
             {
-                _createdBy = value;
+                _scrumMaster = value;
+                Logger.DisplayUpdatedAlert(nameof(ScrumMaster), _scrumMaster.ToString());
             }
         } 
     }
@@ -83,39 +103,17 @@ public abstract class Sprint
     private IList<Developer> _developers { get; init; }
     public IList<Developer> Developers { get => _developers; init => _developers = value; }
     
-    private User _createdBy { get; set; }
-
-    public User CreatedBy
-    {
-        get => _createdBy;
-        set
-        {
-            if (ValidateChange())
-            {
-                _createdBy = value;
-            }
-        }
-    }
-
-    private DateTime? _updatedAt { get; set; }
-    public DateTime? UpdatedAt { get => _updatedAt; set => _updatedAt = value; }
-    
-    private DateTime _createdAt { get; init; }
-    public DateTime CreatedAt { get => _createdAt; init => _createdAt = value; }
-    
-    public Sprint(string title, DateTime startDate, DateTime endDate, User createdBy, User scrumMaster)
+    public Sprint(string title, DateTime startDate, DateTime endDate, User scrumMaster)
     {
         _id = Guid.NewGuid();
         _title = title;
         _startDate = startDate;
         _endDate = endDate;
-        _createdBy = createdBy;
         _scrumMaster = scrumMaster;
         _developers = new List<Developer>();
-        _status = new InitialState(this);
+        _currentStatus = new InitialState(this);
         _reports = new List<Report>();
         _sprintBacklog = new SprintBacklog();
-        _createdAt = DateTime.Now;
     }
     
     //TODO: add state functions
@@ -125,6 +123,8 @@ public abstract class Sprint
             return;
         
         _developers.Add(developer);
+        
+        Logger.DisplayUpdatedAlert(nameof(Developers), $"Added: {developer}");
     }
     
     public void RemoveDeveloper(Developer developer)
@@ -133,6 +133,8 @@ public abstract class Sprint
             return;
         
         _developers.Remove(developer);
+        
+        Logger.DisplayUpdatedAlert(nameof(Developers), $"Removed: {developer}");
     }
     
     public void AddReport(Report report)
@@ -141,6 +143,8 @@ public abstract class Sprint
             return;
         
         _reports.Add(report);
+        
+        Logger.DisplayUpdatedAlert(nameof(Reports), $"Added: {report}");
     }
     
     public void RemoveReport(Report report)
@@ -149,13 +153,16 @@ public abstract class Sprint
             return;
         
         _reports.Remove(report);
+        
+        Logger.DisplayUpdatedAlert(nameof(Reports), $"Removed: {report}");
     }
     
     private bool ValidateChange()
     {
-        if (_status.GetType() == typeof(ReleaseState) || _status.GetType() == typeof(FinishedState))
+        //Don't allow mutation whenever state differs from the initial state
+        if (_currentStatus.GetType() != typeof(InitialState))
         {
-            Console.WriteLine("Can't update sprint in current state.");
+            Logger.DisplayCustomAlert(nameof(Sprint), nameof(ValidateChange), $"Can't update sprint in current state ({_currentStatus.GetType()}).");
             return false;
         }
         
@@ -165,18 +172,23 @@ public abstract class Sprint
             //Check if sprint is a sprint review and has reviews
             if (this is SprintReview { Reviews.Count: 0 })
             {
-                Console.WriteLine("Can't finish sprint review without any reviews. Provide at least one review.");
+                Logger.DisplayCustomAlert(nameof(Sprint), nameof(ValidateChange), $"Can't finish sprint review without any reviews. Provide at least one review.");
+                
+                //Set sprint to review state if it isn't already
+                if(_currentStatus.GetType() != typeof(ReviewState))
+                    _currentStatus = new ReviewState(this);
+                
                 return false;
             }
             
             //Execute sprint
             Execute();
             
-            //Set sprint to close if it isn't already
-            if(_status.GetType() != typeof(FinishedState))
-                _status = new FinishedState(this);
+            //Set sprint to finished state if it isn't already
+            if(_currentStatus.GetType() != typeof(FinishedState))
+                _currentStatus = new FinishedState(this);
             
-            Console.WriteLine("Can't update sprint after end date. Sprint will be set to close if it isn't already.");
+            Logger.DisplayCustomAlert(nameof(Sprint), nameof(ValidateChange), $"Can't update sprint after end date. Sprint will be set to close if it isn't already.");
             
             return false;
         }

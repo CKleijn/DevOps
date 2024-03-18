@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Domain.Helpers;
 
 namespace Domain.Entities;
 
@@ -9,26 +10,28 @@ public class SprintRelease : Sprint
     
     //TODO: implement functions
 
-    public SprintRelease(string title, DateTime startDate, DateTime endDate, User createdBy, User scrumMaster) : base(title, startDate, endDate, createdBy, scrumMaster)
+    public SprintRelease(string title, DateTime startDate, DateTime endDate, User scrumMaster) : base(title, startDate, endDate, scrumMaster)
     {
         _releases = new List<Release>();   
-        Console.WriteLine("Sprint with release type initialized.");
+        
+        Logger.DisplayCreatedAlert(nameof(SprintRelease), Title);
     }
     
     public override void Execute()
     {
-        Console.WriteLine($"Execute Sprint ({Title}) with release type");
+        Logger.DisplayCustomAlert(nameof(SprintRelease), nameof(Execute), $"Execute Sprint ({Title}).");
     }
-
     
     public void AddRelease(Release release)
     {
         _releases.Add(release);
+        Logger.DisplayUpdatedAlert(nameof(Releases), $"Added: {release}");
     }
     
     public void RemoveRelease(Release release)
     {
         _releases.Remove(release);
+        Logger.DisplayUpdatedAlert(nameof(Releases), $"Removed: {release}");
     }
     
     public override string ToString()
@@ -38,9 +41,8 @@ public class SprintRelease : Sprint
         sb.AppendLine($"Sprint Release: {Title}");
         sb.AppendLine($"Start Date: {StartDate}");
         sb.AppendLine($"End Date: {EndDate}");
-        sb.AppendLine($"Created By: {CreatedBy}");
         sb.AppendLine($"Scrum Master: {ScrumMaster}");
-        sb.AppendLine($"Status: {Status.GetType()}");
+        sb.AppendLine($"Status: {CurrentStatus.GetType()}");
         sb.AppendLine($"Releases: {Releases.Count}");
         
         return sb.ToString();
