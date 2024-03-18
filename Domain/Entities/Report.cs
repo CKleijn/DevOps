@@ -1,5 +1,7 @@
 ﻿using System.Text;
+using System.Xml.Linq;
 using Domain.Enums;
+using Domain.Helpers;
 
 namespace Domain.Entities;
 
@@ -20,24 +22,15 @@ public class Report
     private ReportExtension _extension { get; set; }
     public ReportExtension Extension { get => _extension; set => _extension = value; }
     
-    private User _createdBy { get; init; }
-    public User CreatedBy { get => _createdBy; init => _createdBy = value; }
-
-    private DateTime? _updatedAt { get; set; }
-    public DateTime? UpdatedAt { get => _updatedAt; set => _updatedAt = value; }
-    
-    private DateTime _createdAt { get; init; }
-    public DateTime CreatedAt { get => _createdAt; init => _createdAt = value;}
-    
-    public Report(string title, Guid sprintId, string filePath, User creator, ReportExtension extension)
+    public Report(string title, Guid sprintId, string filePath, ReportExtension extension)
     {
         _id = Guid.NewGuid();
         _title = title;
         _sprintId = sprintId;
         _filePath = filePath;
-        _createdBy = creator;
         _extension = extension;
-        _createdAt = DateTime.Now;
+
+        Logger.DisplayCreatedAlert(nameof(Report), _title);
     }
     
     //TODO: implement functions (Update observers, etc)
@@ -50,10 +43,7 @@ public class Report
         sb.AppendLine($"Title: {_title}");
         sb.AppendLine($"SprintId: {_sprintId}");
         sb.AppendLine($"FilePath: {_filePath}");
-        sb.AppendLine($"Creator: {_createdBy.ToString()}");
         sb.AppendLine($"Extension: {_extension}");
-        sb.AppendLine($"UpdatedAt: {_updatedAt}");
-        sb.AppendLine($"CreatedAt: {_createdAt}");
         
         return sb.ToString();
     }

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Domain.Helpers;
+using System.Text;
 
 namespace Domain.Entities;
 
@@ -19,24 +20,15 @@ public class Review
     private string _filePath { get; set; }
     public string FilePath { get => _filePath; set => _filePath = value; }
     
-    private User _createdBy { get; init; }
-    public User CreatedBy { get => _createdBy; init => _createdBy = value; }
-
-    private DateTime? _updatedAt { get; set; }
-    public DateTime? UpdatedAt { get => _updatedAt; set => _updatedAt = value; }
-    
-    private DateTime _createdAt { get; init; }
-    public DateTime CreatedAt { get => _createdAt; init => _createdAt = value;}
-    
-    public Review(string title, Guid sprintId, Guid pipelineId, string filePath, User creator)
+    public Review(string title, Guid sprintId, Guid pipelineId, string filePath)
     {
         _id = Guid.NewGuid();
         _title = title;
         _sprintId = sprintId;
         _pipelineId = pipelineId;
         _filePath = filePath;
-        _createdBy = creator;
-        _createdAt = DateTime.Now;
+
+        Logger.DisplayCreatedAlert(nameof(Review), _title);
     }
     
     //TODO: implement further functions
@@ -50,9 +42,6 @@ public class Review
         sb.AppendLine($"SprintId: {_sprintId}");
         sb.AppendLine($"PipelineId: {_pipelineId}");
         sb.AppendLine($"FilePath: {_filePath}");
-        sb.AppendLine($"Creator: {_createdBy.ToString()}");
-        sb.AppendLine($"UpdatedAt: {_updatedAt}");
-        sb.AppendLine($"CreatedAt: {_createdAt}");
         
         return sb.ToString();
     }
