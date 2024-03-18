@@ -1,41 +1,90 @@
-﻿using System.Text;
+﻿using Domain.Helpers;
+using Domain.States.BacklogItem;
+using System.Text;
 
 namespace Domain.Entities
 {
     public class Activity
     {
-        private Guid _id {  get; init; }
+        private Guid _id { get; init; }
         public Guid Id { get => _id; init => _id = value; }
 
         private string _title { get; set; }
-        public string Title { get => _title; set => _title = value; }
+        public string Title { 
+            get => _title; 
+            set 
+            { 
+                if (ValidateUpdate())
+                {
+                    _title = value;
+                    Logger.ShowUpdatedAlert(nameof(Title), _title);
+                }
+            } 
+        }
 
         private bool _isFinished { get; set; }
-        public bool IsFinished { get => _isFinished; set => _isFinished = value; }
+        public bool IsFinished { 
+            get => _isFinished; 
+            set 
+            {
+                if (ValidateUpdate())
+                {
+                    _isFinished = value;
+                    Logger.ShowUpdatedAlert(nameof(IsFinished), _title);
+                }
+            } 
+        }
 
-        private Developer _developer { get; set; }
-        public Developer Developer { get => _developer; set => _developer = value; }
+        private Item _item { get; init; }
+        public Item Item { get => _item; init => _item = value; }
 
-        private User _creator { get; init; }
-        public User Creator { get => _creator; init => _creator = value; }
+        private Developer? _developer { get; set; }
+        public Developer? Developer 
+        { 
+            get => _developer; 
+            set 
+            {
+                if (ValidateUpdate())
+                {
+                    _developer = value;
+                    Logger.ShowUpdatedAlert(nameof(Developer), _title);
+                }
+            } 
+        }
 
-        private DateTime? _updatedAt { get; set; }
-        public DateTime? UpdatedAt { get => _updatedAt; set => _updatedAt = value; }
-
-        private DateTime _createdAt { get; init; }
-        public DateTime CreatedAt { get => _createdAt; init => _createdAt = value; }
-
-        public Activity(string title, Developer developer, User creator)
+        public Activity(string title, Item item, Developer developer)
         {
             _id = Guid.NewGuid();
             _title = title;
             _isFinished = false;
+            _item = item;
             _developer = developer;
-            _creator = creator;
-            _createdAt = DateTime.Now;
+
+            Logger.ShowCreatedAlert(nameof(Activity), _title);
+        }
+
+        public Activity(string title, Item item)
+        {
+            _id = Guid.NewGuid();
+            _title = title;
+            _isFinished = false;
+            _item = item;
+
+            Logger.ShowCreatedAlert(nameof(Activity), _title);
         }
 
         //TODO: implement functions
+        public bool ValidateUpdate()
+        {
+            if (_item.CurrentStatus.GetType() != typeof(DoneState) || _item.CurrentStatus.GetType() != typeof(ClosedState))
+            {
+                return true;
+            }
+
+            Console.WriteLine("Can't update activity when item status is done or closed.");
+            return false;
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new();
@@ -43,10 +92,7 @@ namespace Domain.Entities
             sb.AppendLine($"Id: {_id}");
             sb.AppendLine($"Title: {_title}");
             sb.AppendLine($"IsFinished: {_isFinished}");
-            sb.AppendLine($"Developer: {_developer.ToString()}");
-            sb.AppendLine($"Creator: {_creator.ToString()}");
-            sb.AppendLine($"UpdatedAt: {_updatedAt}");
-            sb.AppendLine($"CreatedAt: {_createdAt}");
+            sb.AppendLine($"Developer: {_developer?.ToString()}");
 
             return sb.ToString();
         }
