@@ -78,38 +78,67 @@ namespace Domain.Entities
             }
         }
 
-        public virtual void Add(Action action)
+        public virtual void AddAction(Action action)
         {
             var phase = _selectedActions.FirstOrDefault(a => a.GetType() == action.Phase!.GetType()) as Phase;
             phase!.Add(action);
         }
 
-        public void Remove(Action action)
+        public void RemoveAction(Action action)
         {
             var phase = _selectedActions.FirstOrDefault(a => a.GetType() == action.Phase!.GetType()) as Phase;
             phase!.Remove(action);
         }
 
-        public bool ExecutePipeline()
+        public void ExecutePipeline()
         {
             try
             {
-                Start();
-                Source();
-                Package();
-                Utility();
-                Build();
-                Test();
-                Analyse();
-                Deploy();
-                Finish();
-
-                return true;
+                if (_currentStatus.GetType() == typeof(InitialState) || _currentStatus.GetType() == typeof(CancelledState) || _currentStatus.GetType() == typeof(FailedState))
+                {
+                    Start();
+                    Source();
+                    Package();
+                    Utility();
+                    Build();
+                    Test();
+                    Analyse();
+                    Deploy();
+                    Finish();
+                }
+                else
+                {
+                    Logger.DisplayCustomAlert(nameof(Pipeline), nameof(ExecutePipeline), "Not allowed to execute the pipeline!");
+                }
             }
             catch (Exception e)
             {
+                _currentStatus.FailPipeline();
                 Logger.DisplayCustomAlert(nameof(Pipeline), nameof(ExecutePipeline), e.Message);
-                return false;
+            }
+        }
+
+        public void RerunPipeline()
+        {
+            if (_currentStatus.GetType() == typeof(FailedState))
+            {
+                ExecutePipeline();
+            }
+            else
+            {
+                Logger.DisplayCustomAlert(nameof(Pipeline), nameof(RerunPipeline), "Not allowed to rerun the pipeline!");
+            }
+        }
+
+        public void CancelPipeline()
+        {
+            if (_currentStatus.GetType() == typeof(ExecutingState) || _currentStatus.GetType() == typeof(FailedState))
+            {
+                _currentStatus.CancelPipeline();
+            }
+            else
+            {
+                Logger.DisplayCustomAlert(nameof(Pipeline), nameof(CancelPipeline), "Not allowed to cancel the pipeline!");
             }
         }
 
@@ -132,6 +161,7 @@ namespace Domain.Entities
 
         private void Start()
         {
+            _currentStatus.ExecutePipeline();
             Logger.DisplayCustomAlert(nameof(Pipeline), nameof(Start), $"Start pipeline {_name} ...");
             Logger.DisplayCustomAlert(nameof(Pipeline), nameof(Start), $"Pipeline {_name} started!");
         }
@@ -144,20 +174,15 @@ namespace Domain.Entities
 
         private void Build() => RunAction(typeof(BuildPhase));
 
-        protected virtual void Test()
-        {
-            return;
-        }
+        protected virtual void Test() { return; }
 
         private void Analyse() => RunAction(typeof(AnalysePhase));
 
-        protected virtual void Deploy()
-        {
-            return;
-        }
+        protected virtual void Deploy() { return; }
 
         private void Finish()
         {
+            _currentStatus.FinalizePipeline();
             Logger.DisplayCustomAlert(nameof(Pipeline), nameof(Finish), $"Finish pipeline {_name} ...");
             Logger.DisplayCustomAlert(nameof(Pipeline), nameof(Finish), $"Pipeline {_name} finished!");
         }

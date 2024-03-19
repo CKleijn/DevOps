@@ -49,13 +49,13 @@ app.MapGet("/", () =>
 
     Console.WriteLine("");
 
-    pipeline.Add(new GitCloneAction());
-    pipeline.Add(new NpmInstallAction());
-    pipeline.Add(new NpmRunCopyFilesAction());
-    pipeline.Add(new NpmEslintAction());
-    pipeline.Add(new NpmTestAction());
-    pipeline.Add(new DotnetAnalyzeAction());
-    pipeline.Add(new NpmPublishAction());
+    pipeline.AddAction(new GitCloneAction());
+    pipeline.AddAction(new NpmInstallAction());
+    pipeline.AddAction(new NpmRunCopyFilesAction());
+    pipeline.AddAction(new NpmEslintAction());
+    pipeline.AddAction(new NpmTestAction());
+    pipeline.AddAction(new DotnetAnalyzeAction());
+    pipeline.AddAction(new NpmPublishAction());
     Console.WriteLine("");
     pipeline.Print();
 

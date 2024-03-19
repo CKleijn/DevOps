@@ -25,6 +25,8 @@ namespace Domain.States.Pipeline
 
         public void FailPipeline()
         {
+            // Send notification to scrum master
+
             _context.PreviousStatus = this;
             _context.CurrentStatus = new FailedState(_context);
 
@@ -33,6 +35,8 @@ namespace Domain.States.Pipeline
 
         public void FinalizePipeline()
         {
+            // Send notification to scrum master and product owner
+
             _context.PreviousStatus = this;
             _context.CurrentStatus = new FinishedState(_context);
 

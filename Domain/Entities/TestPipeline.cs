@@ -26,15 +26,15 @@ namespace Domain.Entities
             }
         }
 
-        public override void Add(Action action)
+        public override void AddAction(Action action)
         {
             if(action.Phase!.GetType() == typeof(DeployPhase))
             {
-                Logger.DisplayCustomAlert(nameof(TestPipeline), nameof(Add), "Can't add deploy action to test pipeline");
+                Logger.DisplayCustomAlert(nameof(TestPipeline), nameof(AddAction), "Can't add deploy action to test pipeline");
                 return;
             }
 
-            base.Add(action);
+            base.AddAction(action);
         }
 
         protected override void Test() => RunAction(typeof(TestPhase));
