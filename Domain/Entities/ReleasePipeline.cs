@@ -1,4 +1,5 @@
 ﻿using Domain.Helpers;
+using Domain.Phases;
 
 namespace Domain.Entities
 {
@@ -9,14 +10,8 @@ namespace Domain.Entities
             Logger.DisplayCreatedAlert(nameof(ReleasePipeline), name);
         }
 
-        protected override void Test()
-        {
-            // TODO: Forloop each test action
-        }
+        protected override void Test() => RunAction(typeof(TestPhase));
 
-        protected override void Deploy()
-        {
-            // TODO: Forloop each deploy action
-        }
+        protected override void Deploy() => RunAction(typeof(DeployPhase));
     }
 }
