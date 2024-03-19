@@ -35,8 +35,19 @@ public class Project
         _productOwner = productOwner;
         _backlog = new ProjectBacklog();
         _versionControl = versionControl;
+        _pipelines = new List<Pipeline>();
 
         Logger.DisplayCreatedAlert(nameof(Project), _title);
+    }
+
+    public void AddPipeline(Pipeline pipeline)
+    {
+        _pipelines!.Add(pipeline);
+    }
+
+    public void RemovePipeline(Pipeline pipeline)
+    {
+        _pipelines!.Remove(pipeline);
     }
 
     //TODO: implement functions
