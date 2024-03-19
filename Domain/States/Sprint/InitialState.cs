@@ -12,6 +12,8 @@ public class InitialState : ISprintState
     {
         _context = context;
     }
+    
+    public void InitializeSprint() => throw new NotImplementedException();
 
     public void ExecuteSprint()
     {
@@ -27,4 +29,6 @@ public class InitialState : ISprintState
     public void ReviewSprint() => throw new NotImplementedException();
 
     public void CancelSprint() => throw new NotImplementedException();
+    
+    public void CloseSprint() => throw new NotImplementedException();
 }

@@ -12,12 +12,12 @@ public class ExecutedState  : ISprintState
     {
         _context = context;
     }
+    public void InitializeSprint() => throw new NotImplementedException();
+
     public void ExecuteSprint() => throw new NotImplementedException();
 
     public void FinishSprint()
     {
-        //TODO: conditionals like checking whether end date has been reached(, or all tasks are done)?
-        
         _context.CurrentStatus = new FinishedState(_context);
         
         Logger.DisplayCustomAlert(nameof(ExecutedState), nameof(FinishSprint), "Sprint status changed to finishing");
@@ -28,4 +28,6 @@ public class ExecutedState  : ISprintState
     public void ReviewSprint() => throw new NotImplementedException();
 
     public void CancelSprint() => throw new NotImplementedException();
+
+    public void CloseSprint() => throw new NotImplementedException();
 }

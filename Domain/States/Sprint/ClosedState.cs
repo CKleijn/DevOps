@@ -1,22 +1,17 @@
-﻿using Domain.Helpers;
-using Domain.Interfaces.States;
+﻿using Domain.Interfaces.States;
 
 namespace Domain.States.Sprint;
 
-public class CancelledState : ISprintState
+public class ClosedState : ISprintState
 {
     private Entities.Sprint _context { get; init; }
     public Entities.Sprint Context { get => _context; init => _context = value; }
     
-    public CancelledState(Entities.Sprint context)
+    public ClosedState(Entities.Sprint context)
     {
         _context = context;
     }
-    public void InitializeSprint() {
-        _context.CurrentStatus = new InitialState(_context);
-        
-        Logger.DisplayCustomAlert(nameof(CancelledState), nameof(InitializeSprint), "Sprint status changed to initializing");
-    }
+    public void InitializeSprint() => throw new NotImplementedException();
     
     public void ExecuteSprint() => throw new NotImplementedException();
     

@@ -159,53 +159,17 @@ public abstract class Sprint
     
     //** Start State functions **//
 
+    public void InitializeSprint() => _currentStatus.InitializeSprint();
     public void ExecuteSprint() => _currentStatus.ExecuteSprint();
     public void FinishSprint() => _currentStatus.FinishSprint();
     public void ReleaseSprint() => _currentStatus.ReleaseSprint();
     public void ReviewSprint() => _currentStatus.ReviewSprint();
     public void CancelSprint() => _currentStatus.ReviewSprint();
+    public void CloseSprint() => _currentStatus.CloseSprint();
     
     //** End State functions **//
-    
-    private bool ValidateChange()
-    {
-        //Don't allow mutation whenever state differs from the initial state
-        if (_currentStatus.GetType() != typeof(InitialState))
-        {
-            Logger.DisplayCustomAlert(nameof(Sprint), nameof(ValidateChange), $"Can't update sprint in current state ({_currentStatus.GetType()}).");
-            return false;
-        }
-        
-        //Perform actions alteration is done on a sprint that has already ended
-        if (_endDate < DateTime.Now)
-        {
-            //Check if sprint is a sprint review and has reviews
-            if (this is SprintReview { Reviews.Count: 0 })
-            {
-                Logger.DisplayCustomAlert(nameof(Sprint), nameof(ValidateChange), $"Can't finish sprint review without any reviews. Provide at least one review.");
-                
-                //Set sprint to review state if it isn't already
-                if(_currentStatus.GetType() != typeof(ReviewState))
-                    _currentStatus = new ReviewState(this);
-                
-                return false;
-            }
-            
-            //Execute sprint
-            Execute();
-            
-            //Set sprint to finished state if it isn't already
-            if(_currentStatus.GetType() != typeof(FinishedState))
-                _currentStatus = new FinishedState(this);
-            
-            Logger.DisplayCustomAlert(nameof(Sprint), nameof(ValidateChange), $"Can't update sprint after end date. Sprint will be set to close if it isn't already.");
-            
-            return false;
-        }
-        
-        return true;
-    }
-    
-    public abstract void Execute();
+
+    protected abstract bool ValidateChange();
+
     public abstract override string ToString();
 }
