@@ -3,5 +3,6 @@
 public enum NotificationProvider
 {
     MAIL,
-    SLACK
+    SLACK,
+    TEAMS
 }

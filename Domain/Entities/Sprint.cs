@@ -116,7 +116,6 @@ public abstract class Sprint
         _sprintBacklog = new SprintBacklog(this);
     }
     
-    //TODO: add state functions
     public void AddDeveloper(Developer developer)
     {
         if (!ValidateChange())

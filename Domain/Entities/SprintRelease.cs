@@ -12,9 +12,6 @@ public class SprintRelease : Sprint
     private ReleasePipeline _pipeline { get; set; }
     public ReleasePipeline Pipeline { get => _pipeline; set => _pipeline = value; }
     
-    
-    //TODO: implement functions
-
     public SprintRelease(string title, DateTime startDate, DateTime endDate, User scrumMaster) : base(title, startDate, endDate, scrumMaster)
     {
         _releases = new List<Release>();   

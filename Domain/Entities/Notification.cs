@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Domain.Enums;
 using Domain.Helpers;
+using Domain.Services;
 
 namespace Domain.Entities;
 
@@ -15,8 +16,8 @@ public class Notification
     private string _body { get; set; }
     public string Body { get => _body; set => _body = value; }
     
-    private bool _status { get; set; }
-    public bool Status { get => _status; set => _status = value; }
+    private User _sender { get; set; }
+    public User Sender { get => _sender; set => _sender = value; }
     
     private IList<User> _targetUsers { get; set; }
     public IList<User> TargetUsers { get => _targetUsers; set => _targetUsers = value; }
@@ -24,14 +25,17 @@ public class Notification
     private List<NotificationProvider> _destinationTypes { get; set; }
     public List<NotificationProvider> DestinationTypes { get => _destinationTypes; set => _destinationTypes = value; }
     
-    public Notification(string title, string body, bool status)
+    private NotificationService _notificationService { get; init; }
+    
+    public Notification(string title, string body, User sender)
     {
         _id = Guid.NewGuid();
         _title = title;
         _body = body;
-        _status = status;
         _targetUsers = new List<User>();
         _destinationTypes = new List<NotificationProvider>();
+        _notificationService = new NotificationService(this);
+        _sender = sender;
 
         Logger.DisplayCreatedAlert(nameof(Notification), _title);
     }
@@ -40,7 +44,14 @@ public class Notification
     {
         _targetUsers.Add(user);
 
-        Logger.DisplayUpdatedAlert(nameof(Notification), $"Added: {user}");
+        Logger.DisplayUpdatedAlert(nameof(Notification), $"Added: {user.Name}");
+    }
+    
+    public void RemoveTargetUser(User user)
+    {
+        _targetUsers.Remove(user);
+
+        Logger.DisplayUpdatedAlert(nameof(Notification), $"Removed: {user.Name}");
     }
     
     public void AddDestinationType(NotificationProvider destinationType)
@@ -50,7 +61,17 @@ public class Notification
         Logger.DisplayUpdatedAlert(nameof(Notification), $"Added: {destinationType}");
     }
     
-    //TODO: implement further functions
+    public void RemoveDestinationType(NotificationProvider destinationType)
+    {
+        _destinationTypes.Remove(destinationType);
+
+        Logger.DisplayUpdatedAlert(nameof(Notification), $"Removed: {destinationType}");
+    }
+
+    public void SendNotification()
+    {
+        _notificationService.SendNotification();
+    }
     
     public override string ToString()
     {
@@ -59,7 +80,8 @@ public class Notification
         sb.AppendLine($"Id: {_id}");
         sb.AppendLine($"Title: {_title}");
         sb.AppendLine($"Body: {_body}");
-        sb.AppendLine($"Status: {_status}");
+        sb.AppendLine($"Target Users: {string.Join(", ", _targetUsers.Select(x => x.Name))}");
+        sb.AppendLine($"Destination Types: {string.Join(", ", _destinationTypes.Select(x => x.ToString()))}");
         
         return sb.ToString();
     }
