@@ -26,7 +26,6 @@ namespace Domain.States.BacklogItem
 
         public void DenyTestedBacklogItem()
         {
-            _context.PreviousStatus = this;
             _context.CurrentStatus = new ReadyForTestingState(_context);
 
             Logger.DisplayCustomAlert(nameof(TestedState), nameof(DenyTestedBacklogItem), "Backlog item status changed to ready for testing");
@@ -40,7 +39,6 @@ namespace Domain.States.BacklogItem
                 return;
             }
 
-            _context.PreviousStatus = this;
             _context.CurrentStatus = new DoneState(_context);
 
             Logger.DisplayCustomAlert(nameof(TestedState), nameof(FinalizeBacklogItem), "Backlog item status changed to done");

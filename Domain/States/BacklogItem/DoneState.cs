@@ -30,7 +30,6 @@ namespace Domain.States.BacklogItem
 
         public void ReceiveFeedback()
         {
-            _context.PreviousStatus = this;
             _context.CurrentStatus = new TodoState(_context);
 
             Logger.DisplayCustomAlert(nameof(DoneState), nameof(ReceiveFeedback), "Backlog item status changed to todo");
@@ -38,7 +37,6 @@ namespace Domain.States.BacklogItem
 
         public void CloseBacklogItem()
         {
-            _context.PreviousStatus = this;
             _context.CurrentStatus = new ClosedState(_context);
 
             Logger.DisplayCustomAlert(nameof(DoneState), nameof(CloseBacklogItem), "Backlog item status changed to closed");

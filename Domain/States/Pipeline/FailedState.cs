@@ -1,4 +1,5 @@
-﻿using Domain.Helpers;
+﻿using Domain.Entities;
+using Domain.Helpers;
 using Domain.Interfaces.States;
 
 namespace Domain.States.Pipeline
@@ -22,7 +23,20 @@ namespace Domain.States.Pipeline
             _context.RerunPipeline();
         }
 
-        public void CancelPipeline() => throw new NotImplementedException();
+        public void CancelPipeline()
+        {
+            // START NOTIFICATION
+            Notification notification = new Notification("Pipeline cancelled", $"The release of the pipeline (with an id of {_context.Id}) has been cancelled after failure.");
+
+            notification.AddTargetUser(_context.Sprint.ScrumMaster);
+
+            _context.Sprint.NotifyObservers(notification);
+            // END NOTIFICATION
+
+            _context.CurrentStatus = new CancelledState(_context);
+
+            Logger.DisplayCustomAlert(nameof(FailedState), nameof(CancelPipeline), "Pipeline status changed to cancelled");
+        }
 
         public void FailPipeline() => throw new NotImplementedException();
 

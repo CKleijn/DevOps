@@ -14,16 +14,18 @@ var app = builder.Build();
 app.MapGet("/", () =>
 {
     Console.ForegroundColor = ConsoleColor.Green;
+    
+    List<NotificationProvider> notificationProviders = new List<NotificationProvider>();
+    notificationProviders.Add(NotificationProvider.MAIL);
+    notificationProviders.Add(NotificationProvider.SLACK);
 
-    var productOwner = new ProductOwner("John Doe", "johndoe@gmail.com", "Password", [NotificationProvider.MAIL, NotificationProvider.SLACK]);
+    var productOwner = new ProductOwner("John Doe", "johndoe@gmail.com", "Password", notificationProviders);
     var project = new Project("Project1", "Description1", productOwner, new GitHub());
     project.VersionControl.CloneRepo("https://github.com/CKleijn/SOFA3-DevOps.git");
+    
+    var developer = new Developer("Kevin", "kevin@test.com", "Password", notificationProviders);
 
-    var developer = new Developer("Kevin", "kevin@test.com", "Password", [NotificationProvider.TEAMS, NotificationProvider.SLACK]);
 
-    //var activity = new Activity("Activity 1", new Item("Test", "Test", developer, developer, 5), developer);
-
-    //return activity.ToString();
 
     // Factory test
 
@@ -41,6 +43,9 @@ app.MapGet("/", () =>
     //Console.WriteLine(reviewSprint.Title);
 
     //return reviewSprint.ToString();
+    
+    var activity = new Activity("Activity 1", new Item("Test", "Test", developer, 5, releaseSprint.SprintBacklog), developer);
+    
 
     releaseSprint.Register(productOwner);
     releaseSprint.Register(developer);

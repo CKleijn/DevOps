@@ -87,8 +87,8 @@ public abstract class Sprint : IObservable
     private IList<Report> _reports { get; init; }
     public IList<Report> Reports { get => _reports; init => _reports = value; }
     
-    private User _scrumMaster { get; set; }
-    public User ScrumMaster 
+    private Developer _scrumMaster { get; set; }
+    public Developer ScrumMaster 
     { 
         get => _scrumMaster; 
         set
@@ -113,7 +113,7 @@ public abstract class Sprint : IObservable
     private IList<IObserver> _observers { get; init; }
     public IList<IObserver> Observers { get => _observers; init => _observers = value; }
     
-    public Sprint(string title, DateTime startDate, DateTime endDate, User scrumMaster, Project project)
+    public Sprint(string title, DateTime startDate, DateTime endDate, Developer scrumMaster, Project project)
     {
         _id = Guid.NewGuid();
         _title = title;

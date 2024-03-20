@@ -37,7 +37,7 @@ namespace Domain.States.Pipeline
         public void FailPipeline()
         {
             // START NOTIFICATION
-            Notification notification = new Notification("Pipeline failed", "Pipeline failed");
+            Notification notification = new Notification("Pipeline release failed", $"The release of the pipeline (with an id of {_context.Id}) has failed.");
 
             notification.AddTargetUser(_context.Sprint.ScrumMaster);
 
@@ -56,7 +56,7 @@ namespace Domain.States.Pipeline
             Logger.DisplayCustomAlert(nameof(ExecutingState), nameof(FinalizePipeline), "Pipeline status changed to finished");
 
             // START NOTIFICATION
-            Notification notification = new Notification("Pipeline finished", "Pipeline has finished");
+            Notification notification = new Notification("Pipeline release succeeded", $"The release of the pipeline (with an id of {_context.Id}) has succeeded.");
 
             notification.AddTargetUser(_context.Sprint.ScrumMaster);
             notification.AddTargetUser(_context.Sprint.Project.ProductOwner);

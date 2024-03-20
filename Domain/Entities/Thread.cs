@@ -61,8 +61,26 @@ namespace Domain.Entities
             if (_item.CurrentStatus.GetType() == typeof(ClosedState))
             {
                 _threadMessages.Add(threadMessage);
-
                 Logger.DisplayUpdatedAlert(nameof(ThreadMessages), $"Added: {threadMessage.Title}");
+                
+                // START NOTIFICATION
+                //Notify developers of the new thread message
+            
+                Notification notification = new("New message in thread", $"New message has been posted in thread: {_subject}.");
+
+                var developers = _item.SprintBacklog!.Sprint.Developers;
+                var scrumMaster = _item.SprintBacklog!.Sprint.ScrumMaster;
+
+                if(!developers.Contains(scrumMaster))
+                    developers.Add(scrumMaster);
+            
+                foreach(var developer in developers)
+                {
+                    notification.AddTargetUser(developer);
+                }
+
+                _item.SprintBacklog.Sprint.NotifyObservers(notification);
+                // END NOTIFICATION
             } 
             else
             {

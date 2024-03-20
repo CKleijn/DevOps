@@ -9,7 +9,7 @@ public class SprintReview : Sprint
     private IList<Review> _reviews { get; init; }
     public IList<Review> Reviews { get => _reviews; init => _reviews = value; }
     
-    public SprintReview(string title, DateTime startDate, DateTime endDate, User scrumMaster, Project project) : base(title, startDate, endDate, scrumMaster, project)
+    public SprintReview(string title, DateTime startDate, DateTime endDate, Developer scrumMaster, Project project) : base(title, startDate, endDate, scrumMaster, project)
     {
         _reviews = new List<Review>();
         Logger.DisplayCreatedAlert(nameof(SprintReview), Title);
@@ -17,12 +17,18 @@ public class SprintReview : Sprint
     
     public void AddReview(Review review)
     {
+        if (CurrentStatus.GetType() != typeof(ReviewState))
+            return;
+        
         _reviews.Add(review);
         Logger.DisplayUpdatedAlert(nameof(Reviews), $"Added review with an id of: {review}");
     }
     
     public void RemoveReview(Review review)
     {
+        if (CurrentStatus.GetType() != typeof(ReviewState))
+            return;
+        
         _reviews.Remove(review);
         Logger.DisplayUpdatedAlert(nameof(Reviews), $"Removed review with an id of: {review}");
     }

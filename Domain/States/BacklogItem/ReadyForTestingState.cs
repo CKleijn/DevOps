@@ -20,7 +20,6 @@ namespace Domain.States.BacklogItem
 
         public void TestingBacklogItem()
         {
-            _context.PreviousStatus = this;
             _context.CurrentStatus = new TestingState(_context);
 
             Logger.DisplayCustomAlert(nameof(ReadyForTestingState), nameof(TestingBacklogItem), "Backlog item status changed to testing");

@@ -22,9 +22,13 @@ namespace Domain.States.BacklogItem
 
         public void DenyDevelopedBacklogItem()
         {
-            // TODO: Send notification to Scrum Master
+            // START NOTIFICATION
+            Notification notification = new Notification("Backlog item denied", $"The backlog item (with an id of {_context.Id}) has been denied.");
+            notification.AddTargetUser(_context.SprintBacklog!.Sprint.ScrumMaster);
 
-            _context.PreviousStatus = this;
+            _context.SprintBacklog.Sprint.NotifyObservers(notification);
+            // END NOTIFICATION
+
             _context.CurrentStatus = new TodoState(_context);
 
             Logger.DisplayCustomAlert(nameof(TestingState), nameof(DenyDevelopedBacklogItem), "Backlog item status changed to todo");
@@ -32,9 +36,13 @@ namespace Domain.States.BacklogItem
 
         public void FinalizeTestingBacklogItem()
         {
-            // TODO: Send notification to (Lead) developer
+            // START NOTIFICATION
+            Notification notification = new Notification("Backlog item finalized", $"The backlog item ({_context.Id}) has been denied.");
+            notification.AddTargetUser(_context.SprintBacklog!.Sprint.ScrumMaster);
+            
+            _context.SprintBacklog.Sprint.NotifyObservers(notification);
+            // END NOTIFICATION
 
-            _context.PreviousStatus = this;
             _context.CurrentStatus = new TestedState(_context);
 
             Logger.DisplayCustomAlert(nameof(TestingState), nameof(FinalizeTestingBacklogItem), "Backlog item status changed to tested");

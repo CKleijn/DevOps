@@ -18,9 +18,26 @@ namespace Domain.States.BacklogItem
 
         public void FinalizeDevelopmentBacklogItem()
         {
-            // TODO: Send notifications to Testers
+            
+            // START NOTIFICATION
+            //Send notifications to Testers (developers)
+            
+            Notification notification = new Notification("Development of backlog item finished", $"The development of the backlog item (with an id of: {_context.Id}) has been finished.");
 
-            _context.PreviousStatus = this;
+            var developers = _context.SprintBacklog!.Sprint.Developers;
+            var scrumMaster = _context.SprintBacklog!.Sprint.ScrumMaster;
+
+            if(!developers.Contains(scrumMaster))
+                developers.Add(scrumMaster);
+            
+            foreach(var developer in developers)
+            {
+                notification.AddTargetUser(developer);
+            }
+
+            _context.SprintBacklog.Sprint.NotifyObservers(notification);
+            // END NOTIFICATION
+            
             _context.CurrentStatus = new ReadyForTestingState(_context);
 
             Logger.DisplayCustomAlert(nameof(DoingState), nameof(FinalizeBacklogItem), "Backlog item status changed to ready for testing");

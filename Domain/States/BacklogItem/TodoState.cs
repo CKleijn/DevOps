@@ -16,13 +16,18 @@ namespace Domain.States.BacklogItem
 
         public void DevelopBacklogItem()
         {
+            if(_context.SprintBacklog != null)
+            {
+                Logger.DisplayCustomAlert(nameof(TodoState), nameof(DevelopBacklogItem), "The backlog item is not part of a sprint backlog!");
+                return;
+            }
+            
             if (_context.PreviousStatus?.Context.Developer.Id != _context.Developer.Id)
             {
                 Logger.DisplayCustomAlert(nameof(TodoState), nameof(DevelopBacklogItem), "The backlog item needs to be fixed by the same developer!");
                 return;
             }
 
-            _context.PreviousStatus = this;
             _context.CurrentStatus = new DoingState(_context);
 
             Logger.DisplayCustomAlert(nameof(TodoState), nameof(DevelopBacklogItem), "Backlog item status changed to doing");

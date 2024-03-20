@@ -27,13 +27,40 @@ namespace Domain.Entities
         public IBacklogItemState? PreviousStatus { get => _previousStatus; set => _previousStatus = value; }
 
         private IBacklogItemState _currentStatus { get; set; }
-        public IBacklogItemState CurrentStatus { get => _currentStatus; set => _currentStatus = value; }
+
+        public IBacklogItemState CurrentStatus
+        {
+            get => _currentStatus;
+            set
+            {
+                _previousStatus = _currentStatus;
+                _currentStatus = value;
+            }
+        }
 
         private IList<Thread> _threads { get; init; }
         public IList<Thread> Threads { get => _threads; init => _threads = value; }
 
         private int _storyPoints { get; set; }
         public int StoryPoints { get => _storyPoints; set => _storyPoints = value; }
+        
+        private SprintBacklog? _sprintBacklog { get; set; }
+        public SprintBacklog? SprintBacklog { get => _sprintBacklog; set => _sprintBacklog = value; }
+        
+        public Item(string title, string description, Developer developer, int storyPoints, SprintBacklog sprintBacklog)
+        {
+            _id = Guid.NewGuid();
+            _title = title;
+            _description = description;
+            _developer = developer;
+            _activities = new List<Activity>();
+            _currentStatus = new TodoState(this);
+            _threads = new List<Thread>();
+            _storyPoints = storyPoints;
+            _sprintBacklog = sprintBacklog;
+
+            Logger.DisplayCreatedAlert(nameof(Item), _title);
+        }
         
         public Item(string title, string description, Developer developer, int storyPoints)
         {
@@ -96,7 +123,21 @@ namespace Domain.Entities
 
             Logger.DisplayCustomAlert(nameof(Item), nameof(CloseItem), $"Closed: {_title}");
         }
+        
+        //** Start State functions **//
 
+        public void DevelopBacklogItem() => _currentStatus.DevelopBacklogItem();
+        public void FinalizeDevelopmentBacklogItem() => _currentStatus.FinalizeDevelopmentBacklogItem();
+        public void TestingBacklogItem() => _currentStatus.TestingBacklogItem();
+        public void DenyDevelopedBacklogItem() => _currentStatus.DenyDevelopedBacklogItem();
+        public void FinalizeTestingBacklogItem() => _currentStatus.FinalizeTestingBacklogItem();
+        public void DenyTestedBacklogItem() => _currentStatus.DenyTestedBacklogItem();
+        public void FinalizeBacklogItem() => _currentStatus.FinalizeBacklogItem();
+        public void ReceiveFeedback() => _currentStatus.ReceiveFeedback();
+        public void CloseBacklogItem() => _currentStatus.CloseBacklogItem();
+    
+        //** End State functions **//
+        
         public override string ToString()
         {
             StringBuilder sb = new();

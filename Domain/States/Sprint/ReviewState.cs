@@ -38,7 +38,7 @@ public class ReviewState : ISprintState
             }
             
             //Execute the sprint
-            sprint.ExecuteSprint();
+            ExecuteSprint();
 
             return;
         }

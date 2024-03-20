@@ -9,7 +9,7 @@ public class SprintRelease : Sprint
     private IList<Release> _releases { get; init; }
     public IList<Release> Releases { get => _releases; init => _releases = value; }
     
-    public SprintRelease(string title, DateTime startDate, DateTime endDate, User scrumMaster, Project project) : base(title, startDate, endDate, scrumMaster, project)
+    public SprintRelease(string title, DateTime startDate, DateTime endDate, Developer scrumMaster, Project project) : base(title, startDate, endDate, scrumMaster, project)
     {
         _releases = new List<Release>();
         Logger.DisplayCreatedAlert(nameof(SprintRelease), Title);
