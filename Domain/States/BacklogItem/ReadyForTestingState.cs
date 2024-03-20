@@ -22,7 +22,7 @@ namespace Domain.States.BacklogItem
         {
             _context.CurrentStatus = new TestingState(_context);
 
-            Logger.DisplayCustomAlert(nameof(ReadyForTestingState), nameof(TestingBacklogItem), "Backlog item status changed to testing");
+            Logger.DisplayCustomAlert(nameof(ReadyForTestingState), nameof(TestingBacklogItem), "Backlog item status changed to testing!");
         }
 
         public void DenyDevelopedBacklogItem() => throw new NotImplementedException();
@@ -33,7 +33,7 @@ namespace Domain.States.BacklogItem
 
         public void FinalizeBacklogItem() => throw new NotImplementedException();
 
-        public void ReceiveFeedback() => throw new NotImplementedException();
+        public void ReceiveFeedbackBacklogItem() => throw new NotImplementedException();
 
         public void CloseBacklogItem() => throw new NotImplementedException();
     }

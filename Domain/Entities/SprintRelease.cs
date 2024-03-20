@@ -73,12 +73,15 @@ public class SprintRelease : Sprint
         StringBuilder sb = new();
         
         sb.AppendLine($"Sprint Release: {Title}");
-        sb.AppendLine($"Start Date: {StartDate}");
-        sb.AppendLine($"End Date: {EndDate}");
-        sb.AppendLine($"Scrum Master: {ScrumMaster}");
+        sb.AppendLine($"Start Date: {StartDate.ToString("dd/mm/yyyy")}");
+        sb.AppendLine($"End Date: {EndDate.ToString("dd/mm/yyyy")}");
+        sb.AppendLine($"Scrum Master: {ScrumMaster.Name}");
+        sb.AppendLine($"Amount of developers: {Developers.Count}");
+        sb.AppendLine($"Amount of testers: {Testers.Count}");
         sb.AppendLine($"Status: {CurrentStatus.GetType()}");
-        sb.AppendLine($"Releases: {Releases.Count}");
-        
+        sb.AppendLine($"Amount of releases: {Releases.Count}");
+        sb.AppendLine($"Amount of items: {SprintBacklog.Items.Count}");
+
         return sb.ToString();
     }
 }

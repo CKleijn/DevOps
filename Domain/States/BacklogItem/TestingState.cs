@@ -22,37 +22,29 @@ namespace Domain.States.BacklogItem
 
         public void DenyDevelopedBacklogItem()
         {
-            // START NOTIFICATION
-            Notification notification = new Notification("Backlog item denied", $"The backlog item (with an id of {_context.Id}) has been denied.");
+            Notification notification = new Notification("Backlog item denied", $"The backlog item (with an id of {_context.Id}) has been denied!");
+
             notification.AddTargetUser(_context.SprintBacklog!.Sprint.ScrumMaster);
 
             _context.SprintBacklog.Sprint.NotifyObservers(notification);
-            // END NOTIFICATION
 
             _context.CurrentStatus = new TodoState(_context);
 
-            Logger.DisplayCustomAlert(nameof(TestingState), nameof(DenyDevelopedBacklogItem), "Backlog item status changed to todo");
+            Logger.DisplayCustomAlert(nameof(TestingState), nameof(DenyDevelopedBacklogItem), "Backlog item status changed to todo!");
         }
 
         public void FinalizeTestingBacklogItem()
         {
-            // START NOTIFICATION
-            Notification notification = new Notification("Backlog item finalized", $"The backlog item ({_context.Id}) has been denied.");
-            notification.AddTargetUser(_context.SprintBacklog!.Sprint.ScrumMaster);
-            
-            _context.SprintBacklog.Sprint.NotifyObservers(notification);
-            // END NOTIFICATION
-
             _context.CurrentStatus = new TestedState(_context);
 
-            Logger.DisplayCustomAlert(nameof(TestingState), nameof(FinalizeTestingBacklogItem), "Backlog item status changed to tested");
+            Logger.DisplayCustomAlert(nameof(TestingState), nameof(FinalizeTestingBacklogItem), "Backlog item status changed to tested!");
         }
 
         public void DenyTestedBacklogItem() => throw new NotImplementedException();
 
         public void FinalizeBacklogItem() => throw new NotImplementedException();
 
-        public void ReceiveFeedback() => throw new NotImplementedException();
+        public void ReceiveFeedbackBacklogItem() => throw new NotImplementedException();
 
         public void CloseBacklogItem() => throw new NotImplementedException();
     }

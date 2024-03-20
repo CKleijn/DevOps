@@ -47,7 +47,7 @@ public abstract class User : IObserver
     public void Update(Notification notification)
     {
         //Set the current target user for the notification
-        notification.CurrentTargetUser = this;
+        notification.Recipient = this;
         
         //deliver message
         notification.SendNotification();

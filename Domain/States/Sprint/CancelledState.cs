@@ -12,10 +12,12 @@ public class CancelledState : ISprintState
     {
         _context = context;
     }
-    public void InitializeSprint() {
+
+    public void InitializeSprint() 
+    {
         _context.CurrentStatus = new InitialState(_context);
         
-        Logger.DisplayCustomAlert(nameof(CancelledState), nameof(InitializeSprint), "Sprint status changed to initializing");
+        Logger.DisplayCustomAlert(nameof(CancelledState), nameof(InitializeSprint), "Sprint status changed to initial!");
     }
     
     public void ExecuteSprint() => throw new NotImplementedException();

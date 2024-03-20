@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using System.Xml.Linq;
 using Domain.Enums;
 using Domain.Helpers;
 
@@ -12,50 +11,71 @@ public class Report
     
     private string _title { get; set; }
     public string Title { get => _title; set => _title = value; }
-    
-    private string _filePath { get; set; }
-    public string FilePath { get => _filePath; set => _filePath = value; }
-    
-    private IList<ReportElement> _elements { get; init; }
-    public IList<ReportElement> Elements { get => _elements; init => _elements = value; }
-    
+
+    private Sprint _sprint { get; init; }
+    public Sprint Sprint { get => _sprint; init => _sprint = value; }
+
+    private ReportElement? _header { get; set; }
+    public ReportElement? Header { get => _header; set => _header = value; }
+
+    private ReportElement? _footer { get; set; }
+    public ReportElement? Footer { get => _footer; set => _footer = value; }
+
     private ReportExtension _extension { get; set; }
     public ReportExtension Extension { get => _extension; set => _extension = value; }
     
-    public Report(string title, string filePath, ReportExtension extension)
+    public Report(string title, Sprint sprint, ReportExtension extension, ReportElement header, ReportElement footer)
     {
         _id = Guid.NewGuid();
         _title = title;
-        _filePath = filePath;
+        _sprint = sprint;
         _extension = extension;
-        _elements = new List<ReportElement>();
+        _header = header;
+        _footer = footer;
 
         Logger.DisplayCreatedAlert(nameof(Report), _title);
     }
-    
-    public void AddElement(ReportElement element)
+
+    public Report(string title, Sprint sprint, ReportExtension extension, ReportElement header)
     {
-        _elements.Add(element);
-        
-        Logger.DisplayUpdatedAlert(nameof(Elements), $"Added element with id: {element.Id}");
+        _id = Guid.NewGuid();
+        _title = title;
+        _sprint = sprint;
+        _extension = extension;
+        _header = header;
+
+        Logger.DisplayCreatedAlert(nameof(Report), _title);
     }
-    
-    public void RemoveElement(ReportElement element)
+
+    public Report(string title, Sprint sprint, ReportExtension extension)
     {
-        _elements.Remove(element);
-        
-        Logger.DisplayUpdatedAlert(nameof(Elements), $"Removed element with id: {element.Id}");
+        _id = Guid.NewGuid();
+        _title = title;
+        _sprint = sprint;
+        _extension = extension;
+
+        Logger.DisplayCreatedAlert(nameof(Report), _title);
     }
-    
-    public override string ToString()
+
+    public void GenerateReport()
     {
         StringBuilder sb = new();
-        
+
+        if (_header != null)
+        {
+            sb.AppendLine(_header.ToString());
+        }
+
         sb.AppendLine($"Id: {_id}");
         sb.AppendLine($"Title: {_title}");
-        sb.AppendLine($"FilePath: {_filePath}");
         sb.AppendLine($"Extension: {_extension}");
-        
-        return sb.ToString();
+        sb.AppendLine(_sprint.ToString());
+
+        if (_footer != null)
+        {
+            sb.AppendLine(_footer.ToString());
+        }
+
+        Console.WriteLine(sb.ToString());
     }
 }

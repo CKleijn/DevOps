@@ -17,7 +17,7 @@ namespace Domain.Actions
 
         public override void Execute()
         {
-            Logger.DisplayCustomAlert(nameof(NpmInstallAction), nameof(Execute), $"Execute {Command}");
+            Logger.DisplayCustomAlert(nameof(NpmInstallAction), nameof(Execute), $"Execute {Command}!");
             Logger.DisplayCustomAlert(nameof(NpmInstallAction), nameof(Execute), $"Succesfully executed {Command} without any errors!");
         }
 

@@ -17,10 +17,9 @@ public class InitialState : ISprintState
 
     public void ExecuteSprint()
     {
-        _context.PreviousStatus = this;
         _context.CurrentStatus = new ExecutedState(_context);
         
-        Logger.DisplayCustomAlert(nameof(InitialState), nameof(ExecuteSprint), "Sprint status changed to executing");
+        Logger.DisplayCustomAlert(nameof(InitialState), nameof(ExecuteSprint), "Sprint status changed to executed!");
     }
 
     public void FinishSprint() => throw new NotImplementedException();

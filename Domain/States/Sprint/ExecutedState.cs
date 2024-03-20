@@ -20,7 +20,7 @@ public class ExecutedState  : ISprintState
     {
         _context.CurrentStatus = new FinishedState(_context);
         
-        Logger.DisplayCustomAlert(nameof(ExecutedState), nameof(FinishSprint), "Sprint status changed to finishing");
+        Logger.DisplayCustomAlert(nameof(ExecutedState), nameof(FinishSprint), "Sprint status changed to finished!");
     }
 
     public void ReleaseSprint() => throw new NotImplementedException();

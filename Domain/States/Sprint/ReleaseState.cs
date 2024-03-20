@@ -16,10 +16,7 @@ public class ReleaseState : ISprintState
 
     public void InitializeSprint() => throw new NotImplementedException();
     
-    public void ExecuteSprint()
-    {
-        Logger.DisplayCustomAlert(nameof(SprintRelease), nameof(ExecuteSprint), $"Execute Sprint ({_context.Title}).");
-    }
+    public void ExecuteSprint() => throw new NotImplementedException();
 
     public void FinishSprint() => throw new NotImplementedException();
 
@@ -27,14 +24,21 @@ public class ReleaseState : ISprintState
     {
         if (_context is SprintRelease sprint)
         {
-            sprint.Pipeline.ExecutePipeline();
-            
-            Logger.DisplayCustomAlert(nameof(SprintRelease), nameof(ReleaseSprint), "Execute pipeline for sprint releasing");
-            
+            if (sprint.Pipeline is not null)
+            {
+                Logger.DisplayCustomAlert(nameof(SprintRelease), nameof(ReleaseSprint), "Execute pipeline to release sprint!");
+
+                sprint.Pipeline.ExecutePipeline();
+
+                return;
+            }
+
+            Logger.DisplayCustomAlert(nameof(SprintRelease), nameof(ReleaseSprint), "Sprint has no pipeline to execute!");
+
             return;
         }
         
-        Logger.DisplayCustomAlert(nameof(SprintRelease), nameof(ReleaseSprint), "Sprint is of incorrect type");
+        Logger.DisplayCustomAlert(nameof(SprintRelease), nameof(ReleaseSprint), "Sprint is of an incorrect type!");
     }
 
     public void ReviewSprint() => throw new NotImplementedException();
@@ -43,7 +47,8 @@ public class ReleaseState : ISprintState
     {
         _context.CurrentStatus = new CancelledState(_context);
         
-        Logger.DisplayCustomAlert(nameof(ReleaseState), nameof(CancelSprint), "Sprint status changed to cancelling");
+        Logger.DisplayCustomAlert(nameof(ReleaseState), nameof(CancelSprint), "Sprint status changed to cancelled!");
     }
+
     public void CloseSprint() => throw new NotImplementedException();
 }

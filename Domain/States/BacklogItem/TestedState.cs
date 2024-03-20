@@ -28,23 +28,23 @@ namespace Domain.States.BacklogItem
         {
             _context.CurrentStatus = new ReadyForTestingState(_context);
 
-            Logger.DisplayCustomAlert(nameof(TestedState), nameof(DenyTestedBacklogItem), "Backlog item status changed to ready for testing");
+            Logger.DisplayCustomAlert(nameof(TestedState), nameof(DenyTestedBacklogItem), "Backlog item status changed to ready for testing!");
         }
 
         public void FinalizeBacklogItem()
         {
-            if (_context.Activities.Count != 0 && _context.Activities.Any(activity => !activity.IsFinished))
+            if (_context.Activities.Count is not 0 && _context.Activities.Any(activity => !activity.IsFinished))
             {
-                Logger.DisplayCustomAlert(nameof(TestedState), nameof(FinalizeBacklogItem), "The backlog item can't be set to done when all activities aren't finished");
+                Logger.DisplayCustomAlert(nameof(TestedState), nameof(FinalizeBacklogItem), "The backlog item can't be set to done when all activities aren't finished!");
                 return;
             }
 
             _context.CurrentStatus = new DoneState(_context);
 
-            Logger.DisplayCustomAlert(nameof(TestedState), nameof(FinalizeBacklogItem), "Backlog item status changed to done");
+            Logger.DisplayCustomAlert(nameof(TestedState), nameof(FinalizeBacklogItem), "Backlog item status changed to done!");
         }
 
-        public void ReceiveFeedback() => throw new NotImplementedException();
+        public void ReceiveFeedbackBacklogItem() => throw new NotImplementedException();
 
         public void CloseBacklogItem() => throw new NotImplementedException();
     }

@@ -12,7 +12,7 @@ namespace Domain.Interfaces.States
         void DenyDevelopedBacklogItem();
         void DenyTestedBacklogItem();
         void FinalizeBacklogItem();
-        void ReceiveFeedback();
+        void ReceiveFeedbackBacklogItem();
         void CloseBacklogItem();
     }
 }

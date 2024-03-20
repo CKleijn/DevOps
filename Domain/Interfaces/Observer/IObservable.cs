@@ -8,5 +8,5 @@ public interface IObservable
     
     void Unregister(IObserver observer);
     
-    void NotifyObservers(Notification changed);
+    void NotifyObservers(Notification notification);
 }

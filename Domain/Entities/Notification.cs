@@ -19,7 +19,7 @@ public class Notification
     private IList<User> _targetUsers { get; set; }
     public IList<User> TargetUsers { get => _targetUsers; set => _targetUsers = value; }
     
-    public User? CurrentTargetUser { get; set; }
+    public User? Recipient { get; set; }
     
     private NotificationService _notificationService { get; init; }
     

@@ -1,5 +1,6 @@
 ﻿using Domain.Enums;
 using Domain.Helpers;
+using System.Text;
 
 namespace Domain.Entities;
 
@@ -35,7 +36,26 @@ public class ReportElement
         _versionNumber = versionNumber;
         _date = date;
         _type = type;
-        
-        Logger.DisplayCreatedAlert(nameof(ReportElement), $"Header for {_projectName}");
+
+        if (_type == ReportElementType.HEADER)
+        {
+            Logger.DisplayCreatedAlert(nameof(ReportElement), $"Header for {_projectName}");
+        }
+        else
+        {
+            Logger.DisplayCreatedAlert(nameof(ReportElement), $"Footer for {_projectName}");
+        }
+    }
+
+    public override string ToString()
+    {
+        StringBuilder sb = new();
+
+        sb.AppendLine(_versionNumber.ToString());
+        sb.AppendLine(_date.ToString("dd/mm/yyyy"));
+        sb.AppendLine(_companyName);
+        sb.AppendLine(_projectName);
+
+        return sb.ToString();
     }
 }

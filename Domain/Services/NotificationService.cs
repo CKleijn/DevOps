@@ -16,20 +16,18 @@ public class NotificationService
 
     public void SendNotification()
     {
-        //if (_context.DestinationTypes.Count == 0)
-        //{
-        //    Logger.DisplayCustomAlert(nameof(NotificationService), nameof(SendNotification), "No destinations types provided.");
-        //    return;    
-        //}
-        
         var instances = AssemblyScanner.GetInstancesOfType<INotificationAdapter>();
         
-        AssemblyScanner.GetInstancesOfType<INotificationAdapter>().ToList().ForEach(adapter =>
-        {
-            if (_context.CurrentTargetUser!.DestinationTypes.Contains(adapter.Type))
-                adapter.SendMessage(_context);
-        });
+        AssemblyScanner.GetInstancesOfType<INotificationAdapter>()
+            .ToList()
+            .ForEach(adapter =>
+            {
+                if (_context.Recipient!.DestinationTypes.Contains(adapter.Type))
+                {
+                    adapter.SendMessage(_context);
+                }
+            });
         
-        Logger.DisplayCustomAlert(nameof(NotificationService), nameof(SendNotification), "All notifications sent successfully.");
+        Logger.DisplayCustomAlert(nameof(NotificationService), nameof(SendNotification), "All notifications sent successfully!");
     }
 }

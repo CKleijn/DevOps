@@ -4,12 +4,13 @@
     {
         public static IEnumerable<T> GetInstancesOfType<T>()
         {
-            List<T> instances = new List<T>();
+            List<T> instances = [];
             var assignableType = typeof(T);
 
             var scanners = AppDomain.CurrentDomain.GetAssemblies()
-                                                .SelectMany(x => x.GetTypes())
-                                                .Where(t => assignableType.IsAssignableFrom(t) && t.IsClass).ToList();
+                .SelectMany(x => x.GetTypes())
+                .Where(t => assignableType.IsAssignableFrom(t) && t.IsClass)
+                .ToList();
 
             foreach (Type type in scanners)
             {

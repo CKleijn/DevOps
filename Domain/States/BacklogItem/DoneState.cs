@@ -28,18 +28,18 @@ namespace Domain.States.BacklogItem
 
         public void FinalizeBacklogItem() => throw new NotImplementedException();
 
-        public void ReceiveFeedback()
+        public void ReceiveFeedbackBacklogItem()
         {
             _context.CurrentStatus = new TodoState(_context);
 
-            Logger.DisplayCustomAlert(nameof(DoneState), nameof(ReceiveFeedback), "Backlog item status changed to todo");
+            Logger.DisplayCustomAlert(nameof(DoneState), nameof(ReceiveFeedbackBacklogItem), "Backlog item status changed to todo!");
         }
 
         public void CloseBacklogItem()
         {
             _context.CurrentStatus = new ClosedState(_context);
 
-            Logger.DisplayCustomAlert(nameof(DoneState), nameof(CloseBacklogItem), "Backlog item status changed to closed");
+            Logger.DisplayCustomAlert(nameof(DoneState), nameof(CloseBacklogItem), "Backlog item status changed to closed!");
         }
     }
 }

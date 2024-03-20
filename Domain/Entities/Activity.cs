@@ -77,7 +77,7 @@ namespace Domain.Entities
         {
             if (_item.CurrentStatus.GetType() == typeof(DoneState) || _item.CurrentStatus.GetType() == typeof(ClosedState))
             {
-                Logger.DisplayCustomAlert(nameof(Activity), nameof(ValidateUpdate), "Can't update activity when item status is done or closed.");
+                Logger.DisplayCustomAlert(nameof(Activity), nameof(ValidateUpdate), "Can't update activity when item status is done or closed!");
                 return false;
             }
 

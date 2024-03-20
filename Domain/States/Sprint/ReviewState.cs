@@ -18,7 +18,7 @@ public class ReviewState : ISprintState
 
     public void ExecuteSprint()
     {
-        Logger.DisplayCustomAlert(nameof(SprintReview), nameof(ExecuteSprint), $"Successfully executed sprint ({_context.Title}), sprint will be closed.");
+        Logger.DisplayCustomAlert(nameof(SprintReview), nameof(ExecuteSprint), $"Successfully executed sprint ({_context.Title}), sprint will be closed!");
         
         CloseSprint();
     }
@@ -31,31 +31,31 @@ public class ReviewState : ISprintState
     {
         if (_context is SprintReview sprint)
         {
-            if(sprint.Reviews.Count == 0)
+            if (sprint.Reviews.Count is 0)
             {
-                Logger.DisplayCustomAlert(nameof(SprintReview), nameof(ReviewSprint), "Review can't be executed without any reviews. Provide at least one review.");
+                Logger.DisplayCustomAlert(nameof(SprintReview), nameof(ReviewSprint), "Review can't be executed without any reviews. Provide at least one review!");
                 return;
             }
             
-            //Execute the sprint
             ExecuteSprint();
 
             return;
         }
         
-        Logger.DisplayCustomAlert(nameof(SprintRelease), nameof(ReleaseSprint), "Sprint is of incorrect type");
+        Logger.DisplayCustomAlert(nameof(SprintRelease), nameof(ReleaseSprint), "Sprint is of an incorrect type!");
     }
 
     public void CancelSprint()
     {
         _context.CurrentStatus = new CancelledState(_context);
         
-        Logger.DisplayCustomAlert(nameof(ReviewState), nameof(CancelSprint), "Sprint status changed to cancelling");
+        Logger.DisplayCustomAlert(nameof(ReviewState), nameof(CancelSprint), "Sprint status changed to cancelling!");
     }
+
     public void CloseSprint()
     {
         _context.CurrentStatus = new ClosedState(_context);
         
-        Logger.DisplayCustomAlert(nameof(ReviewState), nameof(CloseSprint), "Sprint status changed to closing");
+        Logger.DisplayCustomAlert(nameof(ReviewState), nameof(CloseSprint), "Sprint status changed to closing!");
     }
 }

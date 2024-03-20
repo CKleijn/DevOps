@@ -1,7 +1,6 @@
 ﻿using Domain.Helpers;
 using Domain.Interfaces.States;
 using Domain.States.BacklogItem;
-using System.Diagnostics;
 using System.Text;
 
 namespace Domain.Entities
@@ -78,7 +77,7 @@ namespace Domain.Entities
 
         public void AddThreadToItem(Thread thread)
         {
-            if (_currentStatus.GetType() != typeof(DoneState) || _currentStatus.GetType() != typeof(ClosedState))
+            if (_currentStatus.GetType() != typeof(ClosedState))
             {
                 _threads.Add(thread);
             }
@@ -86,9 +85,9 @@ namespace Domain.Entities
             Logger.DisplayUpdatedAlert(nameof(Item), $"Added: {thread.Subject}");
         }
 
-        public void RemoveThreadToItem(Thread thread)
+        public void RemoveThreadFromItem(Thread thread)
         {
-            if (_currentStatus.GetType() != typeof(DoneState) || _currentStatus.GetType() != typeof(ClosedState))
+            if (_currentStatus.GetType() != typeof(ClosedState))
             {
                 _threads.Remove(thread);
             }
@@ -98,32 +97,24 @@ namespace Domain.Entities
 
         public void AddActivityToItem(Activity activity) 
         {
-            _activities.Add(activity);
+            if (_currentStatus.GetType() == typeof(TodoState) || _currentStatus.GetType() == typeof(DoingState))
+            {
+                _activities.Add(activity);
+            }
 
             Logger.DisplayUpdatedAlert(nameof(Item), $"Added: {activity.Title}");
         }
 
-        public void RemovedActivityToItem(Activity activity)
+        public void RemoveActivityFromItem(Activity activity)
         {
-            _activities.Remove(activity);
+            if (_currentStatus.GetType() == typeof(TodoState) || _currentStatus.GetType() == typeof(DoingState))
+            {
+                _activities.Remove(activity);
+            }
 
             Logger.DisplayUpdatedAlert(nameof(Item), $"Removed: {activity.Title}");
         }
 
-        public void CloseItem()
-        {
-            if (_currentStatus.GetType() == typeof(DoneState))
-            {
-                return;
-            }
-
-            _currentStatus.CloseBacklogItem();
-
-            // Send notification to product owner
-
-            Logger.DisplayCustomAlert(nameof(Item), nameof(CloseItem), $"Closed: {_title}");
-        }
-        
         //** Start State functions **//
 
         public void DevelopBacklogItem() => _currentStatus.DevelopBacklogItem();
@@ -133,7 +124,7 @@ namespace Domain.Entities
         public void FinalizeTestingBacklogItem() => _currentStatus.FinalizeTestingBacklogItem();
         public void DenyTestedBacklogItem() => _currentStatus.DenyTestedBacklogItem();
         public void FinalizeBacklogItem() => _currentStatus.FinalizeBacklogItem();
-        public void ReceiveFeedback() => _currentStatus.ReceiveFeedback();
+        public void ReceiveFeedback() => _currentStatus.ReceiveFeedbackBacklogItem();
         public void CloseBacklogItem() => _currentStatus.CloseBacklogItem();
     
         //** End State functions **//

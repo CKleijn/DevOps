@@ -17,7 +17,7 @@ namespace Domain.States.Pipeline
         {
             _context.CurrentStatus = new ExecutingState(_context);
 
-            Logger.DisplayCustomAlert(nameof(InitialState), nameof(ExecutePipeline), "Pipeline status changed to executing");
+            Logger.DisplayCustomAlert(nameof(InitialState), nameof(ExecutePipeline), "Pipeline status changed to executed!");
 
             _context.ExecutePipeline();
         }

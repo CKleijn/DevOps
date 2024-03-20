@@ -86,7 +86,7 @@ public abstract class Sprint : IObservable
 
     private IList<Report> _reports { get; init; }
     public IList<Report> Reports { get => _reports; init => _reports = value; }
-    
+
     private Developer _scrumMaster { get; set; }
     public Developer ScrumMaster 
     { 
@@ -103,6 +103,9 @@ public abstract class Sprint : IObservable
     
     private IList<Developer> _developers { get; init; }
     public IList<Developer> Developers { get => _developers; init => _developers = value; }
+
+    private IList<Developer> _testers { get; init; }
+    public IList<Developer> Testers { get => _testers; init => _testers = value; }
 
     private Project _project { get; init; }
     public Project Project { get => _project; init => _project = value; }
@@ -121,6 +124,7 @@ public abstract class Sprint : IObservable
         _endDate = endDate;
         _scrumMaster = scrumMaster;
         _developers = new List<Developer>();
+        _testers = new List<Developer>();
         _currentStatus = new InitialState(this);
         _reports = new List<Report>();
         _sprintBacklog = new SprintBacklog(this);
@@ -147,7 +151,27 @@ public abstract class Sprint : IObservable
         
         Logger.DisplayUpdatedAlert(nameof(Developers), $"Removed: {developer.Name}");
     }
-    
+
+    public void AddTester(Developer tester)
+    {
+        if (!ValidateChange())
+            return;
+
+        _testers.Add(tester);
+
+        Logger.DisplayUpdatedAlert(nameof(Testers), $"Added: {tester.Name}");
+    }
+
+    public void RemoveTester(Developer tester)
+    {
+        if (!ValidateChange())
+            return;
+
+        _testers.Remove(tester);
+
+        Logger.DisplayUpdatedAlert(nameof(Testers), $"Removed: {tester.Name}");
+    }
+
     public void AddReport(Report report)
     {
         if (!ValidateChange())

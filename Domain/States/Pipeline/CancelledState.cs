@@ -17,7 +17,7 @@ namespace Domain.States.Pipeline
         {
             _context.CurrentStatus = new ExecutingState(_context);
 
-            Logger.DisplayCustomAlert(nameof(CancelledState), nameof(ExecutePipeline), "Pipeline status changed to executing (rerun)");
+            Logger.DisplayCustomAlert(nameof(CancelledState), nameof(ExecutePipeline), "Pipeline status changed to executed (RERUN)!");
 
             _context.RerunPipeline();
         }

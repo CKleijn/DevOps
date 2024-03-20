@@ -1,5 +1,4 @@
-﻿using Domain.Entities;
-using Domain.Enums;
+﻿using Domain.Enums;
 using Domain.Interfaces.Services;
 using Infrastructure.Libraries.Notification;
 
@@ -7,17 +6,17 @@ namespace Infrastructure.Adapters.Notification
 {
     public class MailAdapter : INotificationAdapter
     {
-        public NotificationProvider Type { get; init; }
-    
+        private NotificationProvider _type { get; init; }
+        public NotificationProvider Type { get => _type; init => _type = value; }
+
         public MailAdapter()
         {
             Type = NotificationProvider.MAIL;
         }
     
-        public void SendMessage(Domain.Entities.Notification notification) {
-            
-            //send mail to currently targeted user
-            new Mail().SendMail(notification.Title, notification.Body, notification.CurrentTargetUser!.Email);
+        public void SendMessage(Domain.Entities.Notification notification) 
+        {
+            new Mail().SendMail(notification.Title, notification.Body, notification.Recipient!.Email);
         }
     }
 }

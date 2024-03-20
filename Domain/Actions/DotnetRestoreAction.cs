@@ -17,7 +17,7 @@ namespace Domain.Actions
 
         public override void Execute()
         {
-            Logger.DisplayCustomAlert(nameof(DotnetRestoreAction), nameof(Execute), $"Execute {Command}");
+            Logger.DisplayCustomAlert(nameof(DotnetRestoreAction), nameof(Execute), $"Execute {Command}!");
             Logger.DisplayCustomAlert(nameof(DotnetRestoreAction), nameof(Execute), $"Succesfully executed {Command} without any errors!");
         }
 

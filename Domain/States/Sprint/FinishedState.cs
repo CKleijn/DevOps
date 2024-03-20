@@ -1,7 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Helpers;
 using Domain.Interfaces.States;
-using Domain.States.BacklogItem;
 
 namespace Domain.States.Sprint;
 
@@ -27,17 +26,17 @@ public class FinishedState : ISprintState
         {
             return;
         }
-        
-        //Cancel sprint when results aren't "good enough" (not all sprint's backlog items are closed)
+
+        // Cancel sprint when results aren't "good enough" a.k.a not all backlog items from the sprint are closed
         if (_context.SprintBacklog.Items.Any(item => item.CurrentStatus.GetType() != typeof(ClosedState)))
         {
             CancelSprint();
             return;
         }
         
-        _context.CurrentStatus = new ReviewState(_context);
+        _context.CurrentStatus = new ReleaseState(_context);
         
-        Logger.DisplayCustomAlert(nameof(FinishedState), nameof(ReleaseSprint), "Sprint status changed to releasing");
+        Logger.DisplayCustomAlert(nameof(FinishedState), nameof(ReleaseSprint), "Sprint status changed to release!");
     }
 
     public void ReviewSprint()
@@ -47,7 +46,7 @@ public class FinishedState : ISprintState
             return;
         }
         
-        //Cancel sprint when results aren't "good enough" (not all sprint's backlog items are closed)
+        // Cancel sprint when results aren't "good enough" a.k.a not all backlog items from the sprint are closed
         if (_context.SprintBacklog.Items.Any(item => item.CurrentStatus.GetType() != typeof(ClosedState)))
         {
             CancelSprint();
@@ -56,23 +55,21 @@ public class FinishedState : ISprintState
         
         _context.CurrentStatus = new ReviewState(_context);
         
-        Logger.DisplayCustomAlert(nameof(FinishedState), nameof(ReviewSprint), "Sprint status changed to reviewing");
+        Logger.DisplayCustomAlert(nameof(FinishedState), nameof(ReviewSprint), "Sprint status changed to review!");
     }
 
     public void CancelSprint()
     {
         _context.CurrentStatus = new CancelledState(_context);
         
-        Logger.DisplayCustomAlert(nameof(FinishedState), nameof(CancelSprint), "Sprint status changed to cancelling");
+        Logger.DisplayCustomAlert(nameof(FinishedState), nameof(CancelSprint), "Sprint status changed to cancelled!");
 
-        // START NOTIFICATION
-        Notification notification = new Notification("Sprint cancelled", "Sprint has been cancelled");
+        Notification notification = new Notification("Sprint cancelled", "Sprint has been cancelled!");
 
         notification.AddTargetUser(_context.ScrumMaster);
         notification.AddTargetUser(_context.Project.ProductOwner);
 
         _context.NotifyObservers(notification);
-        // END NOTIFICATION
     }
 
     public void CloseSprint() => throw new NotImplementedException();

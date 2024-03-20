@@ -6,17 +6,17 @@ namespace Infrastructure.Adapters.Notification
 {
     public class TeamsAdapter : INotificationAdapter
     {
-        public NotificationProvider Type { get; init; }
-    
+        private NotificationProvider _type { get; init; }
+        public NotificationProvider Type { get => _type; init => _type = value; }
+
         public TeamsAdapter()
         {
             Type = NotificationProvider.TEAMS;
         }
     
-        public void SendMessage(Domain.Entities.Notification notification) {
-            
-            //send teams message to currently targeted user
-            new Teams().SendTeamsMessage(notification.Body, notification.CurrentTargetUser!.Id.ToString());
+        public void SendMessage(Domain.Entities.Notification notification) 
+        {
+            new Teams().SendTeamsMessage(notification.Body, notification.Recipient!.Id.ToString());
         }
     }
 }
