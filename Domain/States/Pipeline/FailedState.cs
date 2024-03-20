@@ -1,4 +1,5 @@
-﻿using Domain.Interfaces.States;
+﻿using Domain.Helpers;
+using Domain.Interfaces.States;
 
 namespace Domain.States.Pipeline
 {
@@ -12,7 +13,14 @@ namespace Domain.States.Pipeline
             _context = context;
         }
 
-        public void ExecutePipeline() => throw new NotImplementedException();
+        public void ExecutePipeline()
+        {
+            _context.CurrentStatus = new ExecutingState(_context);
+
+            Logger.DisplayCustomAlert(nameof(FailedState), nameof(ExecutePipeline), "Pipeline status changed to executing (rerun)");
+
+            _context.RerunPipeline();
+        }
 
         public void CancelPipeline() => throw new NotImplementedException();
 

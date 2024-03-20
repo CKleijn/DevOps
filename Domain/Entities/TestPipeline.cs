@@ -1,6 +1,6 @@
 ﻿using Domain.Helpers;
+using Domain.Interfaces.Composite;
 using Domain.Phases;
-using Domain.Tools;
 
 namespace Domain.Entities
 {
@@ -11,16 +11,9 @@ namespace Domain.Entities
             Logger.DisplayCreatedAlert(nameof(TestPipeline), name);
         }
 
-        protected override void InitializeSelectedActions()
+        protected override void FilterPhases(List<IPipeline> phases)
         {
-            var phases = new List<Phase>();
-
-            foreach (var phase in AssemblyScanner.GetSubclassesOf<Phase>())
-            {
-                phases.Add((Phase)Activator.CreateInstance(phase)!);
-            }
-
-            foreach (var phase in phases.Where(p => p.GetType() != typeof(DeployPhase)).OrderBy(p => p.SortIndex))
+            foreach (var phase in phases.Cast<Phase>().Where(p => p.GetType() != typeof(DeployPhase)).OrderBy(p => p.SortIndex))
             {
                 SelectedActions.Add(phase);
             }

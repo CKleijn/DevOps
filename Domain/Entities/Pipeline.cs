@@ -20,7 +20,7 @@ namespace Domain.Entities
         public IPipelineState? PreviousStatus { get => _previousStatus; set => _previousStatus = value; }
 
         private IPipelineState _currentStatus { get; set; }
-        public IPipelineState CurrentStatus { get => _currentStatus; set => _currentStatus = value; }
+        public IPipelineState CurrentStatus { get => _currentStatus; set { _previousStatus = _currentStatus; _currentStatus = value; } }
 
         private IList<IPipeline> _allActions { get; set; }
         public IList<IPipeline> AllActions { get => _allActions; set => _allActions = value; }
@@ -63,16 +63,21 @@ namespace Domain.Entities
             }
         }
 
-        protected virtual void InitializeSelectedActions()
+        private void InitializeSelectedActions()
         {
-            var phases = new List<Phase>();
+            var phases = new List<IPipeline>();
 
             foreach (var phase in AssemblyScanner.GetSubclassesOf<Phase>())
             {
                 phases.Add((Phase)Activator.CreateInstance(phase)!);
             }
 
-            foreach (var phase in phases.OrderBy(p => p.SortIndex))
+            FilterPhases(phases);
+        }
+
+        protected virtual void FilterPhases(List<IPipeline> phases)
+        {
+            foreach (var phase in phases.Cast<Phase>().OrderBy(p => p.SortIndex))
             {
                 _selectedActions.Add(phase);
             }
@@ -90,78 +95,29 @@ namespace Domain.Entities
             phase!.Remove(action);
         }
 
-        public void ExecutePipeline()
-        {
-            try
-            {
-                if (_currentStatus.GetType() == typeof(InitialState) || _currentStatus.GetType() == typeof(CancelledState) || _currentStatus.GetType() == typeof(FailedState))
-                {
-                    Start();
-                    Source();
-                    Package();
-                    Utility();
-                    Build();
-                    Test();
-                    Analyse();
-                    Deploy();
-                    Finish();
-                }
-                else
-                {
-                    Logger.DisplayCustomAlert(nameof(Pipeline), nameof(ExecutePipeline), "Not allowed to execute the pipeline!");
-                }
-            }
-            catch (Exception e)
-            {
-                _currentStatus.FailPipeline();
-                Logger.DisplayCustomAlert(nameof(Pipeline), nameof(ExecutePipeline), e.Message);
-            }
-        }
+        //** Start State functions **//
+        public void ExecutePipeline() => _currentStatus.ExecutePipeline();
+        public void CancelPipeline() => _currentStatus.CancelPipeline();
+        public void RerunPipeline() => _currentStatus.ExecutePipeline();
+        //** Not callable **//
+        private void FinalizePipeline() => _currentStatus.FinalizePipeline();
+        //** End State functions **//
 
-        public void RerunPipeline()
+        public void PipelineTemplate()
         {
-            if (_currentStatus.GetType() == typeof(FailedState))
-            {
-                ExecutePipeline();
-            }
-            else
-            {
-                Logger.DisplayCustomAlert(nameof(Pipeline), nameof(RerunPipeline), "Not allowed to rerun the pipeline!");
-            }
-        }
-
-        public void CancelPipeline()
-        {
-            if (_currentStatus.GetType() == typeof(ExecutingState) || _currentStatus.GetType() == typeof(FailedState))
-            {
-                _currentStatus.CancelPipeline();
-            }
-            else
-            {
-                Logger.DisplayCustomAlert(nameof(Pipeline), nameof(CancelPipeline), "Not allowed to cancel the pipeline!");
-            }
-        }
-
-        protected void RunAction(Type phaseType)
-        {
-            var phase = _selectedActions.FirstOrDefault(a => a.GetType() == phaseType) as Phase;
-
-            if(phase!.Actions.Count > 0)
-            {
-                foreach (var action in phase.Actions.Cast<Action>())
-                {
-                    action.Execute();
-                }
-            }
-            else
-            {
-                throw new Exception("Pipeline failed... need all required actions!");
-            }
+            Start();
+            Source();
+            Package();
+            Utility();
+            Build();
+            Test();
+            Analyse();
+            Deploy();
+            Finish();
         }
 
         private void Start()
         {
-            _currentStatus.ExecutePipeline();
             Logger.DisplayCustomAlert(nameof(Pipeline), nameof(Start), $"Start pipeline {_name} ...");
             Logger.DisplayCustomAlert(nameof(Pipeline), nameof(Start), $"Pipeline {_name} started!");
         }
@@ -182,12 +138,29 @@ namespace Domain.Entities
 
         private void Finish()
         {
-            _currentStatus.FinalizePipeline();
+            FinalizePipeline();
             Logger.DisplayCustomAlert(nameof(Pipeline), nameof(Finish), $"Finish pipeline {_name} ...");
             Logger.DisplayCustomAlert(nameof(Pipeline), nameof(Finish), $"Pipeline {_name} finished!");
         }
 
-        public void PrintAllActions()
+        protected void RunAction(Type phaseType)
+        {
+            var phase = _selectedActions.FirstOrDefault(a => a.GetType() == phaseType) as Phase;
+
+            if (phase!.Actions.Count > 0)
+            {
+                foreach (var action in phase.Actions.Cast<Action>())
+                {
+                    action.Execute();
+                }
+            }
+            else
+            {
+                throw new Exception("Pipeline failed... need all required actions!");
+            }
+        }
+
+        public void Print(int indentations = 0)
         {
             Logger.DisplayCustomAlert(nameof(Pipeline), nameof(Print), "All pipeline actions");
 
@@ -195,10 +168,7 @@ namespace Domain.Entities
             {
                 action.Print(0);
             }
-        }
 
-        public void Print(int indentations = 0)
-        {
             Logger.DisplayCustomAlert(nameof(Pipeline), nameof(Print), "Selected pipeline actions");
 
             foreach (var action in _selectedActions)

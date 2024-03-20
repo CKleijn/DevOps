@@ -15,10 +15,11 @@ namespace Domain.States.Pipeline
 
         public void ExecutePipeline()
         {
-            _context.PreviousStatus = this;
             _context.CurrentStatus = new ExecutingState(_context);
 
             Logger.DisplayCustomAlert(nameof(InitialState), nameof(ExecutePipeline), "Pipeline status changed to executing");
+
+            _context.ExecutePipeline();
         }
 
         public void CancelPipeline() => throw new NotImplementedException();

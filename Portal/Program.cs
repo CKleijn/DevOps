@@ -45,7 +45,7 @@ app.MapGet("/", () =>
 
 
     var pipeline = new TestPipeline("Pipeline");
-    pipeline.PrintAllActions();
+    pipeline.Print();
 
     Console.WriteLine("");
 
@@ -58,9 +58,10 @@ app.MapGet("/", () =>
     pipeline.AddAction(new NpmPublishAction());
     Console.WriteLine("");
     pipeline.Print();
-
+    pipeline.RerunPipeline();
     Console.WriteLine("");
     pipeline.ExecutePipeline();
+    pipeline.RerunPipeline();
 });
 
 app.Run();

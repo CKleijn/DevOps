@@ -13,11 +13,21 @@ namespace Domain.States.Pipeline
             _context = context;
         }
 
-        public void ExecutePipeline() => throw new NotImplementedException();
+        public void ExecutePipeline()
+        {
+            try
+            {
+                _context.PipelineTemplate();
+            }
+            catch (Exception e)
+            {
+                FailPipeline();
+                Logger.DisplayCustomAlert(nameof(Pipeline), nameof(ExecutePipeline), e.Message);
+            }
+        }
 
         public void CancelPipeline()
         {
-            _context.PreviousStatus = this;
             _context.CurrentStatus = new CancelledState(_context);
 
             Logger.DisplayCustomAlert(nameof(ExecutingState), nameof(CancelPipeline), "Pipeline status changed to cancelled");
@@ -27,7 +37,6 @@ namespace Domain.States.Pipeline
         {
             // Send notification to scrum master
 
-            _context.PreviousStatus = this;
             _context.CurrentStatus = new FailedState(_context);
 
             Logger.DisplayCustomAlert(nameof(ExecutingState), nameof(FailPipeline), "Pipeline status changed to failed");
@@ -37,7 +46,6 @@ namespace Domain.States.Pipeline
         {
             // Send notification to scrum master and product owner
 
-            _context.PreviousStatus = this;
             _context.CurrentStatus = new FinishedState(_context);
 
             Logger.DisplayCustomAlert(nameof(ExecutingState), nameof(FinalizePipeline), "Pipeline status changed to finished");
