@@ -1,9 +1,10 @@
 ﻿using System.Text;
+using Domain.Enums;
+using Domain.Helpers;
 using Domain.Interfaces.Observer;
 
 namespace Domain.Entities;
 
-// public abstract class User : IObserver<>
 public abstract class User : IObserver
 {
     private Guid _id { get; init; }
@@ -17,14 +18,32 @@ public abstract class User : IObserver
     private string _password { get; set; }
     public string Password { get => _password; set => _password = value; }
 
-    public User(string name, string email, string password)
+    private List<NotificationProvider> _destinationTypes { get; set; }
+    public List<NotificationProvider> DestinationTypes { get => _destinationTypes; set => _destinationTypes = value; }
+
+    public User(string name, string email, string password, List<NotificationProvider> notificationProviders)
     {
-        Id = Guid.NewGuid();
-        Name = name;
-        Email = email;
-        Password = password;
+        _id = Guid.NewGuid();
+        _name = name;
+        _email = email;
+        _password = password;
+        _destinationTypes = notificationProviders;
     }
-    
+
+    public void AddDestinationType(NotificationProvider destinationType)
+    {
+        _destinationTypes.Add(destinationType);
+
+        Logger.DisplayUpdatedAlert(nameof(User), $"Added: {destinationType}");
+    }
+
+    public void RemoveDestinationType(NotificationProvider destinationType)
+    {
+        _destinationTypes.Remove(destinationType);
+
+        Logger.DisplayUpdatedAlert(nameof(User), $"Removed: {destinationType}");
+    }
+
     public void Update(Notification notification)
     {
         //Set the current target user for the notification
@@ -41,7 +60,8 @@ public abstract class User : IObserver
         sb.AppendLine($"Id: {_id}");
         sb.AppendLine($"Name: {_name}");
         sb.AppendLine($"Email: {_email}");
-        
+        sb.AppendLine($"Destination Types: {string.Join(", ", _destinationTypes.Select(x => x.ToString()))}");
+
         return sb.ToString();
     }
 }

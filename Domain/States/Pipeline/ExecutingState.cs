@@ -1,5 +1,4 @@
 ﻿using Domain.Entities;
-using Domain.Enums;
 using Domain.Helpers;
 using Domain.Interfaces.States;
 
@@ -37,17 +36,14 @@ namespace Domain.States.Pipeline
 
         public void FailPipeline()
         {
-            // Send notification to scrum master
-            // Notification notification = new Notification("Pipeline failed title", "Pipeline failed description");
-            //
-            // notification.AddTargetUser(_context.Project.ProductOwner);
-            // notification.AddDestinationType(NotificationProvider.MAIL);
-            // notification.AddDestinationType(NotificationProvider.TEAMS);
-            //
-            // _context.Project.NotifyObservers(notification);
-            
+            // START NOTIFICATION
+            Notification notification = new Notification("Pipeline failed", "Pipeline failed");
+
+            notification.AddTargetUser(_context.Sprint.ScrumMaster);
+
+            _context.Sprint.NotifyObservers(notification);
             // END NOTIFICATION
-            
+
             _context.CurrentStatus = new FailedState(_context);
 
             Logger.DisplayCustomAlert(nameof(ExecutingState), nameof(FailPipeline), "Pipeline status changed to failed");
@@ -55,11 +51,18 @@ namespace Domain.States.Pipeline
 
         public void FinalizePipeline()
         {
-            // Send notification to scrum master and product owner
-
             _context.CurrentStatus = new FinishedState(_context);
 
             Logger.DisplayCustomAlert(nameof(ExecutingState), nameof(FinalizePipeline), "Pipeline status changed to finished");
+
+            // START NOTIFICATION
+            Notification notification = new Notification("Pipeline finished", "Pipeline has finished");
+
+            notification.AddTargetUser(_context.Sprint.ScrumMaster);
+            notification.AddTargetUser(_context.Sprint.Project.ProductOwner);
+
+            _context.Sprint.NotifyObservers(notification);
+            // END NOTIFICATION
         }
     }
 }

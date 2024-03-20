@@ -142,10 +142,10 @@ namespace Domain.Entities
 
         private void Finish()
         {
-            FinalizePipeline();
             Logger.DisplayCustomAlert(nameof(Pipeline), nameof(Finish), $"Finish pipeline {_name} ...");
             Logger.DisplayCustomAlert(nameof(Pipeline), nameof(Finish), $"Pipeline {_name} finished!");
-        }
+            FinalizePipeline();
+         }
 
         protected void RunAction(Type phaseType)
         {

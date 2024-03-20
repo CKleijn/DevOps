@@ -9,18 +9,12 @@ public class SprintRelease : Sprint
     private IList<Release> _releases { get; init; }
     public IList<Release> Releases { get => _releases; init => _releases = value; }
     
-    public SprintRelease(string title, DateTime startDate, DateTime endDate, User scrumMaster, Pipeline pipeline) : base(title, startDate, endDate, scrumMaster, pipeline)
+    public SprintRelease(string title, DateTime startDate, DateTime endDate, User scrumMaster, Project project) : base(title, startDate, endDate, scrumMaster, project)
     {
         _releases = new List<Release>();
         Logger.DisplayCreatedAlert(nameof(SprintRelease), Title);
     }
-    
-    public SprintRelease(string title, DateTime startDate, DateTime endDate, User scrumMaster) : base(title, startDate, endDate, scrumMaster)
-    {
-        _releases = new List<Release>();
-        Logger.DisplayCreatedAlert(nameof(SprintRelease), Title);
-    }
-    
+
     public void AddRelease(Release release)
     {
         _releases.Add(release);
@@ -32,7 +26,6 @@ public class SprintRelease : Sprint
         _releases.Remove(release);
         Logger.DisplayUpdatedAlert(nameof(Releases), $"Removed release with an id of: {release.Id}");
     }
-
 
     protected override bool ValidateChange()
     {

@@ -5,7 +5,7 @@ namespace Domain.Entities
 {
     public class ReleasePipeline : Pipeline
     {
-        public ReleasePipeline(string name) : base(name) 
+        public ReleasePipeline(string name, Sprint sprint) : base(name, sprint) 
         {
             Logger.DisplayCreatedAlert(nameof(ReleasePipeline), name);
         }

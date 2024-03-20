@@ -21,9 +21,6 @@ public class Notification
     
     public User? CurrentTargetUser { get; set; }
     
-    private List<NotificationProvider> _destinationTypes { get; set; }
-    public List<NotificationProvider> DestinationTypes { get => _destinationTypes; set => _destinationTypes = value; }
-    
     private NotificationService _notificationService { get; init; }
     
     public Notification(string title, string body)
@@ -32,7 +29,6 @@ public class Notification
         _title = title;
         _body = body;
         _targetUsers = new List<User>();
-        _destinationTypes = new List<NotificationProvider>();
         _notificationService = new NotificationService(this);
 
         Logger.DisplayCreatedAlert(nameof(Notification), _title);
@@ -51,20 +47,6 @@ public class Notification
 
         Logger.DisplayUpdatedAlert(nameof(Notification), $"Removed: {user.Name}");
     }
-    
-    public void AddDestinationType(NotificationProvider destinationType)
-    {
-        _destinationTypes.Add(destinationType);
-
-        Logger.DisplayUpdatedAlert(nameof(Notification), $"Added: {destinationType}");
-    }
-    
-    public void RemoveDestinationType(NotificationProvider destinationType)
-    {
-        _destinationTypes.Remove(destinationType);
-
-        Logger.DisplayUpdatedAlert(nameof(Notification), $"Removed: {destinationType}");
-    }
 
     public void SendNotification()
     {
@@ -79,7 +61,6 @@ public class Notification
         sb.AppendLine($"Title: {_title}");
         sb.AppendLine($"Body: {_body}");
         sb.AppendLine($"Target Users: {string.Join(", ", _targetUsers.Select(x => x.Name))}");
-        sb.AppendLine($"Destination Types: {string.Join(", ", _destinationTypes.Select(x => x.ToString()))}");
         
         return sb.ToString();
     }

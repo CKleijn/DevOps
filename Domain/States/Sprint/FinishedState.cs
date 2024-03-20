@@ -61,12 +61,19 @@ public class FinishedState : ISprintState
 
     public void CancelSprint()
     {
-        //TODO: Send notifications to productowner and scrum master
-        
         _context.CurrentStatus = new CancelledState(_context);
         
         Logger.DisplayCustomAlert(nameof(FinishedState), nameof(CancelSprint), "Sprint status changed to cancelling");
+
+        // START NOTIFICATION
+        Notification notification = new Notification("Sprint cancelled", "Sprint has been cancelled");
+
+        notification.AddTargetUser(_context.ScrumMaster);
+        notification.AddTargetUser(_context.Project.ProductOwner);
+
+        _context.NotifyObservers(notification);
+        // END NOTIFICATION
     }
-    
+
     public void CloseSprint() => throw new NotImplementedException();
 }

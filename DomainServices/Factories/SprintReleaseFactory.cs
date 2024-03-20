@@ -6,8 +6,8 @@ namespace DomainServices.Factories;
 
 public class SprintReleaseFactory : ISprintFactory<SprintRelease>
 {
-    public SprintRelease CreateSprint(string title, DateTime startDate, DateTime endDate, User scrumMaster)
+    public SprintRelease CreateSprint(string title, DateTime startDate, DateTime endDate, User scrumMaster, Project project)
     {
-        return new SprintRelease(title, startDate, endDate, scrumMaster);
+        return new SprintRelease(title, startDate, endDate, scrumMaster, project);
     }
 }

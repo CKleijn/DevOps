@@ -9,18 +9,12 @@ public class SprintReview : Sprint
     private IList<Review> _reviews { get; init; }
     public IList<Review> Reviews { get => _reviews; init => _reviews = value; }
     
-    public SprintReview(string title, DateTime startDate, DateTime endDate, User scrumMaster, Pipeline pipeline) : base(title, startDate, endDate, scrumMaster, pipeline)
+    public SprintReview(string title, DateTime startDate, DateTime endDate, User scrumMaster, Project project) : base(title, startDate, endDate, scrumMaster, project)
     {
         _reviews = new List<Review>();
         Logger.DisplayCreatedAlert(nameof(SprintReview), Title);
     }
     
-    public SprintReview(string title, DateTime startDate, DateTime endDate, User scrumMaster) : base(title, startDate, endDate, scrumMaster)
-    {
-        _reviews = new List<Review>();
-        Logger.DisplayCreatedAlert(nameof(SprintReview), Title);
-    }
-
     public void AddReview(Review review)
     {
         _reviews.Add(review);

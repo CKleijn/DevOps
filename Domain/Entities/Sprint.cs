@@ -103,27 +103,15 @@ public abstract class Sprint : IObservable
     
     private IList<Developer> _developers { get; init; }
     public IList<Developer> Developers { get => _developers; init => _developers = value; }
-    
+
+    private Project _project { get; init; }
+    public Project Project { get => _project; init => _project = value; }
+
     private Pipeline? _pipeline { get; set; }
     public Pipeline? Pipeline { get => _pipeline; set => _pipeline = value; }
     
     private IList<IObserver> _observers { get; init; }
     public IList<IObserver> Observers { get => _observers; init => _observers = value; }
-    
-    public Sprint(string title, DateTime startDate, DateTime endDate, User scrumMaster, Project project, Pipeline pipeline)
-    {
-        _id = Guid.NewGuid();
-        _title = title;
-        _startDate = startDate;
-        _endDate = endDate;
-        _scrumMaster = scrumMaster;
-        _developers = new List<Developer>();
-        _currentStatus = new InitialState(this);
-        _reports = new List<Report>();
-        _sprintBacklog = new SprintBacklog(this);
-        _observers = new List<IObserver>();
-        _pipeline = pipeline;
-    }
     
     public Sprint(string title, DateTime startDate, DateTime endDate, User scrumMaster, Project project)
     {
@@ -136,6 +124,7 @@ public abstract class Sprint : IObservable
         _currentStatus = new InitialState(this);
         _reports = new List<Report>();
         _sprintBacklog = new SprintBacklog(this);
+        _project = project;
         _observers = new List<IObserver>();
     }
     
@@ -177,6 +166,11 @@ public abstract class Sprint : IObservable
         _reports.Remove(report);
         
         Logger.DisplayUpdatedAlert(nameof(Reports), $"Removed: {report.Title}");
+    }
+
+    public void SetPipeline(Pipeline pipeline)
+    {
+        _pipeline = pipeline;
     }
     
     //** Start State functions **//
