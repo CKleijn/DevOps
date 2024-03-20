@@ -15,8 +15,8 @@ public class Project
     private string _description { get; set; }
     public string Description { get => _description; set => _description = value; }
     
-    private ProductOwner _productOwner { get; init; }
-    public ProductOwner ProductOwner { get => _productOwner; init => _productOwner = value;}
+    private ProductOwner _productOwner { get; set; }
+    public ProductOwner ProductOwner { get => _productOwner; set => _productOwner = value;}
 
     private ProjectBacklog _backlog { get; init; }
     public ProjectBacklog Backlog { get => _backlog; init => _backlog = value; }

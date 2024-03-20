@@ -14,7 +14,7 @@ public class SprintRelease : Sprint
     
     public SprintRelease(string title, DateTime startDate, DateTime endDate, User scrumMaster) : base(title, startDate, endDate, scrumMaster)
     {
-        _releases = new List<Release>();   
+        _releases = new List<Release>();
         
         Logger.DisplayCreatedAlert(nameof(SprintRelease), Title);
     }
@@ -38,6 +38,14 @@ public class SprintRelease : Sprint
         if (CurrentStatus.GetType() != typeof(InitialState))
         {
             Logger.DisplayCustomAlert(nameof(Sprint), nameof(ValidateChange), $"Can't update sprint in current state ({CurrentStatus.GetType()}).");
+            return false;
+        }
+        
+        //Don't allow mutation whenever pipeline's state differs from the initial state
+        if (_pipeline.CurrentStatus.GetType() != typeof(States.Pipeline.InitialState))
+        {
+            Logger.DisplayCustomAlert(nameof(Sprint), nameof(ValidateChange), $"Can't update sprint when it's corresponding pipeline isn't in its initial state ({_pipeline.CurrentStatus.GetType()}).");
+            
             return false;
         }
         
