@@ -34,7 +34,7 @@ namespace Domain.Entities
 
         private int _storyPoints { get; set; }
         public int StoryPoints { get => _storyPoints; set => _storyPoints = value; }
-
+        
         public Item(string title, string description, Developer developer, int storyPoints)
         {
             _id = Guid.NewGuid();

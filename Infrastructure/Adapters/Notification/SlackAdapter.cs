@@ -15,10 +15,8 @@ namespace Infrastructure.Adapters.Notification
     
         public void SendMessage(Domain.Entities.Notification notification) {
             
-            //send slack to all targeted users
-            foreach(var recipient in notification.TargetUsers) {
-                new Slack().SendSlack(notification.Body, recipient.Id.ToString(), notification.Sender.Id.ToString());
-            }
+            //send slack to currently targeted user
+            new Slack().SendSlack(notification.Body, notification.CurrentTargetUser!.Id.ToString());
         }
     }
 }

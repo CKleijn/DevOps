@@ -9,13 +9,15 @@ public class SprintRelease : Sprint
     private IList<Release> _releases { get; init; }
     public IList<Release> Releases { get => _releases; init => _releases = value; }
     
-    private ReleasePipeline _pipeline { get; set; }
-    public ReleasePipeline Pipeline { get => _pipeline; set => _pipeline = value; }
+    public SprintRelease(string title, DateTime startDate, DateTime endDate, User scrumMaster, Pipeline pipeline) : base(title, startDate, endDate, scrumMaster, pipeline)
+    {
+        _releases = new List<Release>();
+        Logger.DisplayCreatedAlert(nameof(SprintRelease), Title);
+    }
     
     public SprintRelease(string title, DateTime startDate, DateTime endDate, User scrumMaster) : base(title, startDate, endDate, scrumMaster)
     {
         _releases = new List<Release>();
-        
         Logger.DisplayCreatedAlert(nameof(SprintRelease), Title);
     }
     
@@ -42,9 +44,9 @@ public class SprintRelease : Sprint
         }
         
         //Don't allow mutation whenever pipeline's state differs from the initial state
-        if (_pipeline.CurrentStatus.GetType() != typeof(States.Pipeline.InitialState))
+        if (Pipeline?.CurrentStatus.GetType() != typeof(States.Pipeline.InitialState))
         {
-            Logger.DisplayCustomAlert(nameof(Sprint), nameof(ValidateChange), $"Can't update sprint when it's corresponding pipeline isn't in its initial state ({_pipeline.CurrentStatus.GetType()}).");
+            Logger.DisplayCustomAlert(nameof(Sprint), nameof(ValidateChange), $"Can't update sprint when it's corresponding pipeline isn't in its initial state ({Pipeline?.CurrentStatus.GetType()}).");
             
             return false;
         }

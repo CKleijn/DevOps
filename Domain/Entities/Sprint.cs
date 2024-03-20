@@ -1,10 +1,11 @@
 using Domain.Helpers;
+using Domain.Interfaces.Observer;
 using Domain.Interfaces.States;
 using Domain.States.Sprint;
 
 namespace Domain.Entities;
 
-public abstract class Sprint
+public abstract class Sprint : IObservable
 {
     private Guid _id { get; init; }
     public  Guid Id { get => _id ; init => _id = value; }
@@ -103,7 +104,13 @@ public abstract class Sprint
     private IList<Developer> _developers { get; init; }
     public IList<Developer> Developers { get => _developers; init => _developers = value; }
     
-    public Sprint(string title, DateTime startDate, DateTime endDate, User scrumMaster)
+    private Pipeline? _pipeline { get; set; }
+    public Pipeline? Pipeline { get => _pipeline; set => _pipeline = value; }
+    
+    private IList<IObserver> _observers { get; init; }
+    public IList<IObserver> Observers { get => _observers; init => _observers = value; }
+    
+    public Sprint(string title, DateTime startDate, DateTime endDate, User scrumMaster, Project project, Pipeline pipeline)
     {
         _id = Guid.NewGuid();
         _title = title;
@@ -114,6 +121,22 @@ public abstract class Sprint
         _currentStatus = new InitialState(this);
         _reports = new List<Report>();
         _sprintBacklog = new SprintBacklog(this);
+        _observers = new List<IObserver>();
+        _pipeline = pipeline;
+    }
+    
+    public Sprint(string title, DateTime startDate, DateTime endDate, User scrumMaster, Project project)
+    {
+        _id = Guid.NewGuid();
+        _title = title;
+        _startDate = startDate;
+        _endDate = endDate;
+        _scrumMaster = scrumMaster;
+        _developers = new List<Developer>();
+        _currentStatus = new InitialState(this);
+        _reports = new List<Report>();
+        _sprintBacklog = new SprintBacklog(this);
+        _observers = new List<IObserver>();
     }
     
     public void AddDeveloper(Developer developer)
@@ -167,6 +190,34 @@ public abstract class Sprint
     public void CloseSprint() => _currentStatus.CloseSprint();
     
     //** End State functions **//
+    
+    //** Observer functions **//
+    public void Register(IObserver observer)
+    {
+        _observers.Add(observer);
+        
+        Logger.DisplayUpdatedAlert(nameof(Project), $"Added observer to project: {Title}");
+    }
+
+    public void Unregister(IObserver observer)
+    {
+        _observers.Remove(observer);
+        
+        Logger.DisplayUpdatedAlert(nameof(Project), $"Removed observer from project: {Title}");
+    }
+
+    public void NotifyObservers(Notification notification)
+    {
+        if (notification.TargetUsers.Count == 0)
+            return;
+        
+        _observers
+            .Where(observer => notification.TargetUsers.Any(targetUser => targetUser.Id == observer.Id))
+            .ToList()
+            .ForEach(o => o.Update(notification));
+    }
+    
+    //** End observer functions **//
 
     protected abstract bool ValidateChange();
 

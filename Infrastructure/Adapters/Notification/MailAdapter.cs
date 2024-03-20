@@ -16,10 +16,8 @@ namespace Infrastructure.Adapters.Notification
     
         public void SendMessage(Domain.Entities.Notification notification) {
             
-            //send mail to all targeted users
-            foreach(var recipient in notification.TargetUsers) {
-                new Mail().SendMail(notification.Title, notification.Body, recipient.Email, notification.Sender.Email);
-            }
+            //send mail to currently targeted user
+            new Mail().SendMail(notification.Title, notification.Body, notification.CurrentTargetUser!.Email);
         }
     }
 }

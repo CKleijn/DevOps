@@ -1,6 +1,7 @@
 ﻿using Domain.Helpers;
 using Domain.Interfaces.Strategies;
 using System.Text;
+using Domain.Interfaces.Observer;
 
 namespace Domain.Entities;
 
@@ -50,7 +51,6 @@ public class Project
         _pipelines!.Remove(pipeline);
     }
 
-    //TODO: implement functions
     public override string ToString()
     {
         StringBuilder sb = new();

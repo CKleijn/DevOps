@@ -16,18 +16,17 @@ public class Notification
     private string _body { get; set; }
     public string Body { get => _body; set => _body = value; }
     
-    private User _sender { get; set; }
-    public User Sender { get => _sender; set => _sender = value; }
-    
     private IList<User> _targetUsers { get; set; }
     public IList<User> TargetUsers { get => _targetUsers; set => _targetUsers = value; }
+    
+    public User? CurrentTargetUser { get; set; }
     
     private List<NotificationProvider> _destinationTypes { get; set; }
     public List<NotificationProvider> DestinationTypes { get => _destinationTypes; set => _destinationTypes = value; }
     
     private NotificationService _notificationService { get; init; }
     
-    public Notification(string title, string body, User sender)
+    public Notification(string title, string body)
     {
         _id = Guid.NewGuid();
         _title = title;
@@ -35,7 +34,6 @@ public class Notification
         _targetUsers = new List<User>();
         _destinationTypes = new List<NotificationProvider>();
         _notificationService = new NotificationService(this);
-        _sender = sender;
 
         Logger.DisplayCreatedAlert(nameof(Notification), _title);
     }

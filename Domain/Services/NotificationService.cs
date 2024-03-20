@@ -22,12 +22,6 @@ public class NotificationService
             return;    
         }
         
-        if (_context.TargetUsers.Count == 0)
-        {
-            Logger.DisplayCustomAlert(nameof(NotificationService), nameof(SendNotification), "No recipients have been provided.");
-            return;    
-        }
-        
         var instances = AssemblyScanner.GetInstancesOfType<INotificationAdapter>();
         
         AssemblyScanner.GetInstancesOfType<INotificationAdapter>().ToList().ForEach(adapter =>

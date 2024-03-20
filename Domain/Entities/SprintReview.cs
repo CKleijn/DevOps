@@ -9,9 +9,11 @@ public class SprintReview : Sprint
     private IList<Review> _reviews { get; init; }
     public IList<Review> Reviews { get => _reviews; init => _reviews = value; }
     
-    private Pipeline _pipeline { get; set; }
-    public Pipeline Pipeline { get => _pipeline; set => _pipeline = value; }
-    
+    public SprintReview(string title, DateTime startDate, DateTime endDate, User scrumMaster, Pipeline pipeline) : base(title, startDate, endDate, scrumMaster, pipeline)
+    {
+        _reviews = new List<Review>();
+        Logger.DisplayCreatedAlert(nameof(SprintReview), Title);
+    }
     
     public SprintReview(string title, DateTime startDate, DateTime endDate, User scrumMaster) : base(title, startDate, endDate, scrumMaster)
     {
@@ -42,9 +44,9 @@ public class SprintReview : Sprint
         }
         
         //Don't allow mutation whenever pipeline's state differs from the initial state
-        if (_pipeline.CurrentStatus.GetType() != typeof(States.Pipeline.InitialState))
+        if (Pipeline?.CurrentStatus.GetType() != typeof(States.Pipeline.InitialState))
         {
-            Logger.DisplayCustomAlert(nameof(Sprint), nameof(ValidateChange), $"Can't update sprint when it's corresponding pipeline isn't in its initial state ({_pipeline.CurrentStatus.GetType()}).");
+            Logger.DisplayCustomAlert(nameof(Sprint), nameof(ValidateChange), $"Can't update sprint when it's corresponding pipeline isn't in its initial state ({Pipeline?.CurrentStatus.GetType()}).");
             
             return false;
         }

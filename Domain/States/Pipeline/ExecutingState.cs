@@ -1,4 +1,6 @@
-﻿using Domain.Helpers;
+﻿using Domain.Entities;
+using Domain.Enums;
+using Domain.Helpers;
 using Domain.Interfaces.States;
 
 namespace Domain.States.Pipeline
@@ -36,7 +38,16 @@ namespace Domain.States.Pipeline
         public void FailPipeline()
         {
             // Send notification to scrum master
-
+            // Notification notification = new Notification("Pipeline failed title", "Pipeline failed description");
+            //
+            // notification.AddTargetUser(_context.Project.ProductOwner);
+            // notification.AddDestinationType(NotificationProvider.MAIL);
+            // notification.AddDestinationType(NotificationProvider.TEAMS);
+            //
+            // _context.Project.NotifyObservers(notification);
+            
+            // END NOTIFICATION
+            
             _context.CurrentStatus = new FailedState(_context);
 
             Logger.DisplayCustomAlert(nameof(ExecutingState), nameof(FailPipeline), "Pipeline status changed to failed");

@@ -6,7 +6,7 @@ namespace Domain.Entities
 {
     public class TestPipeline : Pipeline
     {
-        public TestPipeline(string name) : base(name)
+        public TestPipeline(string name, Sprint sprint) : base(name, sprint)
         {
             Logger.DisplayCreatedAlert(nameof(TestPipeline), name);
         }

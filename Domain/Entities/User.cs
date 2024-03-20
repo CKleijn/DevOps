@@ -1,12 +1,13 @@
 ﻿using System.Text;
+using Domain.Interfaces.Observer;
 
 namespace Domain.Entities;
 
-public abstract class User
+// public abstract class User : IObserver<>
+public abstract class User : IObserver
 {
     private Guid _id { get; init; }
     public Guid Id { get => _id; init => _id = value; }
-    
     private string _name { get; set; }
     public string Name { get => _name; set => _name = value; }
     
@@ -24,8 +25,15 @@ public abstract class User
         Password = password;
     }
     
-    //TODO: implement functions (Update observers, etc)
-
+    public void Update(Notification notification)
+    {
+        //Set the current target user for the notification
+        notification.CurrentTargetUser = this;
+        
+        //deliver message
+        notification.SendNotification();
+    }
+    
     public override string ToString()
     {
         StringBuilder sb = new();

@@ -27,14 +27,18 @@ namespace Domain.Entities
 
         private IList<IPipeline> _selectedActions { get; set; }
         public IList<IPipeline> SelectedActions { get => _selectedActions; set => _selectedActions = value; }
+        
+        private Sprint _sprint { get; set; }
+        public Sprint Sprint { get => _sprint; set => _sprint = value; }
 
-        public Pipeline(string name)
+        public Pipeline(string name, Sprint sprint)
         {
             _id = Guid.NewGuid();
             _name = name;
             _currentStatus = new InitialState(this);
             _allActions = new List<IPipeline>();
             _selectedActions = new List<IPipeline>();
+            _sprint = sprint;
 
             InitializeAllActions();
             InitializeSelectedActions();

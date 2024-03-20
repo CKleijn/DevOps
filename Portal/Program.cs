@@ -15,9 +15,9 @@ app.MapGet("/", () =>
 {
     Console.ForegroundColor = ConsoleColor.Green;
 
-    //var productOwner = new ProductOwner("John Doe", "johndoe@gmail.com", "Password");
-    //var project = new Project("Project1", "Description1", productOwner, new GitHub(), productOwner);
-    //project.VersionControl.CloneRepo("https://github.com/CKleijn/SOFA3-DevOps.git");
+    var productOwner = new ProductOwner("John Doe", "johndoe@gmail.com", "Password");
+    var project = new Project("Project1", "Description1", productOwner, new GitHub());
+    project.VersionControl.CloneRepo("https://github.com/CKleijn/SOFA3-DevOps.git");
 
     //var developer = new Developer("Kevin", "kevin@test.com", "Password");
 
@@ -25,26 +25,27 @@ app.MapGet("/", () =>
 
     //return activity.ToString();
 
-    //Factory test
-    //var developer = new Developer("Kevin", "kevin@test.com", "Password");
+    // Factory test
 
-    //ISprintFactory<SprintRelease> sprintReleaseFactory = new SprintReleaseFactory();
-    //ISprintFactory<SprintReview> sprintReviewFactory = new SprintReviewFactory();
+    var developer = new Developer("Kevin", "kevin@test.com", "Password");
+
+    ISprintFactory<SprintRelease> sprintReleaseFactory = new SprintReleaseFactory();
+    ISprintFactory<SprintReview> sprintReviewFactory = new SprintReviewFactory();
 
 
-    //SprintRelease releaseSprint = sprintReleaseFactory.CreateSprint("Release Sprint", DateTime.Now.AddDays(-3), DateTime.Now.AddDays(-1), developer, developer);
-    //SprintReview reviewSprint = sprintReviewFactory.CreateSprint("Review Sprint", DateTime.Now.AddDays(-3), DateTime.Now.AddDays(-1), developer, developer);
+    SprintRelease releaseSprint = sprintReleaseFactory.CreateSprint("Release Sprint", DateTime.Now.AddDays(-3), DateTime.Now.AddDays(-1), developer);
+    SprintReview reviewSprint = sprintReviewFactory.CreateSprint("Review Sprint", DateTime.Now.AddDays(-3), DateTime.Now.AddDays(-1), developer);
 
-    //reviewSprint.AddReview(new Review("test", Guid.NewGuid(), Guid.NewGuid(), "a", developer));
+    // reviewSprint.AddReview(new Review("test", Guid.NewGuid(), Guid.NewGuid(), "a", developer));
 
-    //reviewSprint.Title = "New title";
+    reviewSprint.Title = "New title";
 
     //Console.WriteLine(reviewSprint.Title);
 
     //return reviewSprint.ToString();
+    
+    var pipeline = new TestPipeline("Pipeline", reviewSprint);
 
-
-    var pipeline = new TestPipeline("Pipeline");
     pipeline.Print();
 
     Console.WriteLine("");
