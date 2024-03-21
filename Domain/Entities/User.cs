@@ -9,6 +9,7 @@ public abstract class User : IObserver
 {
     private Guid _id { get; init; }
     public Guid Id { get => _id; init => _id = value; }
+
     private string _name { get; set; }
     public string Name { get => _name; set => _name = value; }
     

@@ -2,7 +2,6 @@
 using Domain.Interfaces.States;
 using Domain.States.BacklogItem;
 using System.Text;
-using System.Xml.Linq;
 
 namespace Domain.Entities
 {
