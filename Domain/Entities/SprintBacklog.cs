@@ -12,20 +12,20 @@ namespace Domain.Entities
         {
             _sprint = sprint;
             
-            Logger.DisplayCreatedAlert(nameof(SprintBacklog), $"Sprint: {_sprint.Title}");
+            Logger.DisplayCreatedAlert(nameof(SprintBacklog), _sprint.Title);
         }
         
         public override void AddItemToBacklog(Item item)
         {
             if (_sprint.CurrentStatus.GetType() != typeof(InitialState))
             {
-                Logger.DisplayCustomAlert(nameof(SprintBacklog), nameof(AddItemToBacklog), "Can't add item to sprint when it isn't in the initial state.");
+                Logger.DisplayCustomAlert(nameof(SprintBacklog), nameof(AddItemToBacklog), "Can't add item to sprint when it isn't in the initial state!");
                 return;
             }
             
             Items.Add(item);
 
-            Logger.DisplayUpdatedAlert(nameof(Backlog), $"Added item: {item.Title}");
+            Logger.DisplayAddedAlert(nameof(Backlog), item.Title);
         }
     }
 }

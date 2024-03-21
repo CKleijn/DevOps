@@ -53,7 +53,7 @@ namespace Domain.Entities
         {
             if (_thread.Item.CurrentStatus.GetType() == typeof(ClosedState))
             {
-                Logger.DisplayCustomAlert(nameof(ThreadMessage), nameof(ValidateUpdate), "Can't update message when thread is closed.");
+                Logger.DisplayCustomAlert(nameof(ThreadMessage), nameof(ValidateUpdate), "Can't update message when thread is closed!");
                 return false;
             }
 

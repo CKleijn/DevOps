@@ -18,13 +18,13 @@ public class SprintRelease : Sprint
     public void AddRelease(Release release)
     {
         _releases.Add(release);
-        Logger.DisplayUpdatedAlert(nameof(Releases), $"Added release with an id of: {release.Id}");
+        Logger.DisplayAddedAlert(nameof(Releases), release.Id.ToString());
     }
     
     public void RemoveRelease(Release release)
     {
         _releases.Remove(release);
-        Logger.DisplayUpdatedAlert(nameof(Releases), $"Removed release with an id of: {release.Id}");
+        Logger.DisplayRemovedAlert(nameof(Releases), release.Id.ToString());
     }
 
     protected override bool ValidateChange()
@@ -32,15 +32,14 @@ public class SprintRelease : Sprint
         //Don't allow mutation whenever state differs from the initial state
         if (CurrentStatus.GetType() != typeof(InitialState))
         {
-            Logger.DisplayCustomAlert(nameof(Sprint), nameof(ValidateChange), $"Can't update sprint in current state ({CurrentStatus.GetType()}).");
+            Logger.DisplayCustomAlert(nameof(Sprint), nameof(ValidateChange), $"Can't update sprint in current state ({CurrentStatus.GetType()})!");
             return false;
         }
         
         //Don't allow mutation whenever pipeline's state differs from the initial state
         if (Pipeline?.CurrentStatus.GetType() != typeof(States.Pipeline.InitialState))
         {
-            Logger.DisplayCustomAlert(nameof(Sprint), nameof(ValidateChange), $"Can't update sprint when it's corresponding pipeline isn't in its initial state ({Pipeline?.CurrentStatus.GetType()}).");
-            
+            Logger.DisplayCustomAlert(nameof(Sprint), nameof(ValidateChange), $"Can't update sprint when it's corresponding pipeline isn't in its initial state ({Pipeline?.CurrentStatus.GetType()})!");
             return false;
         }
         
@@ -49,9 +48,11 @@ public class SprintRelease : Sprint
         {
             //Set sprint to finished state if it isn't already
             if(CurrentStatus.GetType() != typeof(FinishedState))
+            {
                 CurrentStatus = new FinishedState(this);
-            
-            Logger.DisplayCustomAlert(nameof(SprintRelease), nameof(ValidateChange), $"Can't update sprint after end date. Sprint will be set to close if it isn't already.");
+            }
+
+            Logger.DisplayCustomAlert(nameof(SprintRelease), nameof(ValidateChange), $"Can't update sprint after end date. Sprint will be set to close if it isn't already!");
 
             //Check if sprint input is valid
             CurrentStatus.ReleaseSprint();
@@ -75,12 +76,35 @@ public class SprintRelease : Sprint
         sb.AppendLine($"Sprint Release: {Title}");
         sb.AppendLine($"Start Date: {StartDate.ToString("dd/mm/yyyy")}");
         sb.AppendLine($"End Date: {EndDate.ToString("dd/mm/yyyy")}");
-        sb.AppendLine($"Scrum Master: {ScrumMaster.Name}");
-        sb.AppendLine($"Amount of developers: {Developers.Count}");
-        sb.AppendLine($"Amount of testers: {Testers.Count}");
         sb.AppendLine($"Status: {CurrentStatus.GetType()}");
-        sb.AppendLine($"Amount of releases: {Releases.Count}");
-        sb.AppendLine($"Amount of items: {SprintBacklog.Items.Count}");
+        sb.AppendLine($"Scrum Master: {ScrumMaster.Name}");
+        sb.AppendLine($"Developers: {Developers.Count}");
+
+        foreach (var developer in Developers)
+        {
+            sb.AppendLine(developer.ToString());
+        }
+
+        sb.AppendLine($"Testers: {Testers.Count}");
+
+        foreach (var tester in Testers)
+        {
+            sb.AppendLine(tester.ToString());
+        }
+
+        sb.AppendLine($"Releases: {Releases.Count}");
+
+        foreach (var release in Releases)
+        {
+            sb.AppendLine(release.ToString());
+        }
+
+        sb.AppendLine($"Items: {SprintBacklog.Items.Count}");
+
+        foreach (var item in SprintBacklog.Items)
+        {
+            sb.AppendLine(item.ToString());
+        }
 
         return sb.ToString();
     }

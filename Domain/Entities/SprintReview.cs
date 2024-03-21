@@ -18,19 +18,23 @@ public class SprintReview : Sprint
     public void AddReview(Review review)
     {
         if (CurrentStatus.GetType() != typeof(ReviewState))
+        {
             return;
-        
+        }
+
         _reviews.Add(review);
-        Logger.DisplayUpdatedAlert(nameof(Reviews), $"Added review with an id of: {review}");
+        Logger.DisplayAddedAlert(nameof(Reviews), review.Title);
     }
     
     public void RemoveReview(Review review)
     {
         if (CurrentStatus.GetType() != typeof(ReviewState))
+        {
             return;
-        
+        }
+
         _reviews.Remove(review);
-        Logger.DisplayUpdatedAlert(nameof(Reviews), $"Removed review with an id of: {review}");
+        Logger.DisplayRemovedAlert(nameof(Reviews), review.Title);
     }
 
     protected override bool ValidateChange()
@@ -38,7 +42,7 @@ public class SprintReview : Sprint
         //Don't allow mutation whenever sprint's state differs from the initial state
         if (CurrentStatus.GetType() != typeof(InitialState))
         {
-            Logger.DisplayCustomAlert(nameof(Sprint), nameof(ValidateChange), $"Can't update sprint in current state ({CurrentStatus.GetType()}).");
+            Logger.DisplayCustomAlert(nameof(Sprint), nameof(ValidateChange), $"Can't update sprint in current state ({CurrentStatus.GetType()})!");
             
             return false;
         }
@@ -46,7 +50,7 @@ public class SprintReview : Sprint
         //Don't allow mutation whenever pipeline's state differs from the initial state
         if (Pipeline?.CurrentStatus.GetType() != typeof(States.Pipeline.InitialState))
         {
-            Logger.DisplayCustomAlert(nameof(Sprint), nameof(ValidateChange), $"Can't update sprint when it's corresponding pipeline isn't in its initial state ({Pipeline?.CurrentStatus.GetType()}).");
+            Logger.DisplayCustomAlert(nameof(Sprint), nameof(ValidateChange), $"Can't update sprint when it's corresponding pipeline isn't in its initial state ({Pipeline?.CurrentStatus.GetType()})!");
             
             return false;
         }
@@ -56,9 +60,11 @@ public class SprintReview : Sprint
         {
             //Set sprint to finished state if it isn't already
             if(CurrentStatus.GetType() != typeof(FinishedState))
+            {
                 CurrentStatus = new FinishedState(this);
-            
-            Logger.DisplayCustomAlert(nameof(SprintReview), nameof(ValidateChange), $"Can't update sprint after end date. Sprint will be set to finished and corresponding actions will be performed.");
+            }
+
+            Logger.DisplayCustomAlert(nameof(SprintReview), nameof(ValidateChange), $"Can't update sprint after end date. Sprint will be set to finished and corresponding actions will be performed!");
     
             //Check if sprint input is valid
             CurrentStatus.ReviewSprint();
@@ -78,16 +84,39 @@ public class SprintReview : Sprint
     public override string ToString()
     {
         StringBuilder sb = new();
-        
+
         sb.AppendLine($"Sprint Review: {Title}");
         sb.AppendLine($"Start Date: {StartDate.ToString("dd/mm/yyyy")}");
         sb.AppendLine($"End Date: {EndDate.ToString("dd/mm/yyyy")}");
-        sb.AppendLine($"Scrum Master: {ScrumMaster.Name}");
-        sb.AppendLine($"Amount of developers: {Developers.Count}");
-        sb.AppendLine($"Amount of testers: {Testers.Count}");
         sb.AppendLine($"Status: {CurrentStatus.GetType()}");
-        sb.AppendLine($"Amount of reviews: {Reviews.Count}");
-        sb.AppendLine($"Amount of items: {SprintBacklog.Items.Count}");
+        sb.AppendLine($"Scrum Master: {ScrumMaster.Name}");
+        sb.AppendLine($"Developers: {Developers.Count}");
+
+        foreach (var developer in Developers)
+        {
+            sb.AppendLine(developer.ToString());
+        }
+
+        sb.AppendLine($"Testers: {Testers.Count}");
+
+        foreach (var tester in Testers)
+        {
+            sb.AppendLine(tester.ToString());
+        }
+
+        sb.AppendLine($"Reviews: {Reviews.Count}");
+
+        foreach (var review in Reviews)
+        {
+            sb.AppendLine(review.ToString());
+        }
+
+        sb.AppendLine($"Items: {SprintBacklog.Items.Count}");
+
+        foreach (var item in SprintBacklog.Items)
+        {
+            sb.AppendLine(item.ToString());
+        }
 
         return sb.ToString();
     }

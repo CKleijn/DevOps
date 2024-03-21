@@ -68,7 +68,7 @@ public class Report
 
         sb.AppendLine($"Id: {_id}");
         sb.AppendLine($"Title: {_title}");
-        sb.AppendLine($"Extension: {_extension}");
+        sb.AppendLine($"Extension: {Enum.GetName(typeof(ReportExtension), _extension)}");
         sb.AppendLine(_sprint.ToString());
 
         if (_footer != null)

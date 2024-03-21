@@ -23,7 +23,7 @@ namespace Domain.Actions
 
         public override void Print(int indentations)
         {
-            Logger.DisplayCustomAlert(new string('\t', indentations) + nameof(DotnetRestoreAction), null, Command!);
+            ActionPrintTemplate.PrintTemplate(indentations, nameof(DotnetRestoreAction), Command!);
         }
     }
 }

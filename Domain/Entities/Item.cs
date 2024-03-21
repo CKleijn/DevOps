@@ -2,6 +2,7 @@
 using Domain.Interfaces.States;
 using Domain.States.BacklogItem;
 using System.Text;
+using System.Xml.Linq;
 
 namespace Domain.Entities
 {
@@ -58,7 +59,7 @@ namespace Domain.Entities
             _storyPoints = storyPoints;
             _sprintBacklog = sprintBacklog;
 
-            Logger.DisplayCreatedAlert(nameof(Item), _title);
+            Logger.DisplayCreatedAlert(nameof(Item), _id.ToString());
         }
         
         public Item(string title, string description, Developer developer, int storyPoints)
@@ -72,7 +73,7 @@ namespace Domain.Entities
             _threads = new List<Thread>();
             _storyPoints = storyPoints;
 
-            Logger.DisplayCreatedAlert(nameof(Item), _title);
+            Logger.DisplayCreatedAlert(nameof(Item), _id.ToString());
         }
 
         public void AddThreadToItem(Thread thread)
@@ -82,7 +83,7 @@ namespace Domain.Entities
                 _threads.Add(thread);
             }
 
-            Logger.DisplayUpdatedAlert(nameof(Item), $"Added: {thread.Subject}");
+            Logger.DisplayAddedAlert(nameof(Item), thread.Subject);
         }
 
         public void RemoveThreadFromItem(Thread thread)
@@ -92,7 +93,7 @@ namespace Domain.Entities
                 _threads.Remove(thread);
             }
 
-            Logger.DisplayUpdatedAlert(nameof(Item), $"Removed: {thread.Subject}");
+            Logger.DisplayRemovedAlert(nameof(Item), thread.Subject);
         }
 
         public void AddActivityToItem(Activity activity) 
@@ -102,7 +103,7 @@ namespace Domain.Entities
                 _activities.Add(activity);
             }
 
-            Logger.DisplayUpdatedAlert(nameof(Item), $"Added: {activity.Title}");
+            Logger.DisplayAddedAlert(nameof(Item), activity.Title);
         }
 
         public void RemoveActivityFromItem(Activity activity)
@@ -112,10 +113,8 @@ namespace Domain.Entities
                 _activities.Remove(activity);
             }
 
-            Logger.DisplayUpdatedAlert(nameof(Item), $"Removed: {activity.Title}");
+            Logger.DisplayRemovedAlert(nameof(Item), activity.Title);
         }
-
-        //** Start State functions **//
 
         public void DevelopBacklogItem() => _currentStatus.DevelopBacklogItem();
         public void FinalizeDevelopmentBacklogItem() => _currentStatus.FinalizeDevelopmentBacklogItem();
@@ -126,8 +125,6 @@ namespace Domain.Entities
         public void FinalizeBacklogItem() => _currentStatus.FinalizeBacklogItem();
         public void ReceiveFeedback() => _currentStatus.ReceiveFeedbackBacklogItem();
         public void CloseBacklogItem() => _currentStatus.CloseBacklogItem();
-    
-        //** End State functions **//
         
         public override string ToString()
         {
@@ -137,11 +134,22 @@ namespace Domain.Entities
             sb.AppendLine($"Title: {_title}");
             sb.AppendLine($"Description: {_description}");
             sb.AppendLine($"Developer: {_developer.ToString()}");
-            sb.AppendLine($"Activities: {_activities.Count}");
+            sb.AppendLine($"StoryPoints: {_storyPoints}");
             sb.AppendLine($"PreviousStatus: {_previousStatus?.GetType().Name}");
             sb.AppendLine($"CurrentStatus: {_currentStatus.GetType().Name}");
+            sb.AppendLine($"Activities: {_activities.Count}");
+
+            foreach (var activity in _activities)
+            {
+                sb.AppendLine(activity.ToString());
+            }
+
             sb.AppendLine($"Threads: {_threads.Count}");
-            sb.AppendLine($"StoryPoints: {_storyPoints}");
+
+            foreach (var thread in _threads)
+            {
+                sb.AppendLine(thread.ToString());
+            }
 
             return sb.ToString();
         }

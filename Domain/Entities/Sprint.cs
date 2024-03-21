@@ -33,7 +33,7 @@ public abstract class Sprint : IObservable
             if (ValidateChange())
             {
                 _startDate = value;
-                Logger.DisplayUpdatedAlert(nameof(StartDate), _startDate.ToString());
+                Logger.DisplayUpdatedAlert(nameof(StartDate), _startDate.ToString("dd/mm/yyyy"));
             }
         }
     }
@@ -47,7 +47,7 @@ public abstract class Sprint : IObservable
             if (ValidateChange())
             {
                 _endDate = value;
-                Logger.DisplayUpdatedAlert(nameof(EndDate), _endDate.ToString());
+                Logger.DisplayUpdatedAlert(nameof(EndDate), _endDate.ToString("dd/mm/yyyy"));
             }
         }
     }
@@ -96,7 +96,7 @@ public abstract class Sprint : IObservable
             if (ValidateChange())
             {
                 _scrumMaster = value;
-                Logger.DisplayUpdatedAlert(nameof(ScrumMaster), _scrumMaster.ToString());
+                Logger.DisplayUpdatedAlert(nameof(ScrumMaster), _scrumMaster.Name);
             }
         } 
     }
@@ -112,7 +112,7 @@ public abstract class Sprint : IObservable
 
     private Pipeline? _pipeline { get; set; }
     public Pipeline? Pipeline { get => _pipeline; set => _pipeline = value; }
-    
+
     private IList<IObserver> _observers { get; init; }
     public IList<IObserver> Observers { get => _observers; init => _observers = value; }
     
@@ -130,74 +130,90 @@ public abstract class Sprint : IObservable
         _sprintBacklog = new SprintBacklog(this);
         _project = project;
         _observers = new List<IObserver>();
+
+        Register(scrumMaster);
+        Register(project.ProductOwner);
     }
     
     public void AddDeveloper(Developer developer)
     {
         if (!ValidateChange())
+        {
             return;
-        
+        }
+
         _developers.Add(developer);
         
-        Logger.DisplayUpdatedAlert(nameof(Developers), $"Added: {developer.Name}");
+        Logger.DisplayAddedAlert(nameof(Developers), developer.Name);
+
+        Register(developer);
     }
     
     public void RemoveDeveloper(Developer developer)
     {
         if (!ValidateChange())
+        {
             return;
-        
+        }
+
         _developers.Remove(developer);
         
-        Logger.DisplayUpdatedAlert(nameof(Developers), $"Removed: {developer.Name}");
+        Logger.DisplayRemovedAlert(nameof(Developers), developer.Name);
+
+        Unregister(developer);
     }
 
     public void AddTester(Developer tester)
     {
         if (!ValidateChange())
+        {
             return;
+        }
 
         _testers.Add(tester);
 
-        Logger.DisplayUpdatedAlert(nameof(Testers), $"Added: {tester.Name}");
+        Logger.DisplayAddedAlert(nameof(Testers), tester.Name);
+
+        Register(tester);
     }
 
     public void RemoveTester(Developer tester)
     {
         if (!ValidateChange())
+        {
             return;
+        }
 
         _testers.Remove(tester);
 
-        Logger.DisplayUpdatedAlert(nameof(Testers), $"Removed: {tester.Name}");
+        Logger.DisplayRemovedAlert(nameof(Testers), tester.Name);
+
+        Unregister(tester);
     }
 
     public void AddReport(Report report)
     {
         if (!ValidateChange())
+        {
             return;
-        
+        }
+
         _reports.Add(report);
         
-        Logger.DisplayUpdatedAlert(nameof(Reports), $"Added: {report.Title}");
+        Logger.DisplayAddedAlert(nameof(Reports), report.Title);
     }
     
     public void RemoveReport(Report report)
     {
         if (!ValidateChange())
+        {
             return;
-        
+        }
+
         _reports.Remove(report);
         
-        Logger.DisplayUpdatedAlert(nameof(Reports), $"Removed: {report.Title}");
+        Logger.DisplayRemovedAlert(nameof(Reports), report.Title);
     }
-
-    public void SetPipeline(Pipeline pipeline)
-    {
-        _pipeline = pipeline;
-    }
-    
-    //** Start State functions **//
 
     public void InitializeSprint() => _currentStatus.InitializeSprint();
     public void ExecuteSprint() => _currentStatus.ExecuteSprint();
@@ -207,36 +223,33 @@ public abstract class Sprint : IObservable
     public void CancelSprint() => _currentStatus.ReviewSprint();
     public void CloseSprint() => _currentStatus.CloseSprint();
     
-    //** End State functions **//
-    
-    //** Observer functions **//
     public void Register(IObserver observer)
     {
         _observers.Add(observer);
         
-        Logger.DisplayUpdatedAlert(nameof(Project), $"Added observer to project: {Title}");
+        Logger.DisplayAddedAlert(nameof(Project), _title);
     }
 
     public void Unregister(IObserver observer)
     {
         _observers.Remove(observer);
         
-        Logger.DisplayUpdatedAlert(nameof(Project), $"Removed observer from project: {Title}");
+        Logger.DisplayRemovedAlert(nameof(Project), _title);
     }
 
     public void NotifyObservers(Notification notification)
     {
-        if (notification.TargetUsers.Count == 0)
+        if (notification.TargetUsers.Count is 0)
+        {
             return;
-        
+        }
+
         _observers
             .Where(observer => notification.TargetUsers.Any(targetUser => targetUser.Id == observer.Id))
             .ToList()
             .ForEach(o => o.Update(notification));
     }
     
-    //** End observer functions **//
-
     protected abstract bool ValidateChange();
 
     public abstract override string ToString();

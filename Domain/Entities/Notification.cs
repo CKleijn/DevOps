@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using Domain.Enums;
 using Domain.Helpers;
 using Domain.Services;
 
@@ -19,8 +18,9 @@ public class Notification
     private IList<User> _targetUsers { get; set; }
     public IList<User> TargetUsers { get => _targetUsers; set => _targetUsers = value; }
     
-    public User? Recipient { get; set; }
-    
+    private User? _recipient { get; set; }
+    public User? Recipient { get => _recipient; set => _recipient = value; }
+
     private NotificationService _notificationService { get; init; }
     
     public Notification(string title, string body)
@@ -38,14 +38,14 @@ public class Notification
     {
         _targetUsers.Add(user);
 
-        Logger.DisplayUpdatedAlert(nameof(Notification), $"Added: {user.Name}");
+        Logger.DisplayAddedAlert(nameof(Notification), user.Name);
     }
     
     public void RemoveTargetUser(User user)
     {
         _targetUsers.Remove(user);
 
-        Logger.DisplayUpdatedAlert(nameof(Notification), $"Removed: {user.Name}");
+        Logger.DisplayRemovedAlert(nameof(Notification), user.Name);
     }
 
     public void SendNotification()
@@ -60,8 +60,13 @@ public class Notification
         sb.AppendLine($"Id: {_id}");
         sb.AppendLine($"Title: {_title}");
         sb.AppendLine($"Body: {_body}");
-        sb.AppendLine($"Target Users: {string.Join(", ", _targetUsers.Select(x => x.Name))}");
-        
+        sb.AppendLine($"Target users: {_targetUsers.Count}");
+
+        foreach (var targetUser in _targetUsers)
+        {
+            sb.AppendLine(targetUser.ToString());
+        }
+
         return sb.ToString();
     }
 }

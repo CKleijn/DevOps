@@ -58,47 +58,49 @@ namespace Domain.Entities
         
         public void AddThreadMessage(ThreadMessage threadMessage)
         {
-            if (_item.CurrentStatus.GetType() == typeof(ClosedState))
+            if (_item.CurrentStatus.GetType() != typeof(ClosedState))
             {
                 _threadMessages.Add(threadMessage);
-                Logger.DisplayUpdatedAlert(nameof(ThreadMessages), $"Added: {threadMessage.Title}");
-                
-                // START NOTIFICATION
-                //Notify developers of the new thread message
-            
-                Notification notification = new("New message in thread", $"New message has been posted in thread: {_subject}.");
 
-                var developers = _item.SprintBacklog!.Sprint.Developers;
+                Logger.DisplayAddedAlert(nameof(ThreadMessages), threadMessage.Title);
+                
+                Notification notification = new("New message in thread", $"New message has been posted in thread: {_subject}!");
+
+                var developers = _item.SprintBacklog?.Sprint.Developers;
                 var scrumMaster = _item.SprintBacklog!.Sprint.ScrumMaster;
 
-                if(!developers.Contains(scrumMaster))
-                    developers.Add(scrumMaster);
-            
-                foreach(var developer in developers)
+                if (developers?.Count is not 0)
                 {
-                    notification.AddTargetUser(developer);
-                }
+                    if (!developers!.Contains(scrumMaster))
+                    {
+                        developers.Add(scrumMaster);
+                    }
 
-                _item.SprintBacklog.Sprint.NotifyObservers(notification);
-                // END NOTIFICATION
+                    foreach (var developer in developers)
+                    {
+                        notification.AddTargetUser(developer);
+                    }
+
+                    _item.SprintBacklog!.Sprint.NotifyObservers(notification);
+                }
             } 
             else
             {
-                Logger.DisplayCustomAlert(nameof(Thread), nameof(AddThreadMessage), "Can't add thread message when item status is closed.");
+                Logger.DisplayCustomAlert(nameof(Thread), nameof(AddThreadMessage), "Can't add thread message when item status is closed!");
             }
         }
     
         public void RemoveThreadMessage(ThreadMessage threadMessage)
         {
-            if (_item.CurrentStatus.GetType() == typeof(ClosedState))
+            if (_item.CurrentStatus.GetType() != typeof(ClosedState))
             {
                 _threadMessages.Remove(threadMessage);
 
-                Logger.DisplayUpdatedAlert(nameof(ThreadMessages), $"Removed: {threadMessage.Title}");
+                Logger.DisplayRemovedAlert(nameof(ThreadMessages), threadMessage.Title);
             }
             else
             {
-                Logger.DisplayCustomAlert(nameof(Thread), nameof(AddThreadMessage), "Can't remove thread message when item status is closed.");
+                Logger.DisplayCustomAlert(nameof(Thread), nameof(AddThreadMessage), "Can't remove thread message when item status is closed!");
             }
         }
 
@@ -106,7 +108,7 @@ namespace Domain.Entities
         {
             if (_item.CurrentStatus.GetType() == typeof(ClosedState))
             {
-                Logger.DisplayCustomAlert(nameof(Thread), nameof(ValidateUpdate), "Can't update thread when item status is closed.");
+                Logger.DisplayCustomAlert(nameof(Thread), nameof(ValidateUpdate), "Can't update thread when item status is closed!");
                 return false;
             }
 
@@ -120,8 +122,12 @@ namespace Domain.Entities
             sb.AppendLine($"Id: {_id}");
             sb.AppendLine($"Subject: {_subject}");
             sb.AppendLine($"Description: {_description}");
-            sb.AppendLine($"Item: {_item.ToString()}");
             sb.AppendLine($"ThreadMessages: {_threadMessages.Count}");
+
+            foreach (var threadMessage in _threadMessages)
+            {
+                sb.AppendLine(threadMessage.ToString());
+            }
 
             return sb.ToString();
         }

@@ -8,30 +8,20 @@ public class Review
     private Guid _id { get; init; }
     public Guid Id { get => _id; init => _id = value; }
     
-    private Guid _sprintId { get; init; }
-    public Guid SprintId { get => _sprintId; init => _sprintId = value; }
-    
-    private Guid _pipelineId { get; init; }
-    public Guid PipelineId { get => _pipelineId; init => _pipelineId = value; }
-    
     private string _title { get; set; }
     public string Title { get => _title; set => _title = value; }
-    
-    private string _filePath { get; set; }
-    public string FilePath { get => _filePath; set => _filePath = value; }
-    
-    public Review(string title, Guid sprintId, Guid pipelineId, string filePath)
+
+    private string _body { get; set; }
+    public string Body { get => _body; set => _body = value; }
+
+    public Review(string title, string body)
     {
         _id = Guid.NewGuid();
         _title = title;
-        _sprintId = sprintId;
-        _pipelineId = pipelineId;
-        _filePath = filePath;
+        _body = body;
 
         Logger.DisplayCreatedAlert(nameof(Review), _title);
     }
-    
-    //TODO: implement further functions
     
     public override string ToString()
     {
@@ -39,10 +29,8 @@ public class Review
         
         sb.AppendLine($"Id: {_id}");
         sb.AppendLine($"Title: {_title}");
-        sb.AppendLine($"SprintId: {_sprintId}");
-        sb.AppendLine($"PipelineId: {_pipelineId}");
-        sb.AppendLine($"FilePath: {_filePath}");
-        
+        sb.AppendLine($"Body: {_body}");
+
         return sb.ToString();
     }
 }

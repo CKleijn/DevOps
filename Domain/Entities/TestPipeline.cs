@@ -23,7 +23,7 @@ namespace Domain.Entities
         {
             if(action.Phase!.GetType() == typeof(DeployPhase))
             {
-                Logger.DisplayCustomAlert(nameof(TestPipeline), nameof(AddAction), "Can't add deploy action to test pipeline");
+                Logger.DisplayCustomAlert(nameof(TestPipeline), nameof(AddAction), "Can't add deploy action to test pipeline!");
                 return;
             }
 

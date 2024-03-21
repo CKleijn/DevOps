@@ -34,22 +34,19 @@ public abstract class User : IObserver
     {
         _destinationTypes.Add(destinationType);
 
-        Logger.DisplayUpdatedAlert(nameof(User), $"Added: {destinationType}");
+        Logger.DisplayAddedAlert(nameof(User), Enum.GetName(typeof(NotificationProvider), destinationType)!);
     }
 
     public void RemoveDestinationType(NotificationProvider destinationType)
     {
         _destinationTypes.Remove(destinationType);
 
-        Logger.DisplayUpdatedAlert(nameof(User), $"Removed: {destinationType}");
+        Logger.DisplayRemovedAlert(nameof(User), Enum.GetName(typeof(NotificationProvider), destinationType)!);
     }
 
     public void Update(Notification notification)
     {
-        //Set the current target user for the notification
         notification.Recipient = this;
-        
-        //deliver message
         notification.SendNotification();
     }
     
@@ -60,7 +57,12 @@ public abstract class User : IObserver
         sb.AppendLine($"Id: {_id}");
         sb.AppendLine($"Name: {_name}");
         sb.AppendLine($"Email: {_email}");
-        sb.AppendLine($"Destination Types: {string.Join(", ", _destinationTypes.Select(x => x.ToString()))}");
+        sb.AppendLine($"Destination Types: {_destinationTypes.Count}");
+
+        foreach (var destinationType in _destinationTypes)
+        {
+            sb.AppendLine(Enum.GetName(typeof(NotificationProvider), destinationType));
+        }
 
         return sb.ToString();
     }

@@ -91,7 +91,6 @@ namespace Domain.Entities
             sb.AppendLine($"Id: {_id}");
             sb.AppendLine($"Title: {_title}");
             sb.AppendLine($"IsFinished: {_isFinished}");
-            sb.AppendLine($"Item: {_item.ToString()}");
             sb.AppendLine($"Developer: {_developer?.ToString()}");
 
             return sb.ToString();

@@ -16,21 +16,21 @@ namespace Domain.Entities
             _id = Guid.NewGuid();
             _items = new List<Item>();
 
-            Logger.DisplayCreatedAlert(nameof(Backlog), $"Backlog: {_id}");
+            Logger.DisplayCreatedAlert(nameof(Backlog), _id.ToString());
         }
 
         public virtual void AddItemToBacklog(Item item)
         {
             _items.Add(item);
 
-            Logger.DisplayUpdatedAlert(nameof(Backlog), $"Added item: {item.Title}");
+            Logger.DisplayAddedAlert(nameof(Backlog), item.Title);
         }
 
         public void RemoveItemFromBacklog(Item item)
         {
             _items.Remove(item);
 
-            Logger.DisplayUpdatedAlert(nameof(Backlog), $"Removed item: {item.Title}");
+            Logger.DisplayRemovedAlert(nameof(Backlog), item.Title);
         }
 
         public override string ToString()
@@ -39,6 +39,11 @@ namespace Domain.Entities
 
             sb.AppendLine($"Id: {_id}");
             sb.AppendLine($"Items: {_items.Count}");
+
+            foreach (var item in _items)
+            {
+                sb.AppendLine(item.ToString());
+            }
 
             return sb.ToString();
         }

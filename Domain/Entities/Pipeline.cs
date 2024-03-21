@@ -4,6 +4,7 @@ using Domain.Interfaces.States;
 using Domain.Phases;
 using Domain.States.Pipeline;
 using Domain.Tools;
+using System.Diagnostics;
 using System.Text;
 
 namespace Domain.Entities
@@ -20,7 +21,15 @@ namespace Domain.Entities
         public IPipelineState? PreviousStatus { get => _previousStatus; set => _previousStatus = value; }
 
         private IPipelineState _currentStatus { get; set; }
-        public IPipelineState CurrentStatus { get => _currentStatus; set { _previousStatus = _currentStatus; _currentStatus = value; } }
+        public IPipelineState CurrentStatus 
+        { 
+            get => _currentStatus; 
+            set 
+            { 
+                _previousStatus = _currentStatus; 
+                _currentStatus = value; 
+            } 
+        }
 
         private IList<IPipeline> _allActions { get; set; }
         public IList<IPipeline> AllActions { get => _allActions; set => _allActions = value; }
@@ -42,6 +51,8 @@ namespace Domain.Entities
 
             InitializeAllActions();
             InitializeSelectedActions();
+
+            Logger.DisplayCreatedAlert(nameof(Pipeline), name);
         }
 
         private void InitializeAllActions()
@@ -91,21 +102,22 @@ namespace Domain.Entities
         {
             var phase = _selectedActions.FirstOrDefault(a => a.GetType() == action.Phase!.GetType()) as Phase;
             phase!.Add(action);
+
+            Logger.DisplayAddedAlert(nameof(Item), action.Id.ToString());
         }
 
         public void RemoveAction(Action action)
         {
             var phase = _selectedActions.FirstOrDefault(a => a.GetType() == action.Phase!.GetType()) as Phase;
             phase!.Remove(action);
+
+            Logger.DisplayRemovedAlert(nameof(Item), action.Id.ToString());
         }
 
-        //** Start State functions **//
         public void ExecutePipeline() => _currentStatus.ExecutePipeline();
         public void CancelPipeline() => _currentStatus.CancelPipeline();
         public void RerunPipeline() => _currentStatus.ExecutePipeline();
-        //** Not callable **//
         private void FinalizePipeline() => _currentStatus.FinalizePipeline();
-        //** End State functions **//
 
         public void PipelineTemplate()
         {

@@ -37,13 +37,13 @@ public class ReportElement
         _date = date;
         _type = type;
 
-        if (_type == ReportElementType.HEADER)
+        if (_type is ReportElementType.HEADER)
         {
-            Logger.DisplayCreatedAlert(nameof(ReportElement), $"Header for {_projectName}");
+            Logger.DisplayCreatedAlert(nameof(ReportElement), $"header for {_projectName}");
         }
         else
         {
-            Logger.DisplayCreatedAlert(nameof(ReportElement), $"Footer for {_projectName}");
+            Logger.DisplayCreatedAlert(nameof(ReportElement), $"footer for {_projectName}");
         }
     }
 

@@ -13,48 +13,59 @@ var app = builder.Build();
 
 app.MapGet("/", () =>
 {
-    Console.ForegroundColor = ConsoleColor.Green;
-    
-    List<NotificationProvider> notificationProviders = new List<NotificationProvider>();
-    notificationProviders.Add(NotificationProvider.MAIL);
-    notificationProviders.Add(NotificationProvider.SLACK);
+    List<NotificationProvider> notificationProviders = [NotificationProvider.MAIL, NotificationProvider.SLACK];
 
     var productOwner = new ProductOwner("John Doe", "johndoe@gmail.com", "Password", notificationProviders);
+    var developer1 = new Developer("Kevin", "kevin@test.com", "Password", notificationProviders);
+    var developer2 = new Developer("Nick", "nick@test.com", "Password", notificationProviders);
+    var developer3 = new Developer("Don", "don@test.com", "Password", notificationProviders);
+    var developer4 = new Developer("Klaas", "klaas@test.com", "Password", notificationProviders);
+    var developer5 = new Developer("Dave", "dave@test.com", "Password", notificationProviders);
+
     var project = new Project("Project1", "Description1", productOwner, new GitHub());
     project.VersionControl.CloneRepo("https://github.com/CKleijn/SOFA3-DevOps.git");
-    
-    var developer = new Developer("Kevin", "kevin@test.com", "Password", notificationProviders);
+    project.VersionControl.PullChanges();
+    project.VersionControl.CommitChanges("Added new functionality");
+    project.VersionControl.PushChanges();
 
+    var item1 = new Item("Item1", "Description1", developer1, 5);
+    var item2 = new Item("Item2", "Description2", developer2, 3);
 
-
-    // Factory test
+    project.Backlog.AddItemToBacklog(item1);
+    project.Backlog.AddItemToBacklog(item2);
 
     ISprintFactory<SprintRelease> sprintReleaseFactory = new SprintReleaseFactory();
-    ISprintFactory<SprintReview> sprintReviewFactory = new SprintReviewFactory();
 
+    SprintRelease releaseSprint = sprintReleaseFactory.CreateSprint("Release Sprint", DateTime.Now.AddDays(-3), DateTime.Now.AddDays(4), developer3, project);
 
-    SprintRelease releaseSprint = sprintReleaseFactory.CreateSprint("Release Sprint", DateTime.Now.AddDays(-3), DateTime.Now.AddDays(-1), developer, project);
-    //SprintReview reviewSprint = sprintReviewFactory.CreateSprint("Review Sprint", DateTime.Now.AddDays(-3), DateTime.Now.AddDays(-1), developer, project);
+    var pipeline = new ReleasePipeline("Pipeline", releaseSprint);
+    releaseSprint.Pipeline = pipeline;
 
-    // reviewSprint.AddReview(new Review("test", Guid.NewGuid(), Guid.NewGuid(), "a", developer));
+    releaseSprint.AddDeveloper(developer1);
+    releaseSprint.AddDeveloper(developer2);
+    releaseSprint.AddDeveloper(developer3);
+    releaseSprint.AddTester(developer4);
+    releaseSprint.AddTester(developer5);
 
-    //reviewSprint.Title = "New title";
+    item1.SprintBacklog = releaseSprint.SprintBacklog;
+    item2.SprintBacklog = releaseSprint.SprintBacklog;
 
-    //Console.WriteLine(reviewSprint.Title);
+    releaseSprint.SprintBacklog.AddItemToBacklog(item1);
+    releaseSprint.SprintBacklog.AddItemToBacklog(item2);
 
-    //return reviewSprint.ToString();
-    
-    var activity = new Activity("Activity 1", new Item("Test", "Test", developer, 5, releaseSprint.SprintBacklog), developer);
-    
+    var activity1 = new Activity("Activity 1", item1);
+    item1.AddActivityToItem(activity1);
 
-    releaseSprint.Register(productOwner);
-    releaseSprint.Register(developer);
-    
-    var pipeline = new TestPipeline("Pipeline", releaseSprint);
+    var activity2 = new Activity("Activity 2", item1);
+    item1.AddActivityToItem(activity2);
+
+    var thread1 = new Domain.Entities.Thread("Thread 1", "Description 1", item1);
+    item1.AddThreadToItem(thread1);
+
+    var threadMessage1 = new ThreadMessage("ThreadMessage 1", "Body 1", thread1);
+    thread1.AddThreadMessage(threadMessage1);
 
     pipeline.Print();
-
-    Console.WriteLine("");
 
     pipeline.AddAction(new GitCloneAction());
     pipeline.AddAction(new NpmInstallAction());
@@ -64,11 +75,10 @@ app.MapGet("/", () =>
     pipeline.AddAction(new NpmTestAction());
     pipeline.AddAction(new DotnetAnalyzeAction());
     pipeline.AddAction(new NpmPublishAction());
-    Console.WriteLine("");
+    
     pipeline.Print();
-    Console.WriteLine("");
+
     pipeline.ExecutePipeline();
-    //pipeline.RerunPipeline();
 });
 
 app.Run();

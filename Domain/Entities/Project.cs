@@ -1,7 +1,6 @@
 ﻿using Domain.Helpers;
 using Domain.Interfaces.Strategies;
 using System.Text;
-using Domain.Interfaces.Observer;
 
 namespace Domain.Entities;
 
@@ -44,11 +43,15 @@ public class Project
     public void AddPipeline(Pipeline pipeline)
     {
         _pipelines!.Add(pipeline);
+
+        Logger.DisplayAddedAlert(nameof(Project), pipeline.Name);
     }
 
     public void RemovePipeline(Pipeline pipeline)
     {
         _pipelines!.Remove(pipeline);
+
+        Logger.DisplayRemovedAlert(nameof(Project), pipeline.Name);
     }
 
     public override string ToString()
@@ -62,6 +65,14 @@ public class Project
         sb.AppendLine($"Backlog: {_backlog.ToString()}");
         sb.AppendLine($"VersionControl: {_versionControl.GetType().Name}");
         sb.AppendLine($"Pipelines: {_pipelines?.Count ?? 0}");
+
+        if (_pipelines?.Count is not 0)
+        {
+            foreach (var pipeline in _pipelines!)
+            {
+                sb.AppendLine(pipeline.ToString());
+            }
+        }
 
         return sb.ToString();
     }
