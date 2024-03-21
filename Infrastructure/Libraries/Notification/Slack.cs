@@ -6,7 +6,7 @@ namespace Infrastructure.Libraries.Notification
     {
         public void SendSlack(string text, string recipientId)
         {
-            Logger.DisplayCustomAlert(nameof(Mail), nameof(SendSlack), $"Send slack to {recipientId} with text ({text})");
+            Logger.DisplayCustomAlert(nameof(Slack), nameof(SendSlack), $"Send slack to {recipientId} with text ({text})");
         }
     }
 }

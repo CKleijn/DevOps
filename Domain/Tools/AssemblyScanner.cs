@@ -4,7 +4,7 @@
     {
         public static IEnumerable<T> GetInstancesOfType<T>()
         {
-            List<T> instances = [];
+            List<T> instances = new();
             var assignableType = typeof(T);
 
             var scanners = AppDomain.CurrentDomain.GetAssemblies()

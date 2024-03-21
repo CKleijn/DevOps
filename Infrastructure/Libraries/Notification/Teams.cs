@@ -6,7 +6,7 @@ namespace Infrastructure.Libraries.Notification
     {
         public void SendTeamsMessage(string text, string recipientId)
         {
-            Logger.DisplayCustomAlert(nameof(Mail), nameof(SendTeamsMessage), $"Send Teams message to {recipientId} with text ({text})");
+            Logger.DisplayCustomAlert(nameof(Teams), nameof(SendTeamsMessage), $"Send Teams message to {recipientId} with text ({text})");
         }
     }
 }

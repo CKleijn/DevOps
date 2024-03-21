@@ -18,7 +18,7 @@ namespace Domain.Actions
         public override void Execute()
         {
             Logger.DisplayCustomAlert(nameof(NpmPublishAction), nameof(Execute), $"Execute {Command}!");
-            Logger.DisplayCustomAlert(nameof(NpmPublishAction), nameof(Execute), $"Succesfully executed {Command} without any errors!");
+            Logger.DisplayCustomAlert(nameof(NpmPublishAction), nameof(Execute), $"Successfully executed {Command} without any errors!");
         }
 
         public override void Print(int indentations)
