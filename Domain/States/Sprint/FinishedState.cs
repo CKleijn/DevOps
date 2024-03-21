@@ -37,8 +37,6 @@ public class FinishedState : ISprintState
         _context.CurrentStatus = new ReleaseState(_context);
         
         Logger.DisplayCustomAlert(nameof(FinishedState), nameof(ReleaseSprint), "Sprint status changed to release!");
-        
-        _context.ReleaseSprint();
     }
 
     public void ReviewSprint()
