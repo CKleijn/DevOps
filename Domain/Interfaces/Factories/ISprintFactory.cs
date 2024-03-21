@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 
-namespace DomainServices.Interfaces;
+namespace Domain.Interfaces.Factories;
 
 public interface ISprintFactory<T> where T : Sprint
 {

@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
-using DomainServices.Interfaces;
+using Domain.Interfaces.Factories;
 
-namespace DomainServices.Factories;
+namespace Domain.Factories;
 
 public class SprintReviewFactory : ISprintFactory<SprintReview>
 {

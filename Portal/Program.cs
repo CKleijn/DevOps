@@ -1,8 +1,8 @@
 using Domain.Actions;
 using Domain.Entities;
 using Domain.Enums;
-using DomainServices.Factories;
-using DomainServices.Interfaces;
+using Domain.Factories;
+using Domain.Interfaces.Factories;
 using Infrastructure.Adapters.Notification;
 using Infrastructure.Libraries.VersionControls;
 
