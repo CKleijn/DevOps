@@ -13,7 +13,9 @@ var app = builder.Build();
 
 app.MapGet("/", () =>
 {
-    List<NotificationProvider> notificationProviders = [NotificationProvider.MAIL, NotificationProvider.SLACK];
+    List<NotificationProvider> notificationProviders = new();
+    notificationProviders.Add(NotificationProvider.MAIL);
+    notificationProviders.Add(NotificationProvider.SLACK);
 
     var productOwner = new ProductOwner("John Doe", "johndoe@gmail.com", "Password", notificationProviders);
     var developer1 = new Developer("Kevin", "kevin@test.com", "Password", notificationProviders);
