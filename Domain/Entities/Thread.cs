@@ -104,7 +104,7 @@ namespace Domain.Entities
             }
         }
 
-        public bool ValidateUpdate()
+        private bool ValidateUpdate()
         {
             if (_item.CurrentStatus.GetType() == typeof(ClosedState))
             {
