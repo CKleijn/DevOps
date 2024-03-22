@@ -61,7 +61,7 @@ public abstract class Sprint : IObservable
         get => _previousStatus;
         set
         {
-            if (ValidateChange())
+            if (CurrentStatus.GetType() == typeof(ClosedState))
             {
                 _previousStatus = value;
                 Logger.DisplayUpdatedAlert(nameof(PreviousStatus), _previousStatus!.GetType().ToString());
@@ -75,7 +75,7 @@ public abstract class Sprint : IObservable
         get => _currentStatus;
         set
         {
-            if (ValidateChange())
+            if (CurrentStatus.GetType() != typeof(ClosedState))
             {
                 _previousStatus = _currentStatus;
                 _currentStatus = value;
@@ -220,7 +220,7 @@ public abstract class Sprint : IObservable
     public void FinishSprint() => _currentStatus.FinishSprint();
     public void ReleaseSprint() => _currentStatus.ReleaseSprint();
     public void ReviewSprint() => _currentStatus.ReviewSprint();
-    public void CancelSprint() => _currentStatus.ReviewSprint();
+    public void CancelSprint() => _currentStatus.CancelSprint();
     public void CloseSprint() => _currentStatus.CloseSprint();
     
     public void Register(IObserver observer)

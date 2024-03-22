@@ -58,6 +58,7 @@ public class SprintReview : Sprint
         //Perform actions alteration is done on a sprint that has already ended
         if (EndDate < DateTime.Now)
         {
+            
             //Set sprint to finished state if it isn't already
             if(CurrentStatus.GetType() != typeof(FinishedState))
             {
@@ -67,7 +68,7 @@ public class SprintReview : Sprint
             Logger.DisplayCustomAlert(nameof(SprintReview), nameof(ValidateChange), $"Can't update sprint after end date. Sprint will be set to finished and corresponding actions will be performed!");
     
             //Check if sprint input is valid
-            CurrentStatus.ReviewSprint();
+            ReviewSprint();
             
             //Review sprint 
             if (CurrentStatus.GetType() == typeof(ReviewState))
