@@ -40,7 +40,7 @@ namespace Domain.Entities
         private Sprint _sprint { get; set; }
         public Sprint Sprint { get => _sprint; set => _sprint = value; }
 
-        public Pipeline(string name, Sprint sprint)
+        protected Pipeline(string name, Sprint sprint)
         {
             _id = Guid.NewGuid();
             _name = name;
@@ -62,7 +62,9 @@ namespace Domain.Entities
 
             foreach (var action in AssemblyScanner.GetSubclassesOf<Action>())
             {
-                actions.Add((Action)Activator.CreateInstance(action)!);
+                var initAction = (Action)Activator.CreateInstance(action)!;
+                initAction.ConnectToPhase();
+                actions.Add(initAction);
             }
 
             foreach (var phase in AssemblyScanner.GetSubclassesOf<Phase>())
@@ -100,6 +102,7 @@ namespace Domain.Entities
 
         public virtual void AddAction(Action action)
         {
+            action.ConnectToPhase();
             var phase = _selectedActions.FirstOrDefault(a => a.GetType() == action.Phase!.GetType()) as Phase;
             phase!.Add(action);
 
@@ -146,11 +149,11 @@ namespace Domain.Entities
 
         private void Build() => RunAction(typeof(BuildPhase));
 
-        protected virtual void Test() { return; }
+        protected virtual void Test() { }
 
         private void Analyse() => RunAction(typeof(AnalysePhase));
 
-        protected virtual void Deploy() { return; }
+        protected virtual void Deploy() { }
 
         private void Finish()
         {
@@ -172,11 +175,11 @@ namespace Domain.Entities
             }
             else
             {
-                throw new Exception("Pipeline failed... need all required actions!");
+                throw new ArgumentException("Pipeline failed... need all required actions!");
             }
         }
 
-        public void Print(int indentations = 0)
+        public void Print(int indentations)
         {
             Logger.DisplayCustomAlert(nameof(Pipeline), nameof(Print), "All pipeline actions");
 
