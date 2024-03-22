@@ -11,7 +11,7 @@ namespace Domain.Entities
         private IList<Item> _items { get; init; }
         public IList<Item> Items { get => _items; init => _items = value; }
 
-        public Backlog()
+        protected Backlog()
         {
             _id = Guid.NewGuid();
             _items = new List<Item>();

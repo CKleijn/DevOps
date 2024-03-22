@@ -22,7 +22,7 @@ public abstract class User : IObserver
     private List<NotificationProvider> _destinationTypes { get; set; }
     public List<NotificationProvider> DestinationTypes { get => _destinationTypes; set => _destinationTypes = value; }
 
-    public User(string name, string email, string password, List<NotificationProvider> notificationProviders)
+    protected User(string name, string email, string password, List<NotificationProvider> notificationProviders)
     {
         _id = Guid.NewGuid();
         _name = name;

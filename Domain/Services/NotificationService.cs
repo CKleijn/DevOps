@@ -16,8 +16,6 @@ public class NotificationService
 
     public void SendNotification()
     {
-        var instances = AssemblyScanner.GetInstancesOfType<INotificationAdapter>();
-        
         AssemblyScanner.GetInstancesOfType<INotificationAdapter>()
             .ToList()
             .ForEach(adapter =>

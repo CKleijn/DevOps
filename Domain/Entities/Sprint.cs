@@ -116,7 +116,7 @@ public abstract class Sprint : IObservable
     private IList<IObserver> _observers { get; init; }
     public IList<IObserver> Observers { get => _observers; init => _observers = value; }
     
-    public Sprint(string title, DateTime startDate, DateTime endDate, Developer scrumMaster, Project project)
+    protected Sprint(string title, DateTime startDate, DateTime endDate, Developer scrumMaster, Project project)
     {
         _id = Guid.NewGuid();
         _title = title;

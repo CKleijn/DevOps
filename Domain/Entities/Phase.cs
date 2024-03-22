@@ -13,7 +13,7 @@ namespace Domain.Entities
         private IList<IPipeline> _actions { get; set; }
         public IList<IPipeline> Actions { get => _actions; set => _actions = value; }
 
-        public Phase()
+        protected Phase()
         {
             _id = Guid.NewGuid();
             _actions = new List<IPipeline>();
