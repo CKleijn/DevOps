@@ -13,11 +13,9 @@ namespace Domain.Entities
         private Phase? _phase { get; set; }
         public Phase? Phase { get => _phase; set => _phase = value; }
 
-        public Action()
+        protected Action()
         {
             _id = Guid.NewGuid();
-
-            ConnectToPhase();
         }
 
         public abstract void ConnectToPhase();

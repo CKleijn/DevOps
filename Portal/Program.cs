@@ -13,19 +13,17 @@ var app = builder.Build();
 
 app.MapGet("/", () =>
 {
-    List<NotificationProvider> notificationProviders = new();
-    notificationProviders.Add(NotificationProvider.MAIL);
-    notificationProviders.Add(NotificationProvider.SLACK);
+    List<NotificationProvider> notificationProviders = [NotificationProvider.MAIL, NotificationProvider.SLACK];
 
-    var productOwner = new ProductOwner("John Doe", "johndoe@gmail.com", "Password", notificationProviders);
-    var developer1 = new Developer("Kevin", "kevin@test.com", "Password", notificationProviders);
-    var developer2 = new Developer("Nick", "nick@test.com", "Password", notificationProviders);
-    var developer3 = new Developer("Don", "don@test.com", "Password", notificationProviders);
-    var developer4 = new Developer("Klaas", "klaas@test.com", "Password", notificationProviders);
-    var developer5 = new Developer("Dave", "dave@test.com", "Password", notificationProviders);
+    var productOwner = new ProductOwner("John Doe", "johndoe@gmail.com", "Password1", notificationProviders);
+    var developer1 = new Developer("Kevin", "kevin@test.com", "Password2", notificationProviders);
+    var developer2 = new Developer("Nick", "nick@test.com", "Password3", notificationProviders);
+    var developer3 = new Developer("Don", "don@test.com", "Password4", notificationProviders);
+    var developer4 = new Developer("Klaas", "klaas@test.com", "Password5", notificationProviders);
+    var developer5 = new Developer("Dave", "dave@test.com", "Password6", notificationProviders);
 
     var project = new Project("Project1", "Description1", productOwner, new GitHub());
-    project.VersionControl.CloneRepo("https://github.com/CKleijn/SOFA3-DevOps.git");
+    project.VersionControl.CloneRepo("SOFA3-DevOps.git");
     project.VersionControl.PullChanges();
     project.VersionControl.CommitChanges("Added new functionality");
     project.VersionControl.PushChanges();
@@ -36,7 +34,7 @@ app.MapGet("/", () =>
     project.Backlog.AddItemToBacklog(item1);
     project.Backlog.AddItemToBacklog(item2);
 
-    ISprintFactory<SprintRelease> sprintReleaseFactory = new SprintReleaseFactory();
+    SprintReleaseFactory sprintReleaseFactory = new SprintReleaseFactory();
 
     SprintRelease releaseSprint = sprintReleaseFactory.CreateSprint("Release Sprint", DateTime.Now.AddDays(-3), DateTime.Now.AddDays(4), developer3, project);
 
@@ -67,7 +65,7 @@ app.MapGet("/", () =>
     var threadMessage1 = new ThreadMessage("ThreadMessage 1", "Body 1", thread1);
     thread1.AddThreadMessage(threadMessage1);
 
-    pipeline.Print();
+    pipeline.Print(0);
 
     pipeline.AddAction(new GitCloneAction());
     pipeline.AddAction(new NpmInstallAction());
@@ -78,7 +76,7 @@ app.MapGet("/", () =>
     pipeline.AddAction(new DotnetAnalyzeAction());
     pipeline.AddAction(new NpmPublishAction());
     
-    pipeline.Print();
+    pipeline.Print(0);
 
     pipeline.ExecutePipeline();
 });
