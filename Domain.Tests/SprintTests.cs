@@ -1,6 +1,3 @@
-// using Domain.Entities;
-// using DomainServices.Factories;
-// using DomainServices.Interfaces;
 //
 // namespace Domain.Tests
 // {
