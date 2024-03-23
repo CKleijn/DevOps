@@ -50,7 +50,10 @@ public class Notification
 
     public void SendNotification()
     {
-        _notificationService.SendNotification();
+        if(Recipient?.DestinationTypes is not null && Recipient?.DestinationTypes.Count > 0)
+        {
+            _notificationService.SendNotification();
+        }
     }
     
     public override string ToString()

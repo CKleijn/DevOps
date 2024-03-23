@@ -6,6 +6,7 @@ using FinishedState = Domain.States.Sprint.FinishedState;
 
 namespace Domain.Tests
 {
+    [Collection("SequentialTest")]
     public class SprintTests
     {
         [Fact]
