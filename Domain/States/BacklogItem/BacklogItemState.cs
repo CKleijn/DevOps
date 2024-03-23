@@ -1,9 +1,11 @@
 ﻿using Domain.Entities;
 
+namespace Domain.States.BacklogItem;
+
 public abstract class BacklogItemState
 {
     public abstract Item Context { get; init; }
-    
+
     public virtual void DevelopBacklogItem() => throw new NotImplementedException();
 
     public virtual void FinalizeDevelopmentBacklogItem() => throw new NotImplementedException();

@@ -628,6 +628,7 @@ public class PipelineTests
         releasePipeline.AddAction(deployAction);
         releasePipeline.AddAction(testAction);
         releasePipeline.ExecutePipeline();
+        releasePipeline.ExecutePipeline();
 
         var output = mockTextWriter.ToString().Trim();
 

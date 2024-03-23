@@ -33,7 +33,7 @@ public abstract class Sprint : IObservable
             if (ValidateChange())
             {
                 _startDate = value;
-                Logger.DisplayUpdatedAlert(nameof(StartDate), _startDate.ToString("dd/mm/yyyy"));
+                Logger.DisplayUpdatedAlert(nameof(StartDate), _startDate.ToString(dateFormat));
             }
         }
     }
@@ -47,7 +47,7 @@ public abstract class Sprint : IObservable
             if (ValidateChange())
             {
                 _endDate = value;
-                Logger.DisplayUpdatedAlert(nameof(EndDate), _endDate.ToString("dd/mm/yyyy"));
+                Logger.DisplayUpdatedAlert(nameof(EndDate), _endDate.ToString(dateFormat));
             }
         }
     }
@@ -115,7 +115,9 @@ public abstract class Sprint : IObservable
 
     private IList<IObserver> _observers { get; init; }
     public IList<IObserver> Observers { get => _observers; init => _observers = value; }
-    
+
+    const string dateFormat = "dd/mm/yyyy";
+
     protected Sprint(string title, DateTime startDate, DateTime endDate, Developer scrumMaster, Project project)
     {
         _id = Guid.NewGuid();
@@ -257,8 +259,8 @@ public abstract class Sprint : IObservable
         StringBuilder sb = new();
 
         sb.AppendLine($"Sprint: {Title}");
-        sb.AppendLine($"Start Date: {StartDate.ToString("dd/mm/yyyy")}");
-        sb.AppendLine($"End Date: {EndDate.ToString("dd/mm/yyyy")}");
+        sb.AppendLine($"Start Date: {StartDate.ToString(dateFormat)}");
+        sb.AppendLine($"End Date: {EndDate.ToString(dateFormat)}");
         sb.AppendLine($"Status: {CurrentStatus.GetType()}");
         sb.AppendLine($"Scrum Master: {ScrumMaster.Name}");
         sb.AppendLine($"Developers: {Developers.Count}");
