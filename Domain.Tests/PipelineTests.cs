@@ -118,12 +118,12 @@ public class PipelineTests
         var projectMock = new Mock<Project>("Project 1", "Description 1", productOwnerMock.Object, githubMock.Object);
         var sprintMock = new Mock<SprintRelease>("Sprint 1", DateTime.Now, DateTime.Now, developerMock.Object, projectMock.Object);
         var sourceAction = new GitCloneAction();
-        var packageAction = new NpmInstallAction();
-        var buildAction = new NpmBuildAction();
-        var testAction = new NpmTestAction();
-        var analyseAction = new NpmEslintAction();
-        var deployAction = new NpmPublishAction();
-        var utilityAction = new NpmRunCopyFilesAction();
+        var packageAction = new DotnetRestoreAction();
+        var buildAction = new DotnetBuildAction();
+        var testAction = new DotnetTestAction();
+        var analyseAction = new DotnetAnalyzeAction();
+        var deployAction = new DotnetPublishAction();
+        var utilityAction = new DotnetCleanAction();
 
         var mockTextWriter = new StringWriter();
         Console.SetOut(mockTextWriter);
@@ -357,39 +357,41 @@ public class PipelineTests
         var packageAction = new NpmInstallAction();
         var buildAction = new NpmBuildAction();
         var analyseAction = new NpmEslintAction();
-        var deployAction = new NpmPublishAction();
         var testAction = new NpmTestAction();
+        utilityAction.ConnectToPhase();
+        packageAction.ConnectToPhase();
+        buildAction.ConnectToPhase();
+        analyseAction.ConnectToPhase();
+        testAction.ConnectToPhase();
 
         var mockTextWriter = new StringWriter();
         Console.SetOut(mockTextWriter);
 
         // Act
-        var releasePipeline = new ReleasePipeline(title, sprintMock.Object);
-        releasePipeline.AddAction(utilityAction);
-        releasePipeline.AddAction(packageAction);
-        releasePipeline.AddAction(buildAction);
-        releasePipeline.AddAction(analyseAction);
-        releasePipeline.AddAction(testAction);
-        releasePipeline.AddAction(deployAction);
-        releasePipeline.ExecutePipeline();
+        var testPipeline = new TestPipeline(title, sprintMock.Object);
+        testPipeline.AddAction(utilityAction);
+        testPipeline.AddAction(packageAction);
+        testPipeline.AddAction(buildAction);
+        testPipeline.AddAction(analyseAction);
+        testPipeline.AddAction(testAction);
+        testPipeline.ExecutePipeline();
 
         var output = mockTextWriter.ToString().Trim();
 
         // Assert
-        Assert.NotNull(releasePipeline);
-        Assert.IsAssignableFrom<Pipeline>(releasePipeline);
-        Assert.IsType<ReleasePipeline>(releasePipeline);
-        Assert.Equal(title, releasePipeline.Name);
-        Assert.Equal(sprintMock.Object, releasePipeline.Sprint);
+        Assert.NotNull(testPipeline);
+        Assert.IsAssignableFrom<Pipeline>(testPipeline);
+        Assert.IsType<TestPipeline>(testPipeline);
+        Assert.Equal(title, testPipeline.Name);
+        Assert.Equal(sprintMock.Object, testPipeline.Sprint);
         Assert.Contains($"Item {utilityAction.Id} has been added!", output);
         Assert.Contains($"Item {packageAction.Id} has been added!", output);
         Assert.Contains($"Item {buildAction.Id} has been added!", output);
         Assert.Contains($"Item {testAction.Id} has been added!", output);
         Assert.Contains($"Item {analyseAction.Id} has been added!", output);
-        Assert.Contains($"Item {deployAction.Id} has been added!", output);
         Assert.Contains("Pipeline failed... need all required actions!", output);
-        Assert.Equal(typeof(ExecutingState), releasePipeline.PreviousStatus!.GetType());
-        Assert.Equal(typeof(FailedState), releasePipeline.CurrentStatus.GetType());
+        Assert.Equal(typeof(ExecutingState), testPipeline.PreviousStatus!.GetType());
+        Assert.Equal(typeof(FailedState), testPipeline.CurrentStatus.GetType());
     }
 
     [Fact]

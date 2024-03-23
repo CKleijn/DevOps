@@ -1,3 +1,4 @@
+using Domain.Factories;
 using Domain.States.Pipeline;
 using Domain.States.Sprint;
 using CancelledState = Domain.States.Sprint.CancelledState;
@@ -10,10 +11,9 @@ namespace Domain.Tests
     public class SprintTests
     {
         [Fact]
-        public void CreateSprint_GivenTitleStartDateEndDateScrumMasterProject_WhenNoPreConditions_ThenCreateSprint()
+        public void CreateReviewSprint_GivenTitleStartDateEndDateScrumMasterProject_WhenNoPreConditions_ThenCreateReviewSprint()
         {
             // Arrange
-            var mockFactory = new Mock<ISprintFactory<SprintReview>>();
             var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
             var mockVersionControl = new Mock<IVersionControlStrategy>();
             var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
@@ -23,10 +23,9 @@ namespace Domain.Tests
             DateTime startTime = DateTime.Now;
             DateTime endTime = DateTime.Now.AddDays(14);
 
-            mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(new SprintReview(title, startTime, endTime, mockDeveloper.Object, mockProject.Object));
-
             // Act
-            SprintReview sprint = mockFactory.Object.CreateSprint(title, startTime, endTime, mockDeveloper.Object, mockProject.Object);
+            var sprintReviewFactory = new SprintReviewFactory();
+            var sprint = sprintReviewFactory.CreateSprint(title, startTime, endTime, mockDeveloper.Object, mockProject.Object);
 
             // Assert
             Assert.NotNull(sprint);
@@ -36,7 +35,33 @@ namespace Domain.Tests
             Assert.Equal(mockDeveloper.Object, sprint.ScrumMaster);
             Assert.Equal(mockProject.Object, sprint.Project);
         }
-        
+
+        [Fact]
+        public void CreateReleaseSprint_GivenTitleStartDateEndDateScrumMasterProject_WhenNoPreConditions_ThenCreateReleaseSprint()
+        {
+            // Arrange
+            var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+            var mockVersionControl = new Mock<IVersionControlStrategy>();
+            var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+            var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, mockVersionControl.Object);
+
+            string title = "Initial Sprint";
+            DateTime startTime = DateTime.Now;
+            DateTime endTime = DateTime.Now.AddDays(14);
+
+            // Act
+            var sprintReleaseFactory = new SprintReleaseFactory();
+            var sprint = sprintReleaseFactory.CreateSprint(title, startTime, endTime, mockDeveloper.Object, mockProject.Object);
+
+            // Assert
+            Assert.NotNull(sprint);
+            Assert.Equal(title, sprint.Title);
+            Assert.Equal(startTime, sprint.StartDate);
+            Assert.Equal(endTime, sprint.EndDate);
+            Assert.Equal(mockDeveloper.Object, sprint.ScrumMaster);
+            Assert.Equal(mockProject.Object, sprint.Project);
+        }
+
         [Fact]
         public void UpdateSprint_GivenTitleStartDateEndDateScrumMasterProjectReviewDeveloperTesterReport_WhenSprintIsInInitialState_ThenUpdateSprint()
         {
@@ -438,6 +463,11 @@ namespace Domain.Tests
             var sprint = mockFactory.Object.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object);
             sprint.Pipeline = mockPipeline.Object;
             sprint.SprintBacklog.AddItemToBacklog(mockItem.Object);
+
+            var release = new Release("1.0.0");
+            sprint.AddRelease(release);
+            sprint.RemoveRelease(release);
+            sprint.AddRelease(release);
 
             // Act
             sprint.ExecuteSprint();

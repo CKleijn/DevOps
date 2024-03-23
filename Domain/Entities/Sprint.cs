@@ -1,6 +1,7 @@
 using Domain.Helpers;
 using Domain.Interfaces.Observer;
 using Domain.States.Sprint;
+using System.Text;
 
 namespace Domain.Entities;
 
@@ -251,5 +252,36 @@ public abstract class Sprint : IObservable
     
     protected abstract bool ValidateChange();
 
-    public abstract override string ToString();
+    public override string ToString()
+    {
+        StringBuilder sb = new();
+
+        sb.AppendLine($"Sprint: {Title}");
+        sb.AppendLine($"Start Date: {StartDate.ToString("dd/mm/yyyy")}");
+        sb.AppendLine($"End Date: {EndDate.ToString("dd/mm/yyyy")}");
+        sb.AppendLine($"Status: {CurrentStatus.GetType()}");
+        sb.AppendLine($"Scrum Master: {ScrumMaster.Name}");
+        sb.AppendLine($"Developers: {Developers.Count}");
+
+        foreach (var developer in Developers)
+        {
+            sb.AppendLine(developer.ToString());
+        }
+
+        sb.AppendLine($"Testers: {Testers.Count}");
+
+        foreach (var tester in Testers)
+        {
+            sb.AppendLine(tester.ToString());
+        }
+
+        sb.AppendLine($"Items: {SprintBacklog.Items.Count}");
+
+        foreach (var item in SprintBacklog.Items)
+        {
+            sb.AppendLine(item.ToString());
+        }
+
+        return sb.ToString();
+    }
 }
