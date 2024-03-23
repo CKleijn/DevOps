@@ -53,6 +53,7 @@ namespace Domain.Entities
             _description = description;
             _developer = developer;
             _activities = new List<Activity>();
+            _previousStatus = new TodoState(this);
             _currentStatus = new TodoState(this);
             _threads = new List<Thread>();
             _storyPoints = storyPoints;
@@ -68,6 +69,7 @@ namespace Domain.Entities
             _description = description;
             _developer = developer;
             _activities = new List<Activity>();
+            _previousStatus = new TodoState(this);
             _currentStatus = new TodoState(this);
             _threads = new List<Thread>();
             _storyPoints = storyPoints;

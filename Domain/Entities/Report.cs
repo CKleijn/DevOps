@@ -57,7 +57,7 @@ public class Report
         Logger.DisplayCreatedAlert(nameof(Report), _title);
     }
 
-    public void GenerateReport()
+    public string GenerateReport()
     {
         StringBuilder sb = new();
 
@@ -77,5 +77,6 @@ public class Report
         }
 
         Console.WriteLine(sb.ToString());
+        return sb.ToString();
     }
 }

@@ -1,62 +1,79 @@
-﻿using Domain.Enums;
-using Domain.Interfaces.Strategies;
-using Infrastructure.Libraries.VersionControls;
-
-namespace Domain.Tests;
+﻿namespace Domain.Tests;
 
 public class ProjectTests
 {
-     [Fact]
-     public void CreateProject_GivenTitleDescriptionPasswordScrumMaster_WhenNoPreConditions_ThenInstantiateProject()
-     {
-         // Arrange
-         List<NotificationProvider> notificationProviders = new();
-         notificationProviders.Add(NotificationProvider.MAIL);
-         ProductOwner productOwner = new("name", "email", "password", notificationProviders);
+    [Fact]
+    public void CreateProject_GivenTitleDescriptionPasswordScrumMaster_WhenNoPreConditions_ThenCreateProject()
+    {
+        // Arrange
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockVersionControl = new Mock<IVersionControlStrategy>();
 
-         string projectTitle = "Project";
-         string projectDescription = "Description";
-         
-         IVersionControlStrategy gitHub = new GitHub();
+        string projectTitle = "Project";
+        string projectDescription = "Description";
 
-         // Act
-         Project project = new(projectTitle, projectDescription, productOwner, gitHub);
+        // Act
+        Project project = new(projectTitle, projectDescription, mockProductOwner.Object, mockVersionControl.Object);
 
-         // Assert
-         Assert.NotNull(project);
-         Assert.IsType<Project>(project);
-         Assert.Equal(project.Title, projectTitle);
-         Assert.Equal(project.Description, projectDescription);
-         Assert.Equal(project.ProductOwner, productOwner);
-         Assert.Equal(project.VersionControl, gitHub);
-         Assert.IsType<ProjectBacklog>(project.Backlog);
-         Assert.IsType<ProductOwner>(project.ProductOwner);
-     }
-     
-     [Fact]
-     public void UpdateProject_GivenProperties_WhenNoPreConditions_ThenInstantiateProject()
-     {
-         // Arrange
-         List<NotificationProvider> notificationProviders = new();
-         notificationProviders.Add(NotificationProvider.MAIL);
-         ProductOwner productOwner = new("name", "email", "password", notificationProviders);
+        // Assert
+        Assert.NotNull(project);
+        Assert.IsType<Project>(project);
+        Assert.NotNull(project.Backlog);
+        Assert.NotNull(project.VersionControl);
+        Assert.Equal(project.Title, projectTitle);
+        Assert.Equal(project.Description, projectDescription);
+        Assert.Equal(project.ProductOwner, mockProductOwner.Object);
+        Assert.Equal(project.VersionControl, mockVersionControl.Object);
+    }
 
-         string projectTitle = "Project";
-         string projectDescription = "Description";
-             
-         IVersionControlStrategy gitHub = new GitHub();
+    [Fact]
+    public void UpdateProject_GivenTitleDescriptionPasswordScrumMasterPipeline_WhenNoPreConditions_ThenUpdateProject()
+    {
+        // Arrange
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockNewProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
 
-         // Act
-         Project project = new(projectTitle, projectDescription, productOwner, gitHub);
+        var mockVersionControl = new Mock<IVersionControlStrategy>();
+        var mockNewVersionControl = new Mock<IVersionControlStrategy>();
 
-         // Assert
-         Assert.NotNull(project);
-         Assert.IsType<Project>(project);
-         Assert.Equal(project.Title, projectTitle);
-         Assert.Equal(project.Description, projectDescription);
-         Assert.Equal(project.ProductOwner, productOwner);
-         Assert.Equal(project.VersionControl, gitHub);
-         Assert.IsType<ProjectBacklog>(project.Backlog);
-         Assert.IsType<ProductOwner>(project.ProductOwner);
-     }
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, mockVersionControl.Object);
+
+        var mockSprintFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockSprint = new Mock<SprintRelease>(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), mockDeveloper.Object, mockProject.Object);
+        mockSprintFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), mockProject.Object)).Returns(mockSprint.Object);
+
+        var mockPipeline = new Mock<TestPipeline>(It.IsAny<string>(), mockSprint.Object);
+        var mockNewPipeline = new Mock<ReleasePipeline>(It.IsAny<string>(), mockSprint.Object);
+
+        string projectTitle = "Project";
+        string newProjectTitle = "NewProject";
+
+        string projectDescription = "Description";
+        string newProjectDescription = "NewDescription";
+
+        Project project = new(projectTitle, projectDescription, mockProductOwner.Object, mockVersionControl.Object);
+
+        // Act
+        project.Title = newProjectTitle;
+        project.Description = newProjectDescription;
+        project.ProductOwner = mockNewProductOwner.Object;
+        project.VersionControl = mockNewVersionControl.Object;
+
+        project.AddPipeline(mockPipeline.Object);
+        project.RemovePipeline(mockPipeline.Object);
+        project.AddPipeline(mockNewPipeline.Object);
+
+        // Assert
+        Assert.NotNull(project);
+        Assert.NotNull(project.Backlog);
+        Assert.NotNull(project.VersionControl);
+        Assert.Equal(newProjectTitle, project.Title);
+        Assert.Equal(newProjectDescription, project.Description);
+        Assert.Equal(mockNewProductOwner.Object, project.ProductOwner);
+        Assert.Equal(mockNewVersionControl.Object, project.VersionControl);
+        Assert.Equal(mockNewPipeline.Object, project.Pipelines![0]);
+        Assert.Equal(1, project.Pipelines.Count);
+    }
 }

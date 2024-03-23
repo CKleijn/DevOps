@@ -29,6 +29,12 @@ namespace Domain.States.Pipeline
 
         public void CancelPipeline()
         {
+            Notification notification = new Notification("Pipeline release cancelled", $"The release of the pipeline (with an id of {_context.Id}) has been cancelled!");
+
+            notification.AddTargetUser(_context.Sprint.ScrumMaster);
+
+            _context.Sprint.NotifyObservers(notification);
+
             _context.CurrentStatus = new CancelledState(_context);
 
             Logger.DisplayCustomAlert(nameof(ExecutingState), nameof(CancelPipeline), "Pipeline status changed to cancelled!");

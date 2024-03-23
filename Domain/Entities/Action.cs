@@ -8,7 +8,7 @@ namespace Domain.Entities
         public Guid Id { get => _id; init => _id = value; }
 
         private string? _command { get; set; }
-        protected string? Command { get => _command; set => _command = value; }
+        public string? Command { get => _command; set => _command = value; }
 
         private Phase? _phase { get; set; }
         public Phase? Phase { get => _phase; set => _phase = value; }
@@ -22,6 +22,6 @@ namespace Domain.Entities
 
         public abstract void Execute();
 
-        public abstract void Print(int indentations);
+        public abstract string Print();
     }
 }

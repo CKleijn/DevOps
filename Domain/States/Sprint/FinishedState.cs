@@ -28,7 +28,7 @@ public class FinishedState : ISprintState
         }
 
         // Cancel sprint when results aren't "good enough" a.k.a not all backlog items from the sprint are closed
-        if (_context.SprintBacklog.Items.Any(item => item.CurrentStatus.GetType() != typeof(ClosedState)))
+        if (_context.SprintBacklog.Items.Any(item => item.CurrentStatus.GetType() != typeof(BacklogItem.ClosedState)))
         {
             CancelSprint();
             return;
@@ -47,7 +47,7 @@ public class FinishedState : ISprintState
         }
         
         // Cancel sprint when results aren't "good enough" a.k.a not all backlog items from the sprint are closed
-        if (_context.SprintBacklog.Items.Any(item => item.CurrentStatus.GetType() != typeof(ClosedState)))
+        if (_context.SprintBacklog.Items.Any(item => item.CurrentStatus.GetType() != typeof(BacklogItem.ClosedState)))
         {
             CancelSprint();
             return;

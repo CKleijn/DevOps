@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Helpers;
+using System.Text;
 
 namespace Domain.Phases
 {
@@ -10,9 +11,18 @@ namespace Domain.Phases
             SortIndex = 6;
         }
 
-        public override void Print(int indentations)
+        public override string Print()
         {
-            PhasePrintTemplate.PrintTemplate(indentations, nameof(DeployPhase), Actions);
+            StringBuilder sb = new();
+
+            sb.AppendLine(nameof(DeployPhase));
+
+            foreach (var action in Actions)
+            {
+                sb.AppendLine(action.Print());
+            }
+
+            return sb.ToString();
         }
     }
 }

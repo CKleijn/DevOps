@@ -13,7 +13,8 @@ var app = builder.Build();
 
 app.MapGet("/", () =>
 {
-    List<NotificationProvider> notificationProviders = [NotificationProvider.MAIL, NotificationProvider.SLACK];
+    List<NotificationProvider> notificationProviders = new();
+    notificationProviders.Add(NotificationProvider.MAIL);
 
     var productOwner = new ProductOwner("John Doe", "johndoe@gmail.com", "Password1", notificationProviders);
     var developer1 = new Developer("Kevin", "kevin@test.com", "Password2", notificationProviders);
@@ -65,7 +66,8 @@ app.MapGet("/", () =>
     var threadMessage1 = new ThreadMessage("ThreadMessage 1", "Body 1", thread1);
     thread1.AddThreadMessage(threadMessage1);
 
-    pipeline.Print(0);
+    Console.WriteLine(pipeline.Print());
+    Console.WriteLine(pipeline.PrintSelectedActions());
 
     pipeline.AddAction(new GitCloneAction());
     pipeline.AddAction(new NpmInstallAction());
@@ -75,8 +77,8 @@ app.MapGet("/", () =>
     pipeline.AddAction(new NpmTestAction());
     pipeline.AddAction(new DotnetAnalyzeAction());
     pipeline.AddAction(new NpmPublishAction());
-    
-    pipeline.Print(0);
+
+    Console.WriteLine(pipeline.PrintSelectedActions());
 
     pipeline.ExecutePipeline();
 });

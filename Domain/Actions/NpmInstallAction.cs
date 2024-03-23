@@ -21,9 +21,9 @@ namespace Domain.Actions
             Logger.DisplayCustomAlert(nameof(NpmInstallAction), nameof(Execute), $"Successfully executed {Command} without any errors!");
         }
 
-        public override void Print(int indentations)
+        public override string Print()
         {
-            ActionPrintTemplate.PrintTemplate(indentations, nameof(NpmInstallAction), Command!);
+            return $"{nameof(NpmInstallAction)} {Command}";
         }
     }
 }

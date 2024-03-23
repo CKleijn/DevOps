@@ -16,7 +16,7 @@ namespace Domain.States.BacklogItem
 
         public void DevelopBacklogItem()
         {
-            if (_context.SprintBacklog is not null)
+            if (_context.SprintBacklog is null)
             {
                 Logger.DisplayCustomAlert(nameof(TodoState), nameof(DevelopBacklogItem), "The backlog item is not part of a sprint backlog!");
                 return;
@@ -25,13 +25,13 @@ namespace Domain.States.BacklogItem
             if (_context.PreviousStatus!.Context.Developer.Id != _context.Developer.Id)
             {
                 Notification notification = new Notification("Different developer on backlog item", $"The backlog item (with an id of {_context.Id}) has a different developer!");
-
+            
                 notification.AddTargetUser(_context.SprintBacklog!.Sprint.ScrumMaster);
-
+            
                 _context.SprintBacklog.Sprint.NotifyObservers(notification);
-
+            
                 Logger.DisplayCustomAlert(nameof(TodoState), nameof(DevelopBacklogItem), "The backlog item needs to be developed by the same developer!");
-
+            
                 return;
             }
 

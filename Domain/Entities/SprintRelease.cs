@@ -55,7 +55,7 @@ public class SprintRelease : Sprint
             Logger.DisplayCustomAlert(nameof(SprintRelease), nameof(ValidateChange), $"Can't update sprint after end date. Sprint will be set to close if it isn't already!");
 
             //Check if sprint input is valid
-            CurrentStatus.ReleaseSprint();
+            ReleaseSprint();
             
             //Release sprint 
             if (CurrentStatus.GetType() == typeof(ReleaseState))

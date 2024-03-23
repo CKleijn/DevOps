@@ -179,21 +179,32 @@ namespace Domain.Entities
             }
         }
 
-        public void Print(int indentations)
+        public string Print()
         {
-            Logger.DisplayCustomAlert(nameof(Pipeline), nameof(Print), "All pipeline actions");
+            StringBuilder sb = new();
+
+            sb.AppendLine("All pipeline actions");
 
             foreach (var action in _allActions)
             {
-                action.Print(0);
+                sb.AppendLine(action.Print());
             }
 
-            Logger.DisplayCustomAlert(nameof(Pipeline), nameof(Print), "Selected pipeline actions");
+            return sb.ToString();
+        }
+
+        public string PrintSelectedActions()
+        {
+            StringBuilder sb = new();
+
+            sb.AppendLine("Selected pipeline actions");
 
             foreach (var action in _selectedActions)
             {
-                action.Print(0);
+                sb.AppendLine(action.Print());
             }
+
+            return sb.ToString();
         }
 
         public override string ToString()

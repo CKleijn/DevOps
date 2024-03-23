@@ -2,6 +2,6 @@
 {
     public interface IPipeline
     {
-        void Print(int indentations);
+        string Print();
     }
 }
