@@ -1,6 +1,5 @@
 using Domain.Helpers;
 using Domain.Interfaces.Observer;
-using Domain.Interfaces.States;
 using Domain.States.Sprint;
 using System.Text;
 
@@ -56,8 +55,8 @@ public abstract class Sprint : IObservable
     private SprintBacklog _sprintBacklog { get; init; }
     public SprintBacklog SprintBacklog { get => _sprintBacklog; init => _sprintBacklog = value; }
     
-    private ISprintState? _previousStatus { get; set; }
-    public ISprintState? PreviousStatus
+    private SprintState? _previousStatus { get; set; }
+    public SprintState? PreviousStatus
     {
         get => _previousStatus;
         set
@@ -70,8 +69,8 @@ public abstract class Sprint : IObservable
         }
     }
     
-    private ISprintState _currentStatus { get; set; }
-    public ISprintState CurrentStatus
+    private SprintState _currentStatus { get; set; }
+    public SprintState CurrentStatus
     {
         get => _currentStatus;
         set

@@ -1,10 +1,8 @@
 ﻿using Domain.Helpers;
 using Domain.Interfaces.Composite;
-using Domain.Interfaces.States;
 using Domain.Phases;
 using Domain.States.Pipeline;
 using Domain.Tools;
-using System.Diagnostics;
 using System.Text;
 
 namespace Domain.Entities
@@ -17,11 +15,11 @@ namespace Domain.Entities
         private string _name { get; set; }
         public string Name { get => _name; set => _name = value; }
 
-        private IPipelineState? _previousStatus { get; set; }
-        public IPipelineState? PreviousStatus { get => _previousStatus; set => _previousStatus = value; }
+        private PipelineState? _previousStatus { get; set; }
+        public PipelineState? PreviousStatus { get => _previousStatus; set => _previousStatus = value; }
 
-        private IPipelineState _currentStatus { get; set; }
-        public IPipelineState CurrentStatus 
+        private PipelineState _currentStatus { get; set; }
+        public PipelineState CurrentStatus 
         { 
             get => _currentStatus; 
             set 

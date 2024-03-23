@@ -1,5 +1,4 @@
 ﻿using Domain.Helpers;
-using Domain.Interfaces.States;
 using Domain.States.BacklogItem;
 using System.Text;
 
@@ -22,12 +21,12 @@ namespace Domain.Entities
         private IList<Activity> _activities { get; init; }
         public IList<Activity> Activities { get => _activities; init => _activities = value; }
 
-        private IBacklogItemState? _previousStatus { get; set; }
-        public IBacklogItemState? PreviousStatus { get => _previousStatus; set => _previousStatus = value; }
+        private BacklogItemState? _previousStatus { get; set; }
+        public BacklogItemState? PreviousStatus { get => _previousStatus; set => _previousStatus = value; }
 
-        private IBacklogItemState _currentStatus { get; set; }
+        private BacklogItemState _currentStatus { get; set; }
 
-        public IBacklogItemState CurrentStatus
+        public BacklogItemState CurrentStatus
         {
             get => _currentStatus;
             set
