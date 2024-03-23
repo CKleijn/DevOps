@@ -2,7 +2,7 @@
 
 public class BacklogTests
 {
-         [Fact]
+     [Fact]
      public void CreateBacklog_GivenNoProperties_WhenNoPreConditions_ThenCreateBacklog()
      {
          //Arrange

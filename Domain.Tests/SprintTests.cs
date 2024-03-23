@@ -6,7 +6,7 @@ using FinishedState = Domain.States.Sprint.FinishedState;
 
 namespace Domain.Tests
 {
-    public class DomainTests
+    public class SprintTests
     {
         [Fact]
         public void CreateSprint_GivenTitleStartDateEndDateScrumMasterProject_WhenNoPreConditions_ThenCreateSprint()
