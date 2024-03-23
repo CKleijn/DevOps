@@ -84,39 +84,15 @@ public class SprintReview : Sprint
 
     public override string ToString()
     {
+        base.ToString();
+
         StringBuilder sb = new();
-
-        sb.AppendLine($"Sprint Review: {Title}");
-        sb.AppendLine($"Start Date: {StartDate.ToString("dd/mm/yyyy")}");
-        sb.AppendLine($"End Date: {EndDate.ToString("dd/mm/yyyy")}");
-        sb.AppendLine($"Status: {CurrentStatus.GetType()}");
-        sb.AppendLine($"Scrum Master: {ScrumMaster.Name}");
-        sb.AppendLine($"Developers: {Developers.Count}");
-
-        foreach (var developer in Developers)
-        {
-            sb.AppendLine(developer.ToString());
-        }
-
-        sb.AppendLine($"Testers: {Testers.Count}");
-
-        foreach (var tester in Testers)
-        {
-            sb.AppendLine(tester.ToString());
-        }
 
         sb.AppendLine($"Reviews: {Reviews.Count}");
 
         foreach (var review in Reviews)
         {
             sb.AppendLine(review.ToString());
-        }
-
-        sb.AppendLine($"Items: {SprintBacklog.Items.Count}");
-
-        foreach (var item in SprintBacklog.Items)
-        {
-            sb.AppendLine(item.ToString());
         }
 
         return sb.ToString();

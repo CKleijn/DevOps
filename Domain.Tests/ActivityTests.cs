@@ -1,6 +1,4 @@
-﻿using Domain.States.BacklogItem;
-
-namespace Domain.Tests;
+﻿namespace Domain.Tests;
 
 [Collection("SequentialTest")]
 public class ActivityTests
