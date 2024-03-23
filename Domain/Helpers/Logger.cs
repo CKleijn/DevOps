@@ -7,6 +7,5 @@
         public static void DisplayAddedAlert(string property, string title) => Console.WriteLine($"{property} {title} has been added!");
         public static void DisplayRemovedAlert(string property, string title) => Console.WriteLine($"{property} {title} has been removed!");
         public static void DisplayCustomAlert(string property, string? action, string message) => Console.WriteLine(action == null ? $"{property} {message}" : $"{property} ({action}) {message}");
-        public static void DisplayNotSelected() => Console.WriteLine(new string('\t', 1) + "Not selected!");
     }
 }

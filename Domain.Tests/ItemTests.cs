@@ -1,7 +1,6 @@
-﻿using Domain.States.BacklogItem;
+﻿namespace Domain.Tests;
 
-namespace Domain.Tests;
-
+[Collection("SequentialTest")]
 public class ItemTests
 {
     [Fact]
@@ -149,7 +148,7 @@ public class ItemTests
 
             mockItem.Object.CloseBacklogItem();
         }
-        catch (Exception e){}
+        catch (Exception){}
 
         //Assert
         Assert.NotNull(mockItem.Object);
@@ -185,7 +184,7 @@ public class ItemTests
             //try to close the item
             mockItem.Object.CloseBacklogItem();
         }
-        catch (Exception e){}
+        catch (Exception){}
 
         //Assert
         Assert.NotNull(mockItem.Object);
