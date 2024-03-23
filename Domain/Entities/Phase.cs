@@ -29,6 +29,6 @@ namespace Domain.Entities
             _actions.Remove(action);
         }
 
-        public abstract void Print(int indentations);
+        public abstract string Print();
     }
 }

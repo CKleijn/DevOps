@@ -21,9 +21,9 @@ namespace Domain.Actions
             Logger.DisplayCustomAlert(nameof(DotnetAnalyzeAction), nameof(Execute), $"Successfully executed {Command} without any errors!");
         }
 
-        public override void Print(int indentations)
+        public override string Print()
         {
-            ActionPrintTemplate.PrintTemplate(indentations, nameof(DotnetAnalyzeAction), Command!);
+            return $"{nameof(DotnetAnalyzeAction)} {Command}";
         }
     }
 }
