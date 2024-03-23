@@ -48,6 +48,8 @@ app.MapGet("/", () =>
     releaseSprint.AddTester(developer4);
     releaseSprint.AddTester(developer5);
 
+    releaseSprint.ExecuteSprint();
+
     item1.SprintBacklog = releaseSprint.SprintBacklog;
     item2.SprintBacklog = releaseSprint.SprintBacklog;
 

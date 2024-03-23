@@ -1,19 +1,18 @@
 ﻿using Domain.Helpers;
-using Domain.Interfaces.States;
 
 namespace Domain.States.Pipeline
 {
-    public class InitialState : IPipelineState
+    public class InitialState : PipelineState
     {
         private Entities.Pipeline _context {  get; init; }
-        public Entities.Pipeline Context { get => _context; init => _context = value; }
+        public override Entities.Pipeline Context { get => _context; init => _context = value; }
 
         public InitialState(Entities.Pipeline context)
         {
             _context = context;
         }
 
-        public void ExecutePipeline()
+        public override void ExecutePipeline()
         {
             _context.CurrentStatus = new ExecutingState(_context);
 
@@ -21,11 +20,5 @@ namespace Domain.States.Pipeline
 
             _context.ExecutePipeline();
         }
-
-        public void CancelPipeline() => throw new NotImplementedException();
-
-        public void FailPipeline() => throw new NotImplementedException();
-
-        public void FinalizePipeline() => throw new NotImplementedException();
     }
 }

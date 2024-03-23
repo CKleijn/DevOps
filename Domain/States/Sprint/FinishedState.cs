@@ -1,26 +1,19 @@
 ﻿using Domain.Entities;
 using Domain.Helpers;
-using Domain.Interfaces.States;
 
 namespace Domain.States.Sprint;
 
-public class FinishedState : ISprintState
+public class FinishedState : SprintState
 {
     private Entities.Sprint _context { get; init; }
-    public Entities.Sprint Context { get => _context; init => _context = value; }
+    public override Entities.Sprint Context { get => _context; init => _context = value; }
 
     public FinishedState(Entities.Sprint context)
     {
         _context = context;
     }
     
-    public void InitializeSprint() => throw new NotImplementedException();
-
-    public void ExecuteSprint() => throw new NotImplementedException();
-
-    public void FinishSprint() => throw new NotImplementedException();
-
-    public void ReleaseSprint() 
+    public override void ReleaseSprint() 
     {
         if (_context is not SprintRelease)
         {
@@ -39,7 +32,7 @@ public class FinishedState : ISprintState
         Logger.DisplayCustomAlert(nameof(FinishedState), nameof(ReleaseSprint), "Sprint status changed to release!");
     }
 
-    public void ReviewSprint()
+    public override void ReviewSprint()
     {
         if (_context is not SprintReview)
         {
@@ -58,7 +51,7 @@ public class FinishedState : ISprintState
         Logger.DisplayCustomAlert(nameof(FinishedState), nameof(ReviewSprint), "Sprint status changed to review!");
     }
 
-    public void CancelSprint()
+    public override void CancelSprint()
     {
         _context.CurrentStatus = new CancelledState(_context);
         
@@ -71,6 +64,4 @@ public class FinishedState : ISprintState
 
         _context.NotifyObservers(notification);
     }
-
-    public void CloseSprint() => throw new NotImplementedException();
 }

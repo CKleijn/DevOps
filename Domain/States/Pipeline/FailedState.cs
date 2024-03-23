@@ -1,20 +1,19 @@
 ﻿using Domain.Entities;
 using Domain.Helpers;
-using Domain.Interfaces.States;
 
 namespace Domain.States.Pipeline
 {
-    public class FailedState : IPipelineState
+    public class FailedState : PipelineState
     {
         private Entities.Pipeline _context { get; init; }
-        public Entities.Pipeline Context { get => _context; init => _context = value; }
+        public override Entities.Pipeline Context { get => _context; init => _context = value; }
 
         public FailedState(Entities.Pipeline context)
         {
             _context = context;
         }
 
-        public void ExecutePipeline()
+        public override void ExecutePipeline()
         {
             _context.CurrentStatus = new ExecutingState(_context);
 
@@ -23,7 +22,7 @@ namespace Domain.States.Pipeline
             _context.RerunPipeline();
         }
 
-        public void CancelPipeline()
+        public override void CancelPipeline()
         {
             Notification notification = new Notification("Pipeline cancelled", $"The release of the pipeline (with an id of {_context.Id}) has been cancelled after failure!");
 
@@ -35,9 +34,5 @@ namespace Domain.States.Pipeline
 
             Logger.DisplayCustomAlert(nameof(FailedState), nameof(CancelPipeline), "Pipeline status changed to cancelled!");
         }
-
-        public void FailPipeline() => throw new NotImplementedException();
-
-        public void FinalizePipeline() => throw new NotImplementedException();
     }
 }

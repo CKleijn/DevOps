@@ -1,33 +1,26 @@
 ﻿using Domain.Entities;
 using Domain.Helpers;
-using Domain.Interfaces.States;
 
 namespace Domain.States.Sprint;
 
-public class ReviewState : ISprintState
+public class ReviewState : SprintState
 {
     private Entities.Sprint _context { get; init; }
-    public Entities.Sprint Context { get => _context; init => _context = value; }
+    public override Entities.Sprint Context { get => _context; init => _context = value; }
     
     public ReviewState(Entities.Sprint context)
     {
         _context = context;
     }
-    
-    public void InitializeSprint() => throw new NotImplementedException();
 
-    public void ExecuteSprint()
+    public override void ExecuteSprint()
     {
         Logger.DisplayCustomAlert(nameof(SprintReview), nameof(ExecuteSprint), $"Successfully executed sprint ({_context.Title}), sprint will be closed!");
         
         CloseSprint();
     }
 
-    public void FinishSprint() => throw new NotImplementedException();
-
-    public void ReleaseSprint() => throw new NotImplementedException();
-
-    public void ReviewSprint()
+    public override void ReviewSprint()
     {
         if (_context is SprintReview sprint)
         {
@@ -45,14 +38,14 @@ public class ReviewState : ISprintState
         Logger.DisplayCustomAlert(nameof(SprintRelease), nameof(ReleaseSprint), "Sprint is of an incorrect type!");
     }
 
-    public void CancelSprint()
+    public override void CancelSprint()
     {
         _context.CurrentStatus = new CancelledState(_context);
         
         Logger.DisplayCustomAlert(nameof(ReviewState), nameof(CancelSprint), "Sprint status changed to cancelling!");
     }
 
-    public void CloseSprint()
+    public override void CloseSprint()
     {
         _context.CurrentStatus = new ClosedState(_context);
         
