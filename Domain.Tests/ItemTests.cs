@@ -8,25 +8,21 @@ public class ItemTests
     public void CreateBacklogItem_TitleDescriptionDeveloperStoryPoints_WhenNoPreConditions_ThenCreateBacklogItem()
     {
         //Arrange
-        ISprintFactory<SprintRelease> factory = new SprintReleaseFactory();
-                
-        List<NotificationProvider> notificationProviders = new();
-        notificationProviders.Add(NotificationProvider.MAIL);
-        
-        Developer scrumMaster = new("name", "email", "password", notificationProviders);
-        IVersionControlStrategy versionControl = new GitHub();
-        ProductOwner productOwner = new("name", "email", "password", notificationProviders);
-                
-        Project project = new("Project", "Description", productOwner, versionControl);
-        SprintRelease sprint = factory.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), scrumMaster, project);
-        
+        var mockFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockVersionControl = new Mock<IVersionControlStrategy>();
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, mockVersionControl.Object);
+
+        mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(new SprintRelease("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object));
+
         string initialTitle = "Item";
         string initialDescription = "Description";
         int initialStoryPoints = 1;
-        
+
         //Act
-        Item item = new(initialTitle, initialDescription, scrumMaster, initialStoryPoints, sprint.SprintBacklog);
-        
+        Item item = new(initialTitle, initialDescription, mockDeveloper.Object, initialStoryPoints, mockFactory.Object.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object).SprintBacklog);
+
         //Assert
         Assert.NotNull(item);
         Assert.Equal(initialTitle, item.Title);
@@ -39,33 +35,29 @@ public class ItemTests
     public void UpdateBacklogItem_TitleDescriptionDeveloperStoryPoints_WhenNoPreConditions_ThenUpdateBacklogItem()
     {
         //Arrange
-        ISprintFactory<SprintRelease> factory = new SprintReleaseFactory();
-                
-        List<NotificationProvider> notificationProviders = new();
-        notificationProviders.Add(NotificationProvider.MAIL);
-        
-        Developer scrumMaster = new("name", "email", "password", notificationProviders);
-        IVersionControlStrategy versionControl = new GitHub();
-        ProductOwner productOwner = new("name", "email", "password", notificationProviders);
-                
-        Project project = new("Project", "Description", productOwner, versionControl);
-        SprintRelease sprint = factory.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), scrumMaster, project);
-        
+        var mockFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockVersionControl = new Mock<IVersionControlStrategy>();
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, mockVersionControl.Object);
+
+        mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(new SprintRelease("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object));
+
         string initialTitle = "Item";
         string initialDescription = "Description";
         int initialStoryPoints = 1;
-        
+
         string newTitle = "newItem";
         string newDescription = "newDescription";
         int newStoryPoints = 3;
-        
+
         //Act
-        Item item = new(initialTitle, initialDescription, scrumMaster, initialStoryPoints, sprint.SprintBacklog);
+        Item item = new(initialTitle, initialDescription, mockDeveloper.Object, initialStoryPoints, mockFactory.Object.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object).SprintBacklog);
 
         item.Title = newTitle;
         item.Description = newDescription;
         item.StoryPoints = newStoryPoints;
-        
+
         //Assert
         Assert.NotNull(item);
         Assert.Equal(newTitle, item.Title);
@@ -76,407 +68,358 @@ public class ItemTests
         Assert.NotEqual(initialStoryPoints, item.StoryPoints);
         Assert.NotNull(item.SprintBacklog);
     }
-    
+
     [Fact]
     public void CloseBacklogItem_TitleDescriptionDeveloperStoryPoints_WhenGoingThroughPhases_ThenCloseBacklogItem()
     {
         //Arrange
-        ISprintFactory<SprintRelease> factory = new SprintReleaseFactory();
-                
-        List<NotificationProvider> notificationProviders = new();
-        notificationProviders.Add(NotificationProvider.MAIL);
-        
-        Developer scrumMaster = new("name", "email", "password", notificationProviders);
-        IVersionControlStrategy versionControl = new GitHub();
-        ProductOwner productOwner = new("name", "email", "password", notificationProviders);
-                
-        Project project = new("Project", "Description", productOwner, versionControl);
-        SprintRelease sprint = factory.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), scrumMaster, project);
-        
-        Item item = new("Item", "Description", scrumMaster, 1, sprint.SprintBacklog);
-        Activity activity = new("Activity", item, scrumMaster);
-        item.AddActivityToItem(activity);
-        activity.IsFinished = true;
-        
+        var mockFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockVersionControl = new Mock<IVersionControlStrategy>();
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, mockVersionControl.Object);
+
+        mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(new SprintRelease("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object));
+
+        var mockItem = new Mock<Item>(It.IsAny<string>(), It.IsAny<string>(), mockDeveloper.Object, 1, mockFactory.Object.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object).SprintBacklog);
+        var mockActivity = new Mock<Activity>(It.IsAny<string>(), mockItem.Object, mockDeveloper.Object);
+        mockItem.Object.AddActivityToItem(mockActivity.Object);
+        mockActivity.Object.IsFinished = true;
+
         //Act
-        item.DevelopBacklogItem();
-        item.FinalizeDevelopmentBacklogItem();
-        item.TestingBacklogItem();
-        item.FinalizeTestingBacklogItem();
-        item.FinalizeBacklogItem();
-        item.CloseBacklogItem();
-        
+        mockItem.Object.DevelopBacklogItem();
+        mockItem.Object.FinalizeDevelopmentBacklogItem();
+        mockItem.Object.TestingBacklogItem();
+        mockItem.Object.FinalizeTestingBacklogItem();
+        mockItem.Object.FinalizeBacklogItem();
+        mockItem.Object.CloseBacklogItem();
+
         //Assert
-        Assert.NotNull(item);
-        Assert.Equal(typeof(DoneState), item.PreviousStatus!.GetType());
-        Assert.Equal(typeof(ClosedState), item.CurrentStatus.GetType());
+        Assert.NotNull(mockItem.Object);
+        Assert.Equal(typeof(DoneState), mockItem.Object.PreviousStatus!.GetType());
+        Assert.Equal(typeof(ClosedState), mockItem.Object.CurrentStatus.GetType());
     }
     
-    [Fact]
+   [Fact]
     public void AddBacklogItemToSprint_TitleDescriptionDeveloperStoryPoints_WhenSprintIsExecuted_ThenDontAddBacklogItem()
     {
         //Arrange
-        ISprintFactory<SprintRelease> factory = new SprintReleaseFactory();
-                
-        List<NotificationProvider> notificationProviders = new();
-        notificationProviders.Add(NotificationProvider.MAIL);
-        
-        Developer scrumMaster = new("name", "email", "password", notificationProviders);
-        IVersionControlStrategy versionControl = new GitHub();
-        ProductOwner productOwner = new("name", "email", "password", notificationProviders);
-                
-        Project project = new("Project", "Description", productOwner, versionControl);
-        SprintRelease sprint = factory.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), scrumMaster, project);
-        
-        Item item = new("Item", "Description", scrumMaster, 1, sprint.SprintBacklog);
-        Activity activity = new("Activity", item, scrumMaster);
-        item.AddActivityToItem(activity);
-        activity.IsFinished = true;
-        
+        var mockFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockVersionControl = new Mock<IVersionControlStrategy>();
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, mockVersionControl.Object);
+
+        mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(new SprintRelease("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object));
+
+        var mockItem = new Mock<Item>(It.IsAny<string>(), It.IsAny<string>(), mockDeveloper.Object, 1, mockFactory.Object.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object).SprintBacklog);
+        var mockActivity = new Mock<Activity>(It.IsAny<string>(), mockItem.Object, mockDeveloper.Object);
+        mockItem.Object.AddActivityToItem(mockActivity.Object);
+        mockActivity.Object.IsFinished = true;
+
         //Act
-        sprint.ExecuteSprint();
-        item.SprintBacklog!.AddItemToBacklog(item);
-        
+        mockFactory.Object.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object).ExecuteSprint();
+        mockItem.Object.SprintBacklog!.AddItemToBacklog(mockItem.Object);
+
         //Assert
-        Assert.NotNull(item);
-        Assert.Equal(0, item.SprintBacklog!.Items.Count);
+        Assert.NotNull(mockItem.Object);
+        Assert.Equal(0, mockItem.Object.SprintBacklog!.Items.Count);
     }
-    
+
     [Fact]
     public void CloseBacklogItem_TitleDescriptionDeveloperStoryPoints_WhenBacklogItemInTodoState_ThenDontCloseBacklogItem()
     {
         //Arrange
-        ISprintFactory<SprintRelease> factory = new SprintReleaseFactory();
-                
-        List<NotificationProvider> notificationProviders = new();
-        notificationProviders.Add(NotificationProvider.MAIL);
-        
-        Developer scrumMaster = new("name", "email", "password", notificationProviders);
-        IVersionControlStrategy versionControl = new GitHub();
-        ProductOwner productOwner = new("name", "email", "password", notificationProviders);
-                
-        Project project = new("Project", "Description", productOwner, versionControl);
-        SprintRelease sprint = factory.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), scrumMaster, project);
-        
-        Item item = new("Item", "Description", scrumMaster, 1, sprint.SprintBacklog);
-        
+        var mockFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockVersionControl = new Mock<IVersionControlStrategy>();
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, mockVersionControl.Object);
+
+        mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(new SprintRelease("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object));
+
+        var mockItem = new Mock<Item>(It.IsAny<string>(), It.IsAny<string>(), mockDeveloper.Object, 1, mockFactory.Object.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object).SprintBacklog);
+
         //Act
         try
         {
-            Activity activity = new("Activity", item, scrumMaster);
-            item.AddActivityToItem(activity);
-            activity.IsFinished = true;
-            
-            item.CloseBacklogItem();
+            var mockActivity = new Mock<Activity>(It.IsAny<string>(), mockItem.Object, mockDeveloper.Object);
+            mockItem.Object.AddActivityToItem(mockActivity.Object);
+            mockActivity.Object.IsFinished = true;
+
+            mockItem.Object.CloseBacklogItem();
         }
         catch (Exception e){}
 
         //Assert
-        Assert.NotNull(item);
-        Assert.Equal(typeof(TodoState), item.CurrentStatus.GetType());
-        Assert.NotEqual(typeof(ClosedState), item.CurrentStatus.GetType());
+        Assert.NotNull(mockItem.Object);
+        Assert.Equal(typeof(TodoState), mockItem.Object.CurrentStatus.GetType());
+        Assert.NotEqual(typeof(ClosedState), mockItem.Object.CurrentStatus.GetType());
     }
     
     [Fact]
     public void CloseBacklogItem_TitleDescriptionDeveloperStoryPoints_WhenNotAllActivitiesAreFinished_ThenDontCloseBacklogItem()
     {
         //Arrange
-        ISprintFactory<SprintRelease> factory = new SprintReleaseFactory();
-                
-        List<NotificationProvider> notificationProviders = new();
-        notificationProviders.Add(NotificationProvider.MAIL);
-        
-        Developer scrumMaster = new("name", "email", "password", notificationProviders);
-        IVersionControlStrategy versionControl = new GitHub();
-        ProductOwner productOwner = new("name", "email", "password", notificationProviders);
-                
-        Project project = new("Project", "Description", productOwner, versionControl);
-        SprintRelease sprint = factory.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), scrumMaster, project);
-        
-        Item item = new("Item", "Description", scrumMaster, 1, sprint.SprintBacklog);
-        Activity activity = new("Activity", item, scrumMaster);
-        item.AddActivityToItem(activity);
-        
+        var mockFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockVersionControl = new Mock<IVersionControlStrategy>();
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, mockVersionControl.Object);
+
+        mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(new SprintRelease("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object));
+
+        var mockItem = new Mock<Item>(It.IsAny<string>(), It.IsAny<string>(), mockDeveloper.Object, 1, mockFactory.Object.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object).SprintBacklog);
+        var mockActivity = new Mock<Activity>(It.IsAny<string>(), mockItem.Object, mockDeveloper.Object);
+        mockItem.Object.AddActivityToItem(mockActivity.Object);
+
         //Act
         try
         {
-            item.DevelopBacklogItem();
-            item.FinalizeDevelopmentBacklogItem();
-            item.TestingBacklogItem();
-            item.FinalizeTestingBacklogItem();
-            item.FinalizeBacklogItem();
+            mockItem.Object.DevelopBacklogItem();
+            mockItem.Object.FinalizeDevelopmentBacklogItem();
+            mockItem.Object.TestingBacklogItem();
+            mockItem.Object.FinalizeTestingBacklogItem();
+            mockItem.Object.FinalizeBacklogItem();
 
             //try to close the item
-            item.CloseBacklogItem();
+            mockItem.Object.CloseBacklogItem();
         }
         catch (Exception e){}
 
         //Assert
-        Assert.NotNull(item);
-        Assert.Equal(typeof(TestedState), item.CurrentStatus.GetType());
-        Assert.NotEqual(typeof(DoneState), item.CurrentStatus.GetType());
+        Assert.NotNull(mockItem.Object);
+        Assert.Equal(typeof(TestedState), mockItem.Object.CurrentStatus.GetType());
+        Assert.NotEqual(typeof(DoneState), mockItem.Object.CurrentStatus.GetType());
     }
-    
+
     [Fact]
     public void FinalizeBacklogItem_TitleDescriptionDeveloperStoryPoints_WhenGoingThroughPhases_ThenFinalizeBacklogItem()
     {
         //Arrange
-        ISprintFactory<SprintRelease> factory = new SprintReleaseFactory();
-                
-        List<NotificationProvider> notificationProviders = new();
-        notificationProviders.Add(NotificationProvider.MAIL);
-        
-        Developer scrumMaster = new("name", "email", "password", notificationProviders);
-        IVersionControlStrategy versionControl = new GitHub();
-        ProductOwner productOwner = new("name", "email", "password", notificationProviders);
-                
-        Project project = new("Project", "Description", productOwner, versionControl);
-        SprintRelease sprint = factory.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), scrumMaster, project);
-        
-        Item item = new("Item", "Description", scrumMaster, 1, sprint.SprintBacklog);
-        Activity activity = new("Activity", item, scrumMaster);
-        item.AddActivityToItem(activity);
-        activity.IsFinished = true;
-        
+        var mockFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockVersionControl = new Mock<IVersionControlStrategy>();
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, mockVersionControl.Object);
+
+        mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(new SprintRelease("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object));
+
+        var mockItem = new Mock<Item>(It.IsAny<string>(), It.IsAny<string>(), mockDeveloper.Object, 1, mockFactory.Object.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object).SprintBacklog);
+        var mockActivity = new Mock<Activity>(It.IsAny<string>(), mockItem.Object, mockDeveloper.Object);
+        mockItem.Object.AddActivityToItem(mockActivity.Object);
+        mockActivity.Object.IsFinished = true;
+
         //Act
-        item.DevelopBacklogItem();
-        item.FinalizeDevelopmentBacklogItem();
-        item.TestingBacklogItem();
-        item.FinalizeTestingBacklogItem();
-        item.FinalizeBacklogItem();
-        
+        mockItem.Object.DevelopBacklogItem();
+        mockItem.Object.FinalizeDevelopmentBacklogItem();
+        mockItem.Object.TestingBacklogItem();
+        mockItem.Object.FinalizeTestingBacklogItem();
+        mockItem.Object.FinalizeBacklogItem();
+
         //Assert
-        Assert.NotNull(item);
-        Assert.Equal(typeof(TestedState), item.PreviousStatus!.GetType());
-        Assert.Equal(typeof(DoneState), item.CurrentStatus.GetType());
+        Assert.NotNull(mockItem.Object);
+        Assert.Equal(typeof(TestedState), mockItem.Object.PreviousStatus!.GetType());
+        Assert.Equal(typeof(DoneState), mockItem.Object.CurrentStatus.GetType());
     }
     
     [Fact]
     public void ReceiveFeedbackBacklogItem_TitleDescriptionDeveloperStoryPoints_WhenGoingThroughPhases_ThenReceiveFeedbackBacklogItem()
     {
         //Arrange
-        ISprintFactory<SprintRelease> factory = new SprintReleaseFactory();
-                
-        List<NotificationProvider> notificationProviders = new();
-        notificationProviders.Add(NotificationProvider.MAIL);
-        
-        Developer scrumMaster = new("name", "email", "password", notificationProviders);
-        IVersionControlStrategy versionControl = new GitHub();
-        ProductOwner productOwner = new("name", "email", "password", notificationProviders);
-                
-        Project project = new("Project", "Description", productOwner, versionControl);
-        SprintRelease sprint = factory.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), scrumMaster, project);
-        
-        Item item = new("Item", "Description", scrumMaster, 1, sprint.SprintBacklog);
-        Activity activity = new("Activity", item, scrumMaster);
-        item.AddActivityToItem(activity);
-        activity.IsFinished = true;
-        
+        var mockFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockVersionControl = new Mock<IVersionControlStrategy>();
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, mockVersionControl.Object);
+
+        mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(new SprintRelease("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object));
+
+        var mockItem = new Mock<Item>(It.IsAny<string>(), It.IsAny<string>(), mockDeveloper.Object, 1, mockFactory.Object.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object).SprintBacklog);
+        var mockActivity = new Mock<Activity>(It.IsAny<string>(), mockItem.Object, mockDeveloper.Object);
+        mockItem.Object.AddActivityToItem(mockActivity.Object);
+        mockActivity.Object.IsFinished = true;
+
         //Act
-        item.DevelopBacklogItem();
-        item.FinalizeDevelopmentBacklogItem();
-        item.TestingBacklogItem();
-        item.FinalizeTestingBacklogItem();
-        item.FinalizeBacklogItem();
-        item.ReceiveFeedback();
-        
+        mockItem.Object.DevelopBacklogItem();
+        mockItem.Object.FinalizeDevelopmentBacklogItem();
+        mockItem.Object.TestingBacklogItem();
+        mockItem.Object.FinalizeTestingBacklogItem();
+        mockItem.Object.FinalizeBacklogItem();
+        mockItem.Object.ReceiveFeedback();
+
         //Assert
-        Assert.NotNull(item);
-        Assert.Equal(typeof(DoneState), item.PreviousStatus!.GetType());
-        Assert.Equal(typeof(TodoState), item.CurrentStatus.GetType());
+        Assert.NotNull(mockItem.Object);
+        Assert.Equal(typeof(DoneState), mockItem.Object.PreviousStatus!.GetType());
+        Assert.Equal(typeof(TodoState), mockItem.Object.CurrentStatus.GetType());
     }
-    
+
     [Fact]
     public void FinalizeTestingBacklogItem_TitleDescriptionDeveloperStoryPoints_WhenGoingThroughPhases_ThenFinalizeTestingBacklogItem()
     {
         //Arrange
-        ISprintFactory<SprintRelease> factory = new SprintReleaseFactory();
-                
-        List<NotificationProvider> notificationProviders = new();
-        notificationProviders.Add(NotificationProvider.MAIL);
-        
-        Developer scrumMaster = new("name", "email", "password", notificationProviders);
-        IVersionControlStrategy versionControl = new GitHub();
-        ProductOwner productOwner = new("name", "email", "password", notificationProviders);
-                
-        Project project = new("Project", "Description", productOwner, versionControl);
-        SprintRelease sprint = factory.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), scrumMaster, project);
-        
-        Item item = new("Item", "Description", scrumMaster, 1, sprint.SprintBacklog);
-        Activity activity = new("Activity", item, scrumMaster);
-        item.AddActivityToItem(activity);
-        activity.IsFinished = true;
-        
+        var mockFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockVersionControl = new Mock<IVersionControlStrategy>();
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, mockVersionControl.Object);
+
+        mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(new SprintRelease("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object));
+
+        var mockItem = new Mock<Item>(It.IsAny<string>(), It.IsAny<string>(), mockDeveloper.Object, 1, mockFactory.Object.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object).SprintBacklog);
+        var mockActivity = new Mock<Activity>(It.IsAny<string>(), mockItem.Object, mockDeveloper.Object);
+        mockItem.Object.AddActivityToItem(mockActivity.Object);
+        mockActivity.Object.IsFinished = true;
+
         //Act
-        item.DevelopBacklogItem();
-        item.FinalizeDevelopmentBacklogItem();
-        item.TestingBacklogItem();
-        item.FinalizeTestingBacklogItem();
-        
+        mockItem.Object.DevelopBacklogItem();
+        mockItem.Object.FinalizeDevelopmentBacklogItem();
+        mockItem.Object.TestingBacklogItem();
+        mockItem.Object.FinalizeTestingBacklogItem();
+
         //Assert
-        Assert.NotNull(item);
-        Assert.Equal(typeof(TestingState), item.PreviousStatus!.GetType());
-        Assert.Equal(typeof(TestedState), item.CurrentStatus.GetType());
+        Assert.NotNull(mockItem.Object);
+        Assert.Equal(typeof(TestingState), mockItem.Object.PreviousStatus!.GetType());
+        Assert.Equal(typeof(TestedState), mockItem.Object.CurrentStatus.GetType());
     }
     
     [Fact]
     public void TestingBacklogItem_TitleDescriptionDeveloperStoryPoints_WhenGoingThroughPhases_ThenTestingBacklogItem()
     {
         //Arrange
-        ISprintFactory<SprintRelease> factory = new SprintReleaseFactory();
-                
-        List<NotificationProvider> notificationProviders = new();
-        notificationProviders.Add(NotificationProvider.MAIL);
-        
-        Developer scrumMaster = new("name", "email", "password", notificationProviders);
-        IVersionControlStrategy versionControl = new GitHub();
-        ProductOwner productOwner = new("name", "email", "password", notificationProviders);
-                
-        Project project = new("Project", "Description", productOwner, versionControl);
-        SprintRelease sprint = factory.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), scrumMaster, project);
-        
-        Item item = new("Item", "Description", scrumMaster, 1, sprint.SprintBacklog);
-        Activity activity = new("Activity", item, scrumMaster);
-        item.AddActivityToItem(activity);
-        activity.IsFinished = true;
-        
+        var mockFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockVersionControl = new Mock<IVersionControlStrategy>();
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, mockVersionControl.Object);
+
+        mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(new SprintRelease("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object));
+
+        var mockItem = new Mock<Item>(It.IsAny<string>(), It.IsAny<string>(), mockDeveloper.Object, 1, mockFactory.Object.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object).SprintBacklog);
+        var mockActivity = new Mock<Activity>(It.IsAny<string>(), mockItem.Object, mockDeveloper.Object);
+        mockItem.Object.AddActivityToItem(mockActivity.Object);
+        mockActivity.Object.IsFinished = true;
+
         //Act
-        item.DevelopBacklogItem();
-        item.FinalizeDevelopmentBacklogItem();
-        item.TestingBacklogItem();
-        
+        mockItem.Object.DevelopBacklogItem();
+        mockItem.Object.FinalizeDevelopmentBacklogItem();
+        mockItem.Object.TestingBacklogItem();
+
         //Assert
-        Assert.NotNull(item);
-        Assert.Equal(typeof(ReadyForTestingState), item.PreviousStatus!.GetType());
-        Assert.Equal(typeof(TestingState), item.CurrentStatus.GetType());
+        Assert.NotNull(mockItem.Object);
+        Assert.Equal(typeof(ReadyForTestingState), mockItem.Object.PreviousStatus!.GetType());
+        Assert.Equal(typeof(TestingState), mockItem.Object.CurrentStatus.GetType());
     }
-    
+
     [Fact]
     public void DenyTestedBacklogItem_TitleDescriptionDeveloperStoryPoints_WhenGoingThroughPhases_ThenDenyTestedBacklogItem()
     {
         //Arrange
-        ISprintFactory<SprintRelease> factory = new SprintReleaseFactory();
-                
-        List<NotificationProvider> notificationProviders = new();
-        notificationProviders.Add(NotificationProvider.MAIL);
-        
-        Developer scrumMaster = new("name", "email", "password", notificationProviders);
-        IVersionControlStrategy versionControl = new GitHub();
-        ProductOwner productOwner = new("name", "email", "password", notificationProviders);
-                
-        Project project = new("Project", "Description", productOwner, versionControl);
-        SprintRelease sprint = factory.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), scrumMaster, project);
-        
-        Item item = new("Item", "Description", scrumMaster, 1, sprint.SprintBacklog);
-        Activity activity = new("Activity", item, scrumMaster);
-        item.AddActivityToItem(activity);
-        activity.IsFinished = true;
-        
+        var mockFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockVersionControl = new Mock<IVersionControlStrategy>();
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, mockVersionControl.Object);
+
+        mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(new SprintRelease("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object));
+
+        var mockItem = new Mock<Item>(It.IsAny<string>(), It.IsAny<string>(), mockDeveloper.Object, 1, mockFactory.Object.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object).SprintBacklog);
+        var mockActivity = new Mock<Activity>(It.IsAny<string>(), mockItem.Object, mockDeveloper.Object);
+        mockItem.Object.AddActivityToItem(mockActivity.Object);
+        mockActivity.Object.IsFinished = true;
+
         //Act
-        item.DevelopBacklogItem();
-        item.FinalizeDevelopmentBacklogItem();
-        item.TestingBacklogItem();
-        item.FinalizeTestingBacklogItem();
-        item.DenyTestedBacklogItem();
-        
+        mockItem.Object.DevelopBacklogItem();
+        mockItem.Object.FinalizeDevelopmentBacklogItem();
+        mockItem.Object.TestingBacklogItem();
+        mockItem.Object.FinalizeTestingBacklogItem();
+        mockItem.Object.DenyTestedBacklogItem();
+
         //Assert
-        Assert.NotNull(item);
-        Assert.Equal(typeof(TestedState), item.PreviousStatus!.GetType());
-        Assert.Equal(typeof(ReadyForTestingState), item.CurrentStatus.GetType());
+        Assert.NotNull(mockItem.Object);
+        Assert.Equal(typeof(TestedState), mockItem.Object.PreviousStatus!.GetType());
+        Assert.Equal(typeof(ReadyForTestingState), mockItem.Object.CurrentStatus.GetType());
     }
-    
+        
     [Fact]
     public void DenyDevelopedBacklogItem_TitleDescriptionDeveloperStoryPoints_WhenGoingThroughPhases_ThenDenyDevelopedBacklogItem()
     {
         //Arrange
-        ISprintFactory<SprintRelease> factory = new SprintReleaseFactory();
-                
-        List<NotificationProvider> notificationProviders = new();
-        notificationProviders.Add(NotificationProvider.MAIL);
-        
-        Developer scrumMaster = new("name", "email", "password", notificationProviders);
-        IVersionControlStrategy versionControl = new GitHub();
-        ProductOwner productOwner = new("name", "email", "password", notificationProviders);
-                
-        Project project = new("Project", "Description", productOwner, versionControl);
-        SprintRelease sprint = factory.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), scrumMaster, project);
-        
-        Item item = new("Item", "Description", scrumMaster, 1, sprint.SprintBacklog);
-        Activity activity = new("Activity", item, scrumMaster);
-        item.AddActivityToItem(activity);
-        activity.IsFinished = true;
-        
+        var mockFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockVersionControl = new Mock<IVersionControlStrategy>();
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, mockVersionControl.Object);
+
+        mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(new SprintRelease("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object));
+
+        var mockItem = new Mock<Item>(It.IsAny<string>(), It.IsAny<string>(), mockDeveloper.Object, 1, mockFactory.Object.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object).SprintBacklog);
+        var mockActivity = new Mock<Activity>(It.IsAny<string>(), mockItem.Object, mockDeveloper.Object);
+        mockItem.Object.AddActivityToItem(mockActivity.Object);
+        mockActivity.Object.IsFinished = true;
+
         //Act
-        item.DevelopBacklogItem();
-        item.FinalizeDevelopmentBacklogItem();
-        item.TestingBacklogItem();
-        item.DenyDevelopedBacklogItem();
-        
+        mockItem.Object.DevelopBacklogItem();
+        mockItem.Object.FinalizeDevelopmentBacklogItem();
+        mockItem.Object.TestingBacklogItem();
+        mockItem.Object.DenyDevelopedBacklogItem();
+
         //Assert
-        Assert.NotNull(item);
-        Assert.Equal(typeof(TestingState), item.PreviousStatus!.GetType());
-        Assert.Equal(typeof(TodoState), item.CurrentStatus.GetType());
+        Assert.NotNull(mockItem.Object);
+        Assert.Equal(typeof(TestingState), mockItem.Object.PreviousStatus!.GetType());
+        Assert.Equal(typeof(TodoState), mockItem.Object.CurrentStatus.GetType());
     }
-    
+
     [Fact]
     public void FinalizeDevelopmentBacklogItem_TitleDescriptionDeveloperStoryPoints_WhenGoingThroughPhases_ThenFinalizeDevelopmentBacklogItem()
     {
         //Arrange
-        ISprintFactory<SprintRelease> factory = new SprintReleaseFactory();
-                
-        List<NotificationProvider> notificationProviders = new();
-        notificationProviders.Add(NotificationProvider.MAIL);
-        
-        Developer scrumMaster = new("name", "email", "password", notificationProviders);
-        IVersionControlStrategy versionControl = new GitHub();
-        ProductOwner productOwner = new("name", "email", "password", notificationProviders);
-                
-        Project project = new("Project", "Description", productOwner, versionControl);
-        SprintRelease sprint = factory.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), scrumMaster, project);
-        
-        Item item = new("Item", "Description", scrumMaster, 1, sprint.SprintBacklog);
-        Activity activity = new("Activity", item, scrumMaster);
-        item.AddActivityToItem(activity);
-        activity.IsFinished = true;
-        
+        var mockFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockVersionControl = new Mock<IVersionControlStrategy>();
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, mockVersionControl.Object);
+
+        mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(new SprintRelease("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object));
+
+        var mockItem = new Mock<Item>(It.IsAny<string>(), It.IsAny<string>(), mockDeveloper.Object, 1, mockFactory.Object.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object).SprintBacklog);
+        var mockActivity = new Mock<Activity>(It.IsAny<string>(), mockItem.Object, mockDeveloper.Object);
+        mockItem.Object.AddActivityToItem(mockActivity.Object);
+        mockActivity.Object.IsFinished = true;
+
         //Act
-        item.DevelopBacklogItem();
-        item.FinalizeDevelopmentBacklogItem();
-        
+        mockItem.Object.DevelopBacklogItem();
+        mockItem.Object.FinalizeDevelopmentBacklogItem();
+
         //Assert
-        Assert.NotNull(item);
-        Assert.Equal(typeof(DoingState), item.PreviousStatus!.GetType());
-        Assert.Equal(typeof(ReadyForTestingState), item.CurrentStatus.GetType());
+        Assert.NotNull(mockItem.Object);
+        Assert.Equal(typeof(DoingState), mockItem.Object.PreviousStatus!.GetType());
+        Assert.Equal(typeof(ReadyForTestingState), mockItem.Object.CurrentStatus.GetType());
     }
     
     [Fact]
     public void DevelopBacklogItem_TitleDescriptionDeveloperStoryPoints_WhenGoingThroughPhases_ThenDevelopBacklogItem()
     {
         //Arrange
-        ISprintFactory<SprintRelease> factory = new SprintReleaseFactory();
-                
-        List<NotificationProvider> notificationProviders = new();
-        notificationProviders.Add(NotificationProvider.MAIL);
-        
-        Developer scrumMaster = new("name", "email", "password", notificationProviders);
-        IVersionControlStrategy versionControl = new GitHub();
-        ProductOwner productOwner = new("name", "email", "password", notificationProviders);
-                
-        Project project = new("Project", "Description", productOwner, versionControl);
-        SprintRelease sprint = factory.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), scrumMaster, project);
-        
-        Item item = new("Item", "Description", scrumMaster, 1, sprint.SprintBacklog);
-        Activity activity = new("Activity", item, scrumMaster);
-        item.AddActivityToItem(activity);
-        activity.IsFinished = true;
-        
-        //Act
-        item.DevelopBacklogItem();
-        
-        //Assert
-        Assert.NotNull(item);
-        Assert.Equal(typeof(TodoState), item.PreviousStatus!.GetType());
-        Assert.Equal(typeof(DoingState), item.CurrentStatus.GetType());
-    }
+        var mockFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockVersionControl = new Mock<IVersionControlStrategy>();
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, mockVersionControl.Object);
 
+        mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(new SprintRelease("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object));
+
+        var mockItem = new Mock<Item>(It.IsAny<string>(), It.IsAny<string>(), mockDeveloper.Object, 1, mockFactory.Object.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object).SprintBacklog);
+        var mockActivity = new Mock<Activity>(It.IsAny<string>(), mockItem.Object, mockDeveloper.Object);
+        mockItem.Object.AddActivityToItem(mockActivity.Object);
+        mockActivity.Object.IsFinished = true;
+
+        //Act
+        mockItem.Object.DevelopBacklogItem();
+
+        //Assert
+        Assert.NotNull(mockItem.Object);
+        Assert.Equal(typeof(TodoState), mockItem.Object.PreviousStatus!.GetType());
+        Assert.Equal(typeof(DoingState), mockItem.Object.CurrentStatus.GetType());
+    }
 }

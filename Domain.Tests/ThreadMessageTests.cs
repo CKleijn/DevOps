@@ -1,5 +1,4 @@
-﻿using Domain.States.BacklogItem;
-using Thread = Domain.Entities.Thread;
+﻿using Thread = Domain.Entities.Thread;
 
 namespace Domain.Tests;
 
@@ -9,27 +8,23 @@ public class ThreadMessageTests
     public void CreateThreadMessage_TitleBodyBacklogItem_WhenNoPreConditions_ThenCreateThreadMessage()
     {
         //Arrange
-        ISprintFactory<SprintRelease> factory = new SprintReleaseFactory();
-                
-        List<NotificationProvider> notificationProviders = new();
-        notificationProviders.Add(NotificationProvider.MAIL);
-        
-        Developer scrumMaster = new("name", "email", "password", notificationProviders);
-        IVersionControlStrategy versionControl = new GitHub();
-        ProductOwner productOwner = new("name", "email", "password", notificationProviders);
-                
-        Project project = new("Project", "Description", productOwner, versionControl);
-        SprintRelease sprint = factory.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), scrumMaster, project);
-        
-        Item item = new("Item", "Description", scrumMaster, 1, sprint.SprintBacklog);
-        
-        Thread thread = new("Thread", "Description", item);
-        
+        var mockFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockVersionControl = new Mock<IVersionControlStrategy>();
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, mockVersionControl.Object);
+
+        var mockSprint = new Mock<SprintRelease>(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), mockDeveloper.Object, mockProject.Object);
+        mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(mockSprint.Object);
+
+        var mockItem = new Mock<Item>(It.IsAny<string>(), It.IsAny<string>(), mockDeveloper.Object, It.IsAny<int>(), mockSprint.Object.SprintBacklog);
+        var mockThread = new Mock<Thread>(It.IsAny<string>(), It.IsAny<string>(), mockItem.Object);
+
         //Act
-        ThreadMessage message = new("Title", "Body", thread);
-        
-        thread.AddThreadMessage(message);
-        
+        var message = new ThreadMessage("Title", "Body", mockThread.Object);
+
+        mockThread.Object.AddThreadMessage(message);
+
         //Assert
         Assert.NotNull(message);
         Assert.IsType<ThreadMessage>(message);
@@ -42,37 +37,33 @@ public class ThreadMessageTests
     public void UpdateThreadMessage_TitleBodyBacklogItem_WhenBacklogItemIsClosed_ThenDontAddMessageAndDontUpdateThreadMessage()
     {
         //Arrange
-        ISprintFactory<SprintRelease> factory = new SprintReleaseFactory();
-                
-        List<NotificationProvider> notificationProviders = new();
-        notificationProviders.Add(NotificationProvider.MAIL);
-        
-        Developer scrumMaster = new("name", "email", "password", notificationProviders);
-        IVersionControlStrategy versionControl = new GitHub();
-        ProductOwner productOwner = new("name", "email", "password", notificationProviders);
-                
-        Project project = new("Project", "Description", productOwner, versionControl);
-        SprintRelease sprint = factory.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), scrumMaster, project);
-        
-        Item item = new("Item", "Description", scrumMaster, 1, sprint.SprintBacklog);
-        
-        Thread thread = new("Thread", "Description", item);
-        
+        var mockFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockVersionControl = new Mock<IVersionControlStrategy>();
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, mockVersionControl.Object);
+
+        var mockSprint = new Mock<SprintRelease>(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), mockDeveloper.Object, mockProject.Object);
+        mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(mockSprint.Object);
+
+        var mockItem = new Mock<Item>(It.IsAny<string>(), It.IsAny<string>(), mockDeveloper.Object, It.IsAny<int>(), mockSprint.Object.SprintBacklog);
+        var mockThread = new Mock<Thread>(It.IsAny<string>(), It.IsAny<string>(), mockItem.Object);
+
         string initialTitle = "Title";
         string newTitle = "newTitle";
-        
+
         string initialBody = "Description";
         string newBody = "newDescription";
-        
-        //Act
-        item.CurrentStatus = new ClosedState(item);
 
-        ThreadMessage message = new(initialTitle, initialBody, thread);
+        //Act
+        mockItem.Object.CurrentStatus = new ClosedState(mockItem.Object);
+
+        ThreadMessage message = new(initialTitle, initialBody, mockThread.Object);
         message.Title = newTitle;
         message.Body = newBody;
-        
-        thread.AddThreadMessage(message);
-        
+
+        mockThread.Object.AddThreadMessage(message);
+
         //Assert
         Assert.NotNull(message);
         Assert.IsType<ThreadMessage>(message);
@@ -87,37 +78,33 @@ public class ThreadMessageTests
     public void UpdateThreadMessage_TitleBodyBacklogItem_WhenNoPreConditions_ThenAddMessageAndUpdateThreadMessage()
     {
         //Arrange
-        ISprintFactory<SprintRelease> factory = new SprintReleaseFactory();
-                
-        List<NotificationProvider> notificationProviders = new();
-        notificationProviders.Add(NotificationProvider.MAIL);
-        
-        Developer scrumMaster = new("name", "email", "password", notificationProviders);
-        IVersionControlStrategy versionControl = new GitHub();
-        ProductOwner productOwner = new("name", "email", "password", notificationProviders);
-                
-        Project project = new("Project", "Description", productOwner, versionControl);
-        SprintRelease sprint = factory.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), scrumMaster, project);
-        
-        Item item = new("Item", "Description", scrumMaster, 1, sprint.SprintBacklog);
-        
-        Thread thread = new("Thread", "Description", item);
-        
+        var mockFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockVersionControl = new Mock<IVersionControlStrategy>();
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, mockVersionControl.Object);
+
+        var mockSprint = new Mock<SprintRelease>(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), mockDeveloper.Object, mockProject.Object);
+        mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(mockSprint.Object);
+
+        var mockItem = new Mock<Item>(It.IsAny<string>(), It.IsAny<string>(), mockDeveloper.Object, It.IsAny<int>(), mockSprint.Object.SprintBacklog);
+        var mockThread = new Mock<Thread>(It.IsAny<string>(), It.IsAny<string>(), mockItem.Object);
+
         string initialTitle = "Title";
         string newTitle = "newTitle";
-        
+
         string initialBody = "Description";
         string newBody = "newDescription";
-        
+
         //Act
-        ThreadMessage message = new(initialTitle, initialBody, thread);
+        ThreadMessage message = new(initialTitle, initialBody, mockThread.Object);
         message.Title = newTitle;
         message.Body = newBody;
-        
-        thread.AddThreadMessage(message);
-        thread.RemoveThreadMessage(message);
-        thread.AddThreadMessage(message);
-        
+
+        mockThread.Object.AddThreadMessage(message);
+        mockThread.Object.RemoveThreadMessage(message);
+        mockThread.Object.AddThreadMessage(message);
+
         //Assert
         Assert.NotNull(message);
         Assert.IsType<ThreadMessage>(message);
@@ -132,34 +119,30 @@ public class ThreadMessageTests
     public void UpdateThreadMessage_TitleBodyBacklogItem_WhenBacklogItemIsClosedAfterAddingMessage_ThenDontUpdateThreadMessage()
     {
         //Arrange
-        ISprintFactory<SprintRelease> factory = new SprintReleaseFactory();
-                
-        List<NotificationProvider> notificationProviders = new();
-        notificationProviders.Add(NotificationProvider.MAIL);
-        
-        Developer scrumMaster = new("name", "email", "password", notificationProviders);
-        IVersionControlStrategy versionControl = new GitHub();
-        ProductOwner productOwner = new("name", "email", "password", notificationProviders);
-                
-        Project project = new("Project", "Description", productOwner, versionControl);
-        SprintRelease sprint = factory.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), scrumMaster, project);
-        
-        Item item = new("Item", "Description", scrumMaster, 1, sprint.SprintBacklog);
-        
-        Thread thread = new("Thread", "Description", item);
-        
+        var mockFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockVersionControl = new Mock<IVersionControlStrategy>();
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, mockVersionControl.Object);
+
+        var mockSprint = new Mock<SprintRelease>(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), mockDeveloper.Object, mockProject.Object);
+        mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(mockSprint.Object);
+
+        var mockItem = new Mock<Item>(It.IsAny<string>(), It.IsAny<string>(), mockDeveloper.Object, It.IsAny<int>(), mockSprint.Object.SprintBacklog);
+        var mockThread = new Mock<Thread>(It.IsAny<string>(), It.IsAny<string>(), mockItem.Object);
+
         string initialTitle = "Title";
         string newTitle = "newTitle";
-        
+
         string initialBody = "Description";
         string newBody = "newDescription";
-        
-        //Act
-        ThreadMessage message = new(initialTitle, initialBody, thread);
 
-        thread.AddThreadMessage(message);
+        //Act
+        ThreadMessage message = new(initialTitle, initialBody, mockThread.Object);
+
+        mockThread.Object.AddThreadMessage(message);
         
-        item.CurrentStatus = new ClosedState(item);
+        mockItem.Object.CurrentStatus = new ClosedState(mockItem.Object);
         
         message.Title = newTitle;
         message.Body = newBody;

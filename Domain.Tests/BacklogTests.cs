@@ -2,62 +2,52 @@
 
 public class BacklogTests
 {
-     [Fact]
-     public void CreateBacklog_GivenNoProperties_WhenNoPreConditions_ThenCreateBacklog()
-     {
-         //Arrange
-         ISprintFactory<SprintRelease> factory = new SprintReleaseFactory();
-            
-         List<NotificationProvider> notificationProviders = new();
-         notificationProviders.Add(NotificationProvider.MAIL);
-         
-         Developer scrumMaster = new("name", "email", "password", notificationProviders);
-         ProductOwner productOwner = new("name", "email", "password", notificationProviders);
-                 
-         Project project = new("Project", "Description", productOwner, new GitHub());
-         
-         SprintRelease sprint = factory.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), scrumMaster, project);
-         
-         // Act
-         Backlog backlog = new SprintBacklog(sprint);
-         
+    [Fact]
+    public void CreateBacklog_GivenNoProperties_WhenNoPreConditions_ThenCreateBacklog()
+    {
+        //Arrange
+        var mockFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, new GitHub());
 
-         // Assert
-         Assert.NotNull(backlog);
-         Assert.IsType<SprintBacklog>(backlog);
-     }
+        var mockSprint = new Mock<SprintRelease>(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), mockDeveloper.Object, mockProject.Object);
+        mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(mockSprint.Object);
 
-     [Fact]
-     public void UpdateBacklog_GivenBacklogItem_WhenNoPreConditions_ThenUpdateBacklog()
-     {
-         // Arrange
-         ISprintFactory<SprintRelease> factory = new SprintReleaseFactory();
+        // Act
+        Backlog backlog = new SprintBacklog(mockSprint.Object);
 
-         List<NotificationProvider> notificationProviders = new();
-         notificationProviders.Add(NotificationProvider.MAIL);
+        // Assert
+        Assert.NotNull(backlog);
+        Assert.IsType<SprintBacklog>(backlog);
+    }
 
-         Developer scrumMaster = new("name", "email", "password", notificationProviders);
-         ProductOwner productOwner = new("name", "email", "password", notificationProviders);
+    [Fact]
+    public void UpdateBacklog_GivenBacklogItem_WhenNoPreConditions_ThenUpdateBacklog()
+    {
+        // Arrange
+        var mockFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, new GitHub());
 
-         Project project = new("Project", "Description", productOwner, new GitHub());
+        var mockSprint = new Mock<SprintRelease>(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), mockDeveloper.Object, mockProject.Object);
+        mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(mockSprint.Object);
 
-         SprintRelease sprint = factory.CreateSprint("Sprint", DateTime.Now, DateTime.Now.AddDays(5), scrumMaster, project);
+        var mockInitialItem = new Mock<Item>(It.IsAny<string>(), It.IsAny<string>(), mockDeveloper.Object, 1, mockSprint.Object.SprintBacklog);
+        var mockNewItem = new Mock<Item>(It.IsAny<string>(), It.IsAny<string>(), mockDeveloper.Object, 1, mockSprint.Object.SprintBacklog);
 
-         Item initialItem = new("Item", "Description", scrumMaster, 1, sprint.SprintBacklog);
-         Item newItem = new("newItem", "Description", scrumMaster, 1, sprint.SprintBacklog);
+        // Act
+        Backlog backlog = new SprintBacklog(mockSprint.Object);
 
-         // Act
-         Backlog backlog = new SprintBacklog(sprint);
-    
-         backlog.AddItemToBacklog(initialItem);
-         backlog.RemoveItemFromBacklog(initialItem);
-         backlog.AddItemToBacklog(newItem);
+        backlog.AddItemToBacklog(mockInitialItem.Object);
+        backlog.RemoveItemFromBacklog(mockInitialItem.Object);
+        backlog.AddItemToBacklog(mockNewItem.Object);
 
-
-         // Assert
-         Assert.NotNull(backlog);
-         Assert.Equal(1, backlog.Items.Count);
-         Assert.Equal(newItem, backlog.Items[0]);
-         Assert.NotEqual(initialItem, backlog.Items[0]);
-     }
+        // Assert
+        Assert.NotNull(backlog);
+        Assert.Equal(1, backlog.Items.Count);
+        Assert.Equal(mockNewItem.Object, backlog.Items[0]);
+        Assert.NotEqual(mockInitialItem.Object, backlog.Items[0]);
+    }
 }
