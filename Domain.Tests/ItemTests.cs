@@ -421,4 +421,30 @@ public class ItemTests
         Assert.Equal(typeof(TodoState), mockItem.Object.PreviousStatus!.GetType());
         Assert.Equal(typeof(DoingState), mockItem.Object.CurrentStatus.GetType());
     }
+    
+    [Fact]
+    public void DevelopBacklogItem_TitleDescriptionDeveloperStoryPoints_WhenSprintBacklogIsNull_ThenDontDevelopBacklogItem()
+    {
+        //Arrange
+        var mockFactory = new Mock<ISprintFactory<SprintRelease>>();
+        var mockDeveloper = new Mock<Developer>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockVersionControl = new Mock<IVersionControlStrategy>();
+        var mockProductOwner = new Mock<ProductOwner>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<NotificationProvider>>());
+        var mockProject = new Mock<Project>(It.IsAny<string>(), It.IsAny<string>(), mockProductOwner.Object, mockVersionControl.Object);
+
+        mockFactory.Setup(f => f.CreateSprint(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<Developer>(), It.IsAny<Project>())).Returns(new SprintRelease("Sprint", DateTime.Now, DateTime.Now.AddDays(5), mockDeveloper.Object, mockProject.Object));
+
+        var mockItem = new Mock<Item>(It.IsAny<string>(), It.IsAny<string>(), mockDeveloper.Object, 1);
+        var mockActivity = new Mock<Activity>(It.IsAny<string>(), mockItem.Object, mockDeveloper.Object);
+        mockItem.Object.AddActivityToItem(mockActivity.Object);
+        mockActivity.Object.IsFinished = true;
+
+        //Act
+        mockItem.Object.DevelopBacklogItem();
+
+        //Assert
+        Assert.NotNull(mockItem.Object);
+        Assert.Equal(typeof(TodoState), mockItem.Object.PreviousStatus!.GetType());
+        Assert.Equal(typeof(TodoState), mockItem.Object.CurrentStatus.GetType());
+    }
 }
