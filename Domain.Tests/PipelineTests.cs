@@ -4,6 +4,7 @@ using Moq;
 
 namespace Domain.Tests;
 
+[Collection("SequentialTest")]
 public class PipelineTests
 {
     [Fact]

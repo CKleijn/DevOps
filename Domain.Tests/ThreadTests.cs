@@ -2,6 +2,7 @@
 
 namespace Domain.Tests;
 
+[Collection("SequentialTest")]
 public class ThreadTests
 {
     [Fact]

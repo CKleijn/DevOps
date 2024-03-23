@@ -12,3 +12,6 @@ global using Domain.States.BacklogItem;
 using System.Reflection;
 
 Assembly.Load("Infrastructure");
+
+[CollectionDefinition("SequentialTest", DisableParallelization = true)]
+public class SequentialTestCollection { }

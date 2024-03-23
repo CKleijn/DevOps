@@ -1,5 +1,6 @@
 ﻿namespace Domain.Tests;
 
+[Collection("SequentialTest")]
 public class NotificationTests
 {
      [Fact]
