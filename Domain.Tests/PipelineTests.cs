@@ -107,7 +107,7 @@ public class PipelineTests
     }
 
     [Fact]
-    public void CreatePipelineWithActionsAndExecute_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsAndExecute()
+    public void CreatePipelineWithActions_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsAndFinishAfterExecuting()
     {
         // Arrange
         var title = "Pipeline 1";
@@ -165,7 +165,7 @@ public class PipelineTests
     }
 
     [Fact]
-    public void CreatePipelineWithoutAllActionsAndExecute_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithoutAllActionsAndFailAfterExecuting()
+    public void CreatePipelineWithoutAllActions_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithoutAllActionsAndFailAfterExecuting()
     {
         // Arrange
         var title = "Pipeline 1";
@@ -196,7 +196,7 @@ public class PipelineTests
     }
 
     [Fact]
-    public void CreatePipelineWithActionsButWithoutAnalyseActionAndExecute_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutAnalyseActionAndExecuteAndFailAfterExecuting()
+    public void CreatePipelineWithActionsButWithoutAnalyseAction_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutAnalyseActionAndFailAfterExecuting()
     {
         // Arrange
         var title = "Pipeline 1";
@@ -245,7 +245,7 @@ public class PipelineTests
     }
 
     [Fact]
-    public void CreatePipelineWithActionsButWithoutDeployActionAndExecute_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutDeployActionAndExecuteAndFailAfterExecuting()
+    public void CreatePipelineWithActionsButWithoutDeployAction_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutDeployActionAndFailAfterExecuting()
     {
         // Arrange
         var title = "Pipeline 1";
@@ -294,7 +294,7 @@ public class PipelineTests
     }
 
     [Fact]
-    public void CreatePipelineWithActionsButWithoutUtilityActionAndExecute_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutUtilityActionAndExecuteAndFailAfterExecuting()
+    public void CreatePipelineWithActionsButWithoutUtilityAction_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutUtilityActionFailAfterExecuting()
     {
         // Arrange
         var title = "Pipeline 1";
@@ -343,7 +343,7 @@ public class PipelineTests
     }
 
     [Fact]
-    public void CreatePipelineWithActionsButWithoutSourceActionAndExecute_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutSourceActionAndExecuteAndFailAfterExecuting()
+    public void CreatePipelineWithActionsButWithoutSourceAction_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutSourceActionFailAfterExecuting()
     {
         // Arrange
         var title = "Pipeline 1";
@@ -392,7 +392,7 @@ public class PipelineTests
     }
 
     [Fact]
-    public void CreatePipelineWithActionsButWithoutPackageActionAndExecute_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutPackageActionAndExecuteAndFailAfterExecuting()
+    public void CreatePipelineWithActionsButWithoutPackageAction_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutPackageActionAndFailAfterExecuting()
     {
         // Arrange
         var title = "Pipeline 1";
@@ -441,7 +441,7 @@ public class PipelineTests
     }
 
     [Fact]
-    public void CreatePipelineWithActionsButWithoutBuildActionAndExecute_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutBuildActionAndExecuteAndFailAfterExecuting()
+    public void CreatePipelineWithActionsButWithoutBuildAction_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutBuildActionAndFailAfterExecuting()
     {
         // Arrange
         var title = "Pipeline 1";
@@ -490,7 +490,7 @@ public class PipelineTests
     }
 
     [Fact]
-    public void CreatePipelineWithActionsAndExecuteAndFinalize_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutBuildActionAndExecuteAndFinalizeAfterFinalizing()
+    public void CreatePipelineWithActions_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutBuildActionAndFinalizeAfterFinalizing()
     {
         // Arrange
         var title = "Pipeline 1";
@@ -548,7 +548,7 @@ public class PipelineTests
     }
 
     [Fact]
-    public void CreatePipelineWithActionsAndExecuteAndFail_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutBuildActionAndExecuteAndFailAfterCallingFail()
+    public void CreatePipelineWithActions_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutBuildActionAndFailAfterCallingFail()
     {
         // Arrange
         var title = "Pipeline 1";
@@ -597,7 +597,7 @@ public class PipelineTests
     }
 
     [Fact]
-    public void CreatePipelineWithActionsAndExecuteAndReexecute_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutBuildActionAndExecuteAndReexecuteAfterFailing()
+    public void CreatePipelineWithActions_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutBuildActionAndReexecuteAfterFailing()
     {
         // Arrange
         var title = "Pipeline 1";
@@ -646,7 +646,7 @@ public class PipelineTests
     }
 
     [Fact]
-    public void CreatePipelineWithActionsAndExecuteAndReexecuteAfterCancel_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutBuildActionAndExecuteAndReexecuteAfterCancel()
+    public void CreatePipelineWithActions_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutBuildActionAndReexecuteAfterCancel()
     {
         // Arrange
         var title = "Pipeline 1";
@@ -705,7 +705,7 @@ public class PipelineTests
     }
 
     [Fact]
-    public void CreatePipelineWithActionsAndExecuteAndCancel_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutBuildActionAndExecuteAndCancelAfterFailing()
+    public void CreatePipelineWithActions_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutBuildActionAndCancelAfterFailing()
     {
         // Arrange
         var title = "Pipeline 1";
@@ -755,7 +755,7 @@ public class PipelineTests
     }
 
     [Fact]
-    public void CreatePipelineWithActionsButWithoutTestActionAndExecute_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutTestActionAndExecuteAndFailAfterExecuting()
+    public void CreatePipelineWithActionsButWithoutTestAction_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutTestActionAndFailAfterExecuting()
     {
         // Arrange
         var title = "Pipeline 1";
@@ -804,7 +804,7 @@ public class PipelineTests
     }
 
     [Fact]
-    public void CreatePipelineWithActionsButWithoutTestActionAndExecute_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutTestActionAndExecuteAndFailAfterExecutingAndSendNotificationToScrumMaster()
+    public void CreatePipelineWithActionsButWithoutTestAction_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsButWithoutTestActionAndFailAfterExecutingAndSendNotificationToScrumMaster()
     {
         // Arrange
         var title = "Pipeline 1";
@@ -856,7 +856,7 @@ public class PipelineTests
     }
 
     [Fact]
-    public void CreatePipelineWithActionsAndExecute_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsAndExecuteAndSendNotificationToScrumMasterAndProductOwner()
+    public void CreatePipelineWithActions_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsAndSendNotificationToScrumMasterAndProductOwner()
     {
         // Arrange
         var title = "Pipeline 1";
@@ -919,7 +919,7 @@ public class PipelineTests
     }
 
     [Fact]
-    public void CreatePipelineWithActionsAndExecuteAndCancel_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsAndExecuteAndCancelAndSendNotificationToScrumMaster()
+    public void CreatePipelineWithActions_GivenTitleSprint_WhenNoPreConditions_ThenCreatePipelineWithActionsAndCancelAndSendNotificationToScrumMaster()
     {
         // Arrange
         var title = "Pipeline 1";

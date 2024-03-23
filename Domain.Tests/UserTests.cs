@@ -10,7 +10,6 @@ public class UserTests
          notificationProviders.Add(NotificationProvider.MAIL);
          
          //Act
-         
          Developer user = new("Name", "Email", "Password", notificationProviders);
 
          // Assert

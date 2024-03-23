@@ -3,7 +3,7 @@
 public class NotificationTests
 {
      [Fact]
-     public void CreateNotification_GivenTitleBody_WhenNoPreConditions_ThenCreateProject()
+     public void CreateNotification_GivenTitleBody_WhenNoPreConditions_ThenCreateNotification()
      {
          //Arrange
          string title = "Title";
@@ -21,7 +21,7 @@ public class NotificationTests
      }
      
      [Fact]
-     public void UpdateProject_GivenTitleDescriptionPasswordScrumMasterPipeline_WhenNoPreConditions_ThenUpdateProject()
+     public void UpdateProject_GivenTitleDescriptionPasswordScrumMasterPipeline_WhenNoPreConditions_ThenUpdateNotification()
      {
          //Arrange
          List<NotificationProvider> notificationProviders = new();
